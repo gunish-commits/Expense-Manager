@@ -5,6 +5,11 @@ import { Group, Profile, GroupMember } from '@/types';
 // Seed local storage with initial data if running in Guest Mode
 export function seedLocalData() {
   if (typeof window === 'undefined') return;
+  if (localStorage.getItem('local_notifications_cleared_v2') !== 'true') {
+    localStorage.removeItem('local_data_seeded');
+    localStorage.removeItem('local_notifications');
+    localStorage.setItem('local_notifications_cleared_v2', 'true');
+  }
   if (localStorage.getItem('local_data_seeded') === 'true') return;
 
   const guest = getGuestUser();
@@ -101,10 +106,7 @@ export function seedLocalData() {
   localStorage.setItem('local_recurring_expenses', JSON.stringify(recurring));
 
   // Seed Notifications
-  const notifications = [
-    { id: 'notif-1', user_id: guest.id, type: 'expense_added', message: 'Alice Smith added ₹1200 for Dinner & Drinks at Curlies in Goa Trip 🏖️', related_group_id: group1Id, related_expense_id: exp2Id, read: false, created_at: new Date().toISOString() },
-    { id: 'notif-2', user_id: guest.id, type: 'group_invited', message: 'You created the group Flat 204 Expenses 🏠', related_group_id: group2Id, related_expense_id: null, read: true, created_at: new Date().toISOString() }
-  ];
+  const notifications: any[] = [];
   localStorage.setItem('local_notifications', JSON.stringify(notifications));
 
   localStorage.setItem('local_data_seeded', 'true');

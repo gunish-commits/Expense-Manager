@@ -115,7 +115,7 @@ export default function Groups() {
       {/* Page Header */}
       <div className="flex items-center justify-between">
         <div className="text-left">
-          <span className="text-[10px] uppercase font-black tracking-widest text-[#1F6E5C] dark:text-[#2B9B82]">
+          <span className="text-[10px] uppercase font-black tracking-widest text-primary">
             Shared Expenses
           </span>
           <h1 className="text-2xl font-black tracking-tight text-slate-900 dark:text-white">
@@ -125,7 +125,7 @@ export default function Groups() {
 
         <button 
           onClick={() => setIsModalOpen(true)}
-          className="bg-[#1F6E5C] hover:bg-[#2B9B82] text-white px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm active:scale-95"
+          className="bg-primary hover:bg-primary-light text-white px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm active:scale-95"
         >
           <Plus className="w-4 h-4" /> New Group
         </button>
@@ -137,7 +137,7 @@ export default function Groups() {
           onClick={() => setActiveTab('active')}
           className={`px-4 py-2 text-xs font-bold transition-all border-b-2 ${
             activeTab === 'active' 
-              ? 'border-[#1F6E5C] text-[#1F6E5C] dark:text-[#2B9B82] dark:border-[#2B9B82] font-black' 
+              ? 'border-primary text-primary font-black' 
               : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400'
           }`}
         >
@@ -147,7 +147,7 @@ export default function Groups() {
           onClick={() => setActiveTab('settled')}
           className={`px-4 py-2 text-xs font-bold transition-all border-b-2 ${
             activeTab === 'settled' 
-              ? 'border-[#1F6E5C] text-[#1F6E5C] dark:text-[#2B9B82] dark:border-[#2B9B82] font-black' 
+              ? 'border-primary text-primary font-black' 
               : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400'
           }`}
         >
@@ -158,7 +158,7 @@ export default function Groups() {
       {/* Groups List */}
       {filteredGroups.length === 0 ? (
         <div className="bg-white dark:bg-slate-900 border border-[#E6E4DF] dark:border-[#2D2A26] rounded-3xl p-8 text-center flex flex-col items-center justify-center">
-          <div className="w-12 h-12 bg-emerald-50 dark:bg-emerald-950/20 rounded-2xl flex items-center justify-center text-[#1F6E5C] dark:text-[#2B9B82] mb-4 shadow-sm">
+          <div className="w-12 h-12 bg-blue-50 dark:bg-blue-950/20 rounded-2xl flex items-center justify-center text-primary mb-4 shadow-sm">
             <Users className="w-6 h-6" />
           </div>
           <h3 className="font-bold text-slate-800 dark:text-white mb-1.5">
@@ -184,14 +184,14 @@ export default function Groups() {
             <Link 
               key={grp.id}
               href={`/groups/${grp.id}`}
-              className="group flex items-center justify-between p-4 bg-white dark:bg-slate-900 border border-[#E6E4DF] dark:border-[#2D2A26] rounded-3xl transition-all hover:border-[#1F6E5C]"
+              className="group flex items-center justify-between p-4 bg-white dark:bg-slate-900 border border-[#E6E4DF] dark:border-[#2D2A26] rounded-3xl transition-all hover:border-primary"
             >
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-emerald-50 dark:bg-emerald-950/20 rounded-2xl flex items-center justify-center text-[#1F6E5C] dark:text-[#2B9B82] transition-colors group-hover:bg-[#1F6E5C] group-hover:text-white">
+                <div className="w-10 h-10 bg-blue-50 dark:bg-blue-950/20 rounded-2xl flex items-center justify-center text-primary transition-colors group-hover:bg-primary group-hover:text-white">
                   <Users className="w-5 h-5" />
                 </div>
                 <div className="text-left">
-                  <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm group-hover:text-[#1F6E5C] dark:group-hover:text-[#2B9B82] transition-colors">
+                  <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm group-hover:text-primary transition-colors">
                     {grp.name}
                   </h3>
                   <span className="text-[10px] text-slate-400 flex items-center gap-1 mt-0.5">
@@ -223,7 +223,7 @@ export default function Groups() {
               onChange={(e) => setNewGroupName(e.target.value)}
               required
               disabled={modalLoading}
-              className="block w-full bg-slate-50 dark:bg-slate-900 border border-slate-250 dark:border-slate-800 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-[#1F6E5C] text-slate-800 dark:text-slate-100"
+              className="block w-full bg-slate-50 dark:bg-slate-900 border border-slate-250 dark:border-slate-800 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary text-slate-800 dark:text-slate-100"
             />
           </div>
 
@@ -240,7 +240,7 @@ export default function Groups() {
               value={membersInput}
               onChange={(e) => setMembersInput(e.target.value)}
               disabled={modalLoading}
-              className="block w-full bg-slate-50 dark:bg-slate-900 border border-slate-250 dark:border-slate-800 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#1F6E5C] text-slate-800 dark:text-slate-100 resize-none"
+              className="block w-full bg-slate-50 dark:bg-slate-900 border border-slate-250 dark:border-slate-800 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary text-slate-800 dark:text-slate-100 resize-none"
             />
           </div>
 
@@ -256,7 +256,7 @@ export default function Groups() {
             <button 
               type="submit"
               disabled={modalLoading}
-              className="bg-[#1F6E5C] hover:bg-[#2B9B82] text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-sm flex items-center gap-1 active:scale-95"
+              className="bg-primary hover:bg-primary-light text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-sm flex items-center gap-1 active:scale-95"
             >
               {modalLoading ? 'Creating...' : 'Create Group'}
             </button>

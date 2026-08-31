@@ -269,7 +269,7 @@ export function Header() {
                           }`}
                           onClick={() => !isInvite && handleMarkSingleRead(notif.id)}
                         >
-                          <div className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${isInvite ? 'bg-[#1F6E5C]' : 'bg-slate-400'} opacity-80`} />
+                          <div className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${isInvite ? 'bg-primary' : 'bg-slate-400'} opacity-80`} />
                           <div className="flex-1 text-left">
                             <p className="text-slate-800 dark:text-slate-200 leading-relaxed font-semibold">
                               {notif.message}
@@ -279,7 +279,7 @@ export function Header() {
                               <div className="flex gap-2 mt-2">
                                 <button
                                   onClick={(e) => handleAcceptInvite(notif, e)}
-                                  className="bg-[#1F6E5C] hover:bg-[#2B9B82] text-white px-3 py-1.5 rounded-xl font-bold text-[10px] active:scale-95 transition-all shadow-sm"
+                                  className="bg-primary hover:bg-primary-light text-white px-3 py-1.5 rounded-xl font-bold text-[10px] active:scale-95 transition-all shadow-sm"
                                 >
                                   Accept
                                 </button>

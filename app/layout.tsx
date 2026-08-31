@@ -31,7 +31,7 @@ export default function RootLayout({
       <body className={`${inter.className} bg-background min-h-full flex flex-col text-foreground`}>
         <ToastProvider>
           {/* Main mobile shell wrapper */}
-          <div className="flex-1 w-full max-w-md mx-auto bg-background min-h-screen flex flex-col relative pb-24 border-x border-border-custom">
+          <div className="flex-1 w-full max-w-5xl mx-auto bg-background min-h-screen flex flex-col relative pb-24 border-x border-border-custom">
             <Header />
             <main className="flex-1 overflow-y-auto px-4 pt-4">
               {children}

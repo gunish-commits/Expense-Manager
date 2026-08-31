@@ -173,9 +173,9 @@ export function GlobalAddExpenseModal() {
                 router.push('/personal?action=add-expense');
                 setView('closed');
               }}
-              className="flex items-center gap-4 p-4 border border-[#E6E4DF] dark:border-[#2D2A26] rounded-2xl hover:border-[#1F6E5C] transition-all bg-white dark:bg-slate-900 text-left"
+              className="flex items-center gap-4 p-4 border border-[#E6E4DF] dark:border-[#2D2A26] rounded-2xl hover:border-primary transition-all bg-white dark:bg-slate-900 text-left"
             >
-              <div className="w-10 h-10 rounded-xl bg-teal-50 dark:bg-teal-950/20 flex items-center justify-center text-[#1F6E5C] dark:text-[#2B9B82]">
+              <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-955/20 flex items-center justify-center text-primary">
                 <User className="w-5 h-5" />
               </div>
               <div>
@@ -187,9 +187,9 @@ export function GlobalAddExpenseModal() {
             {/* Option B: Group */}
             <button
               onClick={() => setView('group-form')}
-              className="flex items-center gap-4 p-4 border border-[#E6E4DF] dark:border-[#2D2A26] rounded-2xl hover:border-[#1F6E5C] transition-all bg-white dark:bg-slate-900 text-left"
+              className="flex items-center gap-4 p-4 border border-[#E6E4DF] dark:border-[#2D2A26] rounded-2xl hover:border-primary transition-all bg-white dark:bg-slate-900 text-left"
             >
-              <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/20 flex items-center justify-center text-[#1F6E5C] dark:text-[#2B9B82]">
+              <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-955/20 flex items-center justify-center text-primary">
                 <Users className="w-5 h-5" />
               </div>
               <div>
@@ -214,7 +214,7 @@ export function GlobalAddExpenseModal() {
               router.push('/groups?action=create-group');
               setView('closed');
             }}
-            className="inline-flex items-center gap-1.5 bg-[#1F6E5C] hover:bg-[#2B9B82] text-white px-4 py-2 rounded-xl text-xs font-bold transition-all active:scale-95 shadow-sm"
+            className="inline-flex items-center gap-1.5 bg-primary hover:bg-primary-light text-white px-4 py-2 rounded-xl text-xs font-bold transition-all active:scale-95 shadow-sm"
           >
             <PlusCircle className="w-4 h-4" /> Create a Group
           </button>
@@ -410,7 +410,7 @@ export function GlobalAddExpenseModal() {
             <button
               type="submit"
               disabled={loading}
-              className="bg-[#1F6E5C] hover:bg-[#2B9B82] text-white px-4 py-2 rounded-xl text-xs font-bold transition-all active:scale-95 shadow-sm"
+              className="bg-primary hover:bg-primary-light text-white px-4 py-2 rounded-xl text-xs font-bold transition-all active:scale-95 shadow-sm"
             >
               {loading ? 'Splitting...' : 'Add Expense'}
             </button>
