@@ -165,7 +165,7 @@ export function GlobalAddExpenseModal() {
     return (
       <Modal isOpen={true} onClose={() => setView('closed')} title="Add Expense">
         <div className="space-y-4 py-2">
-          <p className="text-xs text-slate-550 dark:text-slate-400 text-left">Where would you like to log this expense?</p>
+          <p className="text-[13px] text-text-secondary text-left leading-[1.4]">Where would you like to log this expense?</p>
           <div className="grid grid-cols-1 gap-3">
             {/* Option A: Personal */}
             <button
@@ -173,28 +173,28 @@ export function GlobalAddExpenseModal() {
                 router.push('/personal?action=add-expense');
                 setView('closed');
               }}
-              className="flex items-center gap-4 p-4 border border-slate-200 dark:border-slate-800 rounded-2xl hover:border-blue-500 hover:shadow-md transition-all bg-white dark:bg-slate-900 text-left shadow-xs"
+              className="flex items-center gap-4 p-4 border border-border rounded-xl hover:border-primary transition-all bg-surface text-left shadow-subtle"
             >
-              <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/20 flex items-center justify-center text-primary">
+              <div className="w-10 h-10 rounded-full bg-primary-light flex items-center justify-center text-primary flex-shrink-0">
                 <User className="w-5 h-5" />
               </div>
               <div>
-                <h4 className="text-sm font-bold text-slate-800 dark:text-slate-200">Personal Spending</h4>
-                <p className="text-[10px] text-slate-400 mt-0.5">Log private expenses tracked only in your ledger</p>
+                <h4 className="text-[15px] font-medium text-text-primary leading-[1.4]">Personal Spending</h4>
+                <p className="text-[13px] text-text-secondary mt-0.5 leading-[1.4]">Log private expenses tracked only in your ledger</p>
               </div>
             </button>
 
             {/* Option B: Group */}
             <button
               onClick={() => setView('group-form')}
-              className="flex items-center gap-4 p-4 border border-slate-200 dark:border-slate-800 rounded-2xl hover:border-blue-500 hover:shadow-md transition-all bg-white dark:bg-slate-900 text-left shadow-xs"
+              className="flex items-center gap-4 p-4 border border-border rounded-xl hover:border-primary transition-all bg-surface text-left shadow-subtle"
             >
-              <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/20 flex items-center justify-center text-primary">
+              <div className="w-10 h-10 rounded-full bg-primary-light flex items-center justify-center text-primary flex-shrink-0">
                 <Users className="w-5 h-5" />
               </div>
               <div>
-                <h4 className="text-sm font-bold text-slate-800 dark:text-slate-200">Group Expense</h4>
-                <p className="text-[10px] text-slate-400 mt-0.5">Split bills and share balances with roommates or friends</p>
+                <h4 className="text-[15px] font-medium text-text-primary leading-[1.4]">Group Expense</h4>
+                <p className="text-[13px] text-text-secondary mt-0.5 leading-[1.4]">Split bills and share balances with roommates or friends</p>
               </div>
             </button>
           </div>
@@ -208,13 +208,13 @@ export function GlobalAddExpenseModal() {
     <Modal isOpen={true} onClose={() => setView('closed')} title="Add Group Expense">
       {activeGroups.length === 0 && !isGroupPageActive ? (
         <div className="space-y-4 py-4 text-center">
-          <p className="text-xs text-rose-500 font-bold">No active groups — create one first</p>
+          <p className="text-[13px] text-danger font-medium">No active groups — create one first</p>
           <button
             onClick={() => {
               router.push('/groups?action=create-group');
               setView('closed');
             }}
-            className="inline-flex items-center gap-1.5 bg-primary hover:bg-primary-light text-white px-4 py-2 rounded-xl text-xs font-bold transition-all active:scale-95 shadow-sm"
+            className="inline-flex items-center gap-1.5 bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-lg text-[15px] font-medium transition-colors active:scale-95 shadow-subtle"
           >
             <PlusCircle className="w-4 h-4" /> Create a Group
           </button>
@@ -225,13 +225,13 @@ export function GlobalAddExpenseModal() {
             {/* Group Selector */}
             {!isGroupPageActive && (
               <div className="text-left">
-                <label className="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5">
+                <label className="block text-[13px] font-normal text-text-secondary mb-1.5">
                   Select Group
                 </label>
                 <select
                   value={selectedGroupId}
                   onChange={(e) => setSelectedGroupId(e.target.value)}
-                  className="block w-full bg-slate-50 dark:bg-slate-900 border border-slate-250 dark:border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-800 dark:text-slate-100 focus:outline-none"
+                  className="block w-full bg-surface border border-border rounded-lg px-3 py-2.5 text-[15px] text-text-primary focus:outline-none focus:border-primary"
                 >
                   <option value="">Select Group...</option>
                   {activeGroups.map(g => (
@@ -243,7 +243,7 @@ export function GlobalAddExpenseModal() {
 
             {/* Amount input */}
             <div className="text-left">
-              <label className="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5">
+              <label className="block text-[13px] font-normal text-text-secondary mb-1.5">
                 Amount (₹)
               </label>
               <input
@@ -254,13 +254,13 @@ export function GlobalAddExpenseModal() {
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 disabled={loading}
-                className="block w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary text-slate-800 dark:text-slate-100"
+                className="block w-full bg-surface border border-border rounded-lg px-3 py-2.5 text-[15px] text-text-primary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
               />
             </div>
 
             {/* Description input */}
             <div className="text-left">
-              <label className="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5">
+              <label className="block text-[13px] font-normal text-text-secondary mb-1.5">
                 Description / Note
               </label>
               <input
@@ -270,32 +270,32 @@ export function GlobalAddExpenseModal() {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 disabled={loading}
-                className="block w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2.5 text-xs focus:outline-none text-slate-800 dark:text-slate-100"
+                className="block w-full bg-surface border border-border rounded-lg px-3 py-2.5 text-[15px] text-text-primary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
               />
             </div>
 
             {/* Category dropdown & Date */}
             <div className="grid grid-cols-2 gap-3 text-left">
               <div>
-                <label className="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5">
+                <label className="block text-[13px] font-normal text-text-secondary mb-1.5">
                   Category
                 </label>
                 <select
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
                   disabled={loading}
-                  className="block w-full bg-slate-50 dark:bg-slate-955 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-xs focus:outline-none text-slate-800 dark:text-slate-100"
+                  className="block w-full bg-surface border border-border rounded-lg px-3 py-2.5 text-[15px] text-text-primary focus:outline-none focus:border-primary"
                 >
-                  <option value="Food">Food 🍔</option>
-                  <option value="Travel">Travel ✈️</option>
-                  <option value="Stay">Stay 🏠</option>
-                  <option value="Shopping">Shopping 🛒</option>
-                  <option value="Other">Other 💸</option>
+                  <option value="Food">Food</option>
+                  <option value="Travel">Travel</option>
+                  <option value="Stay">Stay</option>
+                  <option value="Shopping">Shopping</option>
+                  <option value="Other">Other</option>
                 </select>
               </div>
 
               <div>
-                <label className="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5">
+                <label className="block text-[13px] font-normal text-text-secondary mb-1.5">
                   Date
                 </label>
                 <input
@@ -304,7 +304,7 @@ export function GlobalAddExpenseModal() {
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
                   disabled={loading}
-                  className="block w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-xs focus:outline-none text-slate-800 dark:text-slate-100"
+                  className="block w-full bg-surface border border-border rounded-lg px-3 py-2.5 text-[15px] text-text-primary focus:outline-none focus:border-primary"
                 />
               </div>
             </div>
@@ -312,14 +312,14 @@ export function GlobalAddExpenseModal() {
             {/* Paid by dropdown */}
             {members.length > 0 && (
               <div className="text-left">
-                <label className="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5">
+                <label className="block text-[13px] font-normal text-text-secondary mb-1.5">
                   Paid by
                 </label>
                 <select
                   value={payerId}
                   onChange={(e) => setPayerId(e.target.value)}
                   disabled={loading}
-                  className="block w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-xs focus:outline-none text-slate-800 dark:text-slate-100"
+                  className="block w-full bg-surface border border-border rounded-lg px-3 py-2.5 text-[15px] text-text-primary focus:outline-none focus:border-primary"
                   required
                 >
                   <option value="">Choose Member...</option>
@@ -332,9 +332,9 @@ export function GlobalAddExpenseModal() {
 
             {/* Split among list */}
             {members.length > 0 && (
-              <div className="border-t border-slate-100 dark:border-slate-800 pt-3 text-left">
+              <div className="border-t border-border-subtle pt-3 text-left">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider">Split Among</span>
+                  <span className="text-[13px] font-normal text-text-secondary">Split Among</span>
                   <button
                     type="button"
                     onClick={() => {
@@ -345,12 +345,12 @@ export function GlobalAddExpenseModal() {
                       });
                       setSelectedSplitUsers(nextSelections);
                     }}
-                    className="flex items-center gap-1.5 text-xs text-slate-700 dark:text-slate-350 font-bold focus:outline-none"
+                    className="flex items-center gap-1.5 text-[13px] text-text-primary font-medium focus:outline-none"
                   >
                     {Object.values(selectedSplitUsers).every(v => v) && Object.keys(selectedSplitUsers).length === members.length ? (
                       <CheckSquare className="w-4 h-4 text-primary" />
                     ) : (
-                      <Square className="w-4 h-4 text-slate-400" />
+                      <Square className="w-4 h-4 text-text-secondary" />
                     )}
                     <span>All</span>
                   </button>
@@ -360,21 +360,21 @@ export function GlobalAddExpenseModal() {
                   {members.map(member => {
                     const isSelected = selectedSplitUsers[member.id] || false;
                     return (
-                      <div key={member.id} className="flex items-center justify-between text-xs py-0.5">
+                      <div key={member.id} className="flex items-center justify-between text-[15px] py-0.5">
                         <button
                           type="button"
                           onClick={() => setSelectedSplitUsers(prev => ({ ...prev, [member.id]: !prev[member.id] }))}
-                          className="flex items-center gap-2 hover:opacity-85 text-slate-700 dark:text-slate-350"
+                          className="flex items-center gap-2 hover:opacity-85 text-text-primary"
                         >
                           {isSelected ? (
                             <CheckSquare className="w-4 h-4 text-primary" />
                           ) : (
-                            <Square className="w-4 h-4 text-slate-400" />
+                            <Square className="w-4 h-4 text-text-secondary" />
                           )}
                           <img 
                             src={member.avatar_url || `https://api.dicebear.com/7.x/bottts/svg?seed=${member.name}`}
                             alt={member.name}
-                            className="w-5.5 h-5.5 rounded-full"
+                            className="w-5.5 h-5.5 rounded-full object-cover"
                           />
                           <span>{member.name}</span>
                         </button>
@@ -384,9 +384,9 @@ export function GlobalAddExpenseModal() {
                 </div>
 
                 {/* Live math share calculation display */}
-                <div className="mt-3 p-3 bg-slate-50 dark:bg-slate-900/40 border border-slate-150 dark:border-slate-850 rounded-xl flex items-center justify-between text-[11px]">
-                  <span className="font-semibold text-slate-500">Each:</span>
-                  <span className="font-black text-primary">
+                <div className="mt-3 p-3 bg-primary-light rounded-lg flex items-center justify-between text-[13px]">
+                  <span className="font-normal text-text-secondary">Each:</span>
+                  <span className="font-semibold text-primary">
                     {(() => {
                       const checkedCount = Object.values(selectedSplitUsers).filter(v => v).length;
                       const amt = parseFloat(amount) || 0;
@@ -399,18 +399,18 @@ export function GlobalAddExpenseModal() {
             )}
           </div>
 
-          <div className="flex gap-2 pt-3 justify-end border-t border-slate-200/50 dark:border-slate-800">
+          <div className="flex gap-2 pt-3 justify-end border-t border-border-subtle">
             <button
               type="button"
               onClick={() => setView('action-sheet')}
-              className="px-4 py-2 border border-slate-250 dark:border-slate-800 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-855"
+              className="px-4 py-2 bg-surface border border-border rounded-lg text-[15px] font-medium text-text-secondary hover:bg-background transition-colors"
             >
               Back
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="bg-primary hover:bg-primary-light text-white px-4 py-2 rounded-xl text-xs font-bold transition-all active:scale-95 shadow-sm"
+              className="bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-lg text-[15px] font-medium transition-colors active:scale-95 shadow-subtle"
             >
               {loading ? 'Splitting...' : 'Add Expense'}
             </button>

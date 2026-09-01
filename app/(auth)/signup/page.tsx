@@ -61,28 +61,28 @@ export default function Signup() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-center px-6 py-12 bg-slate-50 dark:bg-slate-950">
+    <div className="min-h-screen flex flex-col justify-center px-6 py-12 bg-background">
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
-        <div className="inline-flex bg-gradient-to-tr from-indigo-500 to-indigo-600 text-white p-3.5 rounded-2xl shadow-xl shadow-indigo-100 dark:shadow-none mb-4">
+        <div className="inline-flex bg-primary-light text-primary p-3.5 rounded-full mb-3">
           <Sparkles className="w-6 h-6" />
         </div>
-        <h2 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white">
+        <h1 className="text-[22px] font-semibold text-text-primary leading-[1.2]">
           Create an Account
-        </h2>
-        <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
+        </h1>
+        <p className="mt-1 text-[13px] text-text-secondary leading-[1.4]">
           Sync your expenses across all devices
         </p>
       </div>
 
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white dark:bg-slate-900 py-8 px-6 shadow-xl rounded-3xl border border-slate-200/50 dark:border-slate-800/50 space-y-6">
+      <div className="mt-6 sm:mx-auto sm:w-full sm:max-w-md">
+        <div className="bg-surface py-8 px-6 shadow-subtle rounded-xl border border-border space-y-6">
           <form onSubmit={handleSignup} className="space-y-4">
             <div>
-              <label className="block text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-1.5">
+              <label className="block text-[13px] font-normal text-text-secondary mb-1.5 text-left">
                 Full Name
               </label>
               <div className="relative">
-                <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
+                <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-text-secondary">
                   <User className="w-4 h-4" />
                 </span>
                 <input
@@ -92,17 +92,17 @@ export default function Signup() {
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   disabled={loading}
-                  className="block w-full pl-10 pr-3 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-slate-800 dark:text-slate-100 transition-all"
+                  className="block w-full pl-10 pr-3 py-2.5 bg-surface border border-border rounded-lg text-[15px] text-text-primary placeholder:text-text-disabled focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-1.5">
+              <label className="block text-[13px] font-normal text-text-secondary mb-1.5 text-left">
                 Email Address
               </label>
               <div className="relative">
-                <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
+                <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-text-secondary">
                   <Mail className="w-4 h-4" />
                 </span>
                 <input
@@ -112,17 +112,17 @@ export default function Signup() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   disabled={loading}
-                  className="block w-full pl-10 pr-3 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-slate-800 dark:text-slate-100 transition-all"
+                  className="block w-full pl-10 pr-3 py-2.5 bg-surface border border-border rounded-lg text-[15px] text-text-primary placeholder:text-text-disabled focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-1.5">
+              <label className="block text-[13px] font-normal text-text-secondary mb-1.5 text-left">
                 Password
               </label>
               <div className="relative">
-                <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
+                <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-text-secondary">
                   <Lock className="w-4 h-4" />
                 </span>
                 <input
@@ -132,7 +132,7 @@ export default function Signup() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   disabled={loading}
-                  className="block w-full pl-10 pr-3 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-slate-800 dark:text-slate-100 transition-all"
+                  className="block w-full pl-10 pr-3 py-2.5 bg-surface border border-border rounded-lg text-[15px] text-text-primary placeholder:text-text-disabled focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
                 />
               </div>
             </div>
@@ -140,17 +140,17 @@ export default function Signup() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-2.5 px-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-bold shadow-md shadow-indigo-100 dark:shadow-none hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50"
+              className="w-full py-2.5 px-4 bg-primary hover:bg-primary-hover text-white rounded-lg text-[15px] font-medium shadow-subtle transition-colors focus:outline-none disabled:opacity-50 active:scale-95"
             >
               {loading ? 'Creating Account...' : 'Create Account'}
             </button>
           </form>
 
-          <div className="text-center text-xs">
-            <span className="text-slate-400">Already have an account? </span>
+          <div className="text-center text-[13px]">
+            <span className="text-text-secondary">Already have an account? </span>
             <Link 
               href="/login" 
-              className="font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 transition-colors"
+              className="font-medium text-primary hover:text-primary-hover transition-colors"
             >
               Sign in instead
             </Link>

@@ -219,41 +219,48 @@ export default function DuesPage() {
     return (
       <div 
         key={rec.id}
-        className={`border rounded-2xl p-4 bg-white dark:bg-slate-900 transition-all ${
+        className={`border rounded-xl p-4 bg-surface transition-all shadow-subtle ${
           rec.settled 
-            ? 'border-slate-200 dark:border-slate-800 opacity-70 shadow-none' 
-            : 'border-slate-200 dark:border-slate-800 hover:border-blue-500 hover:shadow-md transition-all shadow-xs'
+            ? 'border-border opacity-70 shadow-none' 
+            : 'border-border hover:border-primary'
         }`}
       >
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-slate-50 dark:bg-slate-800 rounded-xl flex items-center justify-center text-lg">
+            <div className="w-9 h-9 bg-background rounded-full flex items-center justify-center text-lg flex-shrink-0">
               {isLender ? '📈' : '📉'}
             </div>
             <div className="text-left">
-              <h4 className="font-bold text-slate-800 dark:text-slate-100 text-xs sm:text-sm">
+              <h4 className="font-medium text-text-primary text-[15px] leading-[1.4]">
                 {isLender ? `Lent to ${counterPartyName}` : `Borrowed from ${counterPartyName}`}
               </h4>
-              <p className="text-[10px] text-slate-400 mt-0.5">
-                Reason: <span className="font-semibold text-slate-500">{rec.reason}</span> • {formatDate(rec.date)}
+              <p className="text-[13px] text-text-secondary mt-0.5 leading-[1.4]">
+                Reason: <span className="font-medium text-text-primary">{rec.reason}</span> • {formatDate(rec.date)}
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
             <div className="text-right mr-1">
-              <span className={`font-black text-sm sm:text-base block ${
-                rec.settled 
-                  ? 'text-slate-400' 
-                  : isLender 
-                    ? 'text-emerald-600 dark:text-emerald-400' 
-                    : 'text-rose-600 dark:text-rose-400'
-              }`}>
-                {formatCurrency(rec.amount)}
-              </span>
+              <div className="flex items-center justify-end gap-0.5">
+                {!rec.settled && (isLender ? (
+                  <ArrowUpRight className="w-3.5 h-3.5 text-success stroke-[2.5px]" />
+                ) : (
+                  <ArrowDownLeft className="w-3.5 h-3.5 text-warning stroke-[2.5px]" />
+                ))}
+                <span className={`font-semibold text-[15px] block leading-[1.4] ${
+                  rec.settled 
+                    ? 'text-text-secondary' 
+                    : isLender 
+                      ? 'text-success' 
+                      : 'text-warning'
+                }`}>
+                  {formatCurrency(rec.amount)}
+                </span>
+              </div>
               {rec.settled && (
-                <span className="inline-flex items-center gap-0.5 text-[8px] bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400 px-1.5 py-0.5 rounded font-black uppercase tracking-wider mt-0.5">
-                  <Check className="w-2.5 h-2.5 text-emerald-600 dark:text-emerald-400" /> Settled
+                <span className="inline-flex items-center gap-0.5 text-[11px] bg-success-light text-success px-2 py-0.5 rounded-full font-medium uppercase tracking-wider mt-0.5">
+                  <Check className="w-2.5 h-2.5 text-success" /> Settled
                 </span>
               )}
             </div>
@@ -261,10 +268,10 @@ export default function DuesPage() {
             {/* Settle Action Button */}
             <button 
               onClick={() => handleToggleSettle(rec)}
-              className={`text-[10px] font-bold px-2.5 py-1.5 rounded-xl transition-colors ${
+              className={`text-[13px] font-medium px-3 py-1.5 rounded-lg transition-colors ${
                 rec.settled 
-                  ? 'bg-slate-50 text-slate-450 border border-slate-200/50 hover:bg-slate-100 dark:bg-slate-950 dark:border-slate-800' 
-                  : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-650 dark:text-emerald-400 dark:bg-emerald-950/20 dark:hover:bg-emerald-900/40'
+                  ? 'bg-background text-text-secondary border border-border hover:bg-surface' 
+                  : 'bg-primary-light hover:opacity-80 text-primary'
               }`}
             >
               {rec.settled ? 'Unsettle' : 'Settle'}
@@ -277,7 +284,7 @@ export default function DuesPage() {
                   e.stopPropagation();
                   setActiveMenuId(activeMenuId === rec.id ? null : rec.id);
                 }}
-                className="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+                className="p-1.5 text-text-secondary hover:text-text-primary rounded-lg hover:bg-background transition-colors"
                 title="Actions"
               >
                 <MoreVertical className="w-4 h-4" />
@@ -286,10 +293,10 @@ export default function DuesPage() {
               {activeMenuId === rec.id && (
                 <>
                   <div className="fixed inset-0 z-30" onClick={() => setActiveMenuId(null)} />
-                  <div className="absolute right-0 mt-1 w-24 bg-white dark:bg-slate-950 rounded-xl shadow-lg border border-slate-200/60 dark:border-slate-800/60 py-1.5 z-40 text-left">
+                  <div className="absolute right-0 mt-1 w-28 bg-surface rounded-xl shadow-subtle border border-border py-1.5 z-40 text-left">
                     <button
                       onClick={() => handleStartEdit(rec)}
-                      className="w-full text-left px-3 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors"
+                      className="w-full text-left px-3 py-1.5 text-[13px] font-medium text-text-primary hover:bg-background transition-colors"
                     >
                       Edit
                     </button>
@@ -298,7 +305,7 @@ export default function DuesPage() {
                         setDeletingId(rec.id);
                         setActiveMenuId(null);
                       }}
-                      className="w-full text-left px-3 py-1.5 text-xs font-semibold text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/20 transition-colors"
+                      className="w-full text-left px-3 py-1.5 text-[13px] font-medium text-danger hover:bg-danger-light transition-colors"
                     >
                       Delete
                     </button>
@@ -317,8 +324,8 @@ export default function DuesPage() {
       <div className="space-y-6 pb-6 text-left">
         <Skeleton className="h-8 w-1/3 rounded-lg" />
         <div className="grid grid-cols-2 gap-4">
-          <Skeleton className="h-24 rounded-3xl" />
-          <Skeleton className="h-24 rounded-3xl" />
+          <Skeleton className="h-24 rounded-xl" />
+          <Skeleton className="h-24 rounded-xl" />
         </div>
         <SkeletonList count={3} />
       </div>
@@ -326,16 +333,16 @@ export default function DuesPage() {
   }
 
   return (
-    <div className="space-y-6 pb-6 text-slate-900 dark:text-slate-100">
+    <div className="space-y-6 pb-6 text-text-primary">
       {/* Top Header */}
       <div className="flex items-center justify-between text-left">
         <div>
-          <span className="text-[10px] uppercase font-black tracking-widest text-primary">
-            Dues Ledger
-          </span>
-          <h1 className="text-2xl font-black tracking-tight text-slate-900 dark:text-white">
+          <h1 className="text-[22px] font-semibold text-text-primary leading-[1.2]">
             Dues
           </h1>
+          <p className="text-[13px] font-normal text-text-secondary leading-[1.4] mt-0.5">
+            Personal peer-to-peer debts
+          </p>
         </div>
 
         <button 
@@ -346,46 +353,48 @@ export default function DuesPage() {
             setCustomContactName('');
             setIsModalOpen(true);
           }}
-          className="bg-primary hover:bg-primary-light text-white px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm active:scale-95"
+          className="bg-primary hover:bg-primary-hover text-white px-3.5 py-2 rounded-lg text-[15px] font-medium transition-colors flex items-center gap-1.5 shadow-subtle active:scale-95"
         >
           <Plus className="w-4 h-4" /> Add Payment
         </button>
       </div>
 
       {/* Stats summaries */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4">
         {/* Someone owes me (Lent) */}
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl text-left shadow-xs">
-          <div className="w-9 h-9 bg-emerald-50 dark:bg-emerald-950/20 rounded-xl flex items-center justify-center mb-3">
-            <ArrowUpRight className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+        <div className="bg-surface border border-border p-4 rounded-xl text-left shadow-subtle">
+          <div className="w-9 h-9 bg-success-light text-success rounded-full flex items-center justify-center mb-2">
+            <ArrowUpRight className="w-5 h-5 text-success stroke-[2.5px]" />
           </div>
-          <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">Owed to You</span>
-          <span className="text-base sm:text-lg font-black text-emerald-600 dark:text-emerald-400 mt-1 block">
+          <span className="text-[13px] font-normal text-text-secondary block">Owed to You</span>
+          <span className="text-[22px] font-bold text-success mt-1 block leading-[1.2]">
             {formatCurrency(owedToMe)}
           </span>
         </div>
 
         {/* I owe someone (Borrowed) */}
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl text-left shadow-xs">
-          <div className="w-9 h-9 bg-rose-50 dark:bg-rose-950/20 rounded-xl flex items-center justify-center mb-3">
-            <ArrowDownLeft className="w-5 h-5 text-rose-600 dark:text-rose-400" />
+        <div className="bg-surface border border-border p-4 rounded-xl text-left shadow-subtle">
+          <div className="w-9 h-9 bg-warning-light text-warning rounded-full flex items-center justify-center mb-2">
+            <ArrowDownLeft className="w-5 h-5 text-warning stroke-[2.5px]" />
           </div>
-          <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">You Owe</span>
-          <span className="text-base sm:text-lg font-black text-rose-600 dark:text-rose-400 mt-1 block">
+          <span className="text-[13px] font-normal text-text-secondary block">You Owe</span>
+          <span className="text-[22px] font-bold text-warning mt-1 block leading-[1.2]">
             {formatCurrency(iOwe)}
           </span>
         </div>
       </div>
 
       {/* Active Dues Section */}
-      <div className="space-y-4">
-        <h3 className="font-bold text-xs uppercase tracking-widest text-slate-400 text-left">Active Dues</h3>
+      <div className="space-y-3">
+        <h2 className="text-[17px] font-semibold text-text-primary text-left leading-[1.2]">Active Dues</h2>
         
         {unsettledRecords.length === 0 ? (
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 text-center flex flex-col items-center justify-center shadow-xs">
-            <span className="text-3xl mb-3">🤝</span>
-            <h4 className="font-bold text-slate-800 dark:text-white mb-1">No active dues</h4>
-            <p className="text-xs text-slate-500 dark:text-slate-400 max-w-xs">
+          <div className="bg-surface border border-border rounded-xl p-8 text-center flex flex-col items-center justify-center shadow-subtle">
+            <div className="w-12 h-12 rounded-full flex items-center justify-center text-text-secondary mb-3">
+              <span className="text-3xl">🤝</span>
+            </div>
+            <h4 className="font-semibold text-text-primary text-[17px] mb-1 leading-[1.2]">No active dues</h4>
+            <p className="text-[13px] font-normal text-text-secondary max-w-xs leading-[1.4]">
               Quickly record any simple cash loans you made to a friend without setting up a group workspace.
             </p>
           </div>
@@ -400,10 +409,10 @@ export default function DuesPage() {
           <div className="space-y-2 mt-4 text-left">
             <button
               onClick={() => setShowSettled(!showSettled)}
-              className="w-full flex items-center justify-between font-bold text-xs uppercase tracking-widest text-slate-500 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-3 rounded-2xl focus:outline-none"
+              className="w-full flex items-center justify-between font-semibold text-[15px] text-text-primary bg-surface border border-border p-3.5 rounded-xl shadow-subtle focus:outline-none"
             >
               <span>Settled Dues ({settledRecords.length})</span>
-              <span>{showSettled ? 'Hide ▲' : 'Show ▼'}</span>
+              <span className="text-[13px] font-normal text-text-secondary">{showSettled ? 'Hide ▲' : 'Show ▼'}</span>
             </button>
 
             {showSettled && (
@@ -424,17 +433,17 @@ export default function DuesPage() {
         <form onSubmit={handleCreateRecord} className="space-y-4">
           {/* Direction toggle */}
           <div>
-            <label className="block text-[9px] font-black text-slate-500 uppercase tracking-wider mb-1.5 text-left">
+            <label className="block text-[13px] font-normal text-text-secondary mb-1.5 text-left">
               Direction of Transaction
             </label>
-            <div className="grid grid-cols-2 gap-2 bg-slate-100 dark:bg-slate-950 p-1 rounded-xl">
+            <div className="grid grid-cols-2 gap-2 bg-background p-1 rounded-lg border border-border">
               <button 
                 type="button"
                 onClick={() => setDirection('collect')}
-                className={`py-2 text-xs font-bold rounded-lg transition-all ${
+                className={`py-2 text-[15px] font-medium rounded-md transition-colors ${
                   direction === 'collect' 
-                    ? 'bg-white dark:bg-slate-900 text-emerald-600 shadow-sm' 
-                    : 'text-slate-450 hover:text-slate-655'
+                    ? 'bg-surface text-success shadow-subtle' 
+                    : 'text-text-secondary hover:text-text-primary'
                 }`}
               >
                 I Lent
@@ -442,10 +451,10 @@ export default function DuesPage() {
               <button 
                 type="button"
                 onClick={() => setDirection('pay')}
-                className={`py-2 text-xs font-bold rounded-lg transition-all ${
+                className={`py-2 text-[15px] font-medium rounded-md transition-colors ${
                   direction === 'pay' 
-                    ? 'bg-white dark:bg-slate-900 text-rose-600 dark:text-rose-400 shadow-sm' 
-                    : 'text-slate-450 hover:text-slate-650'
+                    ? 'bg-surface text-warning shadow-subtle' 
+                    : 'text-text-secondary hover:text-text-primary'
                 }`}
               >
                 I Borrowed
@@ -454,7 +463,7 @@ export default function DuesPage() {
           </div>
 
           <div className="text-left">
-            <label className="block text-[9px] font-black text-slate-500 uppercase tracking-wider mb-1">
+            <label className="block text-[13px] font-normal text-text-secondary mb-1.5">
               Person's Name
             </label>
             <input 
@@ -464,13 +473,13 @@ export default function DuesPage() {
               onChange={(e) => setCustomContactName(e.target.value)}
               required
               disabled={modalLoading}
-              className="block w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-xs focus:outline-none text-slate-800 dark:text-slate-100"
+              className="block w-full bg-surface border border-border rounded-lg px-3 py-2.5 text-[15px] text-text-primary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-3 text-left">
             <div>
-              <label className="block text-[9px] font-black text-slate-500 uppercase tracking-wider mb-1">
+              <label className="block text-[13px] font-normal text-text-secondary mb-1.5">
                 Amount (₹)
               </label>
               <input 
@@ -481,12 +490,12 @@ export default function DuesPage() {
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 disabled={modalLoading}
-                className="block w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-xs focus:outline-none text-slate-800 dark:text-slate-100"
+                className="block w-full bg-surface border border-border rounded-lg px-3 py-2.5 text-[15px] text-text-primary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
               />
             </div>
 
             <div>
-              <label className="block text-[9px] font-black text-slate-500 uppercase tracking-wider mb-1">
+              <label className="block text-[13px] font-normal text-text-secondary mb-1.5">
                 Date
               </label>
               <input 
@@ -495,13 +504,13 @@ export default function DuesPage() {
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
                 disabled={modalLoading}
-                className="block w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-xs focus:outline-none text-slate-800 dark:text-slate-100"
+                className="block w-full bg-surface border border-border rounded-lg px-3 py-2.5 text-[15px] text-text-primary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
               />
             </div>
           </div>
 
           <div className="text-left">
-            <label className="block text-[9px] font-black text-slate-500 uppercase tracking-wider mb-1">
+            <label className="block text-[13px] font-normal text-text-secondary mb-1.5">
               Reason / Item detail
             </label>
             <input 
@@ -511,7 +520,7 @@ export default function DuesPage() {
               value={reason}
               onChange={(e) => setReason(e.target.value)}
               disabled={modalLoading}
-              className="block w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2.5 text-xs focus:outline-none text-slate-800 dark:text-slate-100"
+              className="block w-full bg-surface border border-border rounded-lg px-3 py-2.5 text-[15px] text-text-primary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
             />
           </div>
 
@@ -523,14 +532,14 @@ export default function DuesPage() {
                 setIsModalOpen(false);
               }}
               disabled={modalLoading}
-              className="px-4 py-2 border border-slate-250 dark:border-slate-800 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-850 transition-colors"
+              className="px-4 py-2 bg-surface border border-border rounded-lg text-[15px] font-medium text-text-secondary hover:bg-background transition-colors"
             >
               Cancel
             </button>
             <button 
               type="submit"
               disabled={modalLoading}
-              className="bg-primary hover:opacity-90 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-sm"
+              className="bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-lg text-[15px] font-medium transition-colors shadow-subtle"
             >
               {modalLoading ? 'Saving...' : editingId ? 'Save Changes' : 'Add Payment'}
             </button>
@@ -545,19 +554,19 @@ export default function DuesPage() {
         title="Confirm Delete"
       >
         <div className="space-y-4">
-          <p className="text-xs text-slate-500 dark:text-slate-400 text-left">
+          <p className="text-[13px] text-text-secondary text-left leading-[1.4]">
             Are you sure you want to permanently delete this due log? It will be removed from your summaries.
           </p>
           <div className="flex gap-2 justify-end">
             <button 
               onClick={() => setDeletingId(null)}
-              className="px-4 py-2 border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+              className="px-4 py-2 bg-surface border border-border rounded-lg text-[15px] font-medium text-text-secondary hover:bg-background transition-colors"
             >
               Cancel
             </button>
             <button 
               onClick={() => deletingId && handleDelete(deletingId)}
-              className="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition-colors shadow-sm"
+              className="bg-danger hover:opacity-90 text-white px-4 py-2 rounded-lg text-[15px] font-medium transition-colors shadow-subtle active:scale-95"
             >
               Delete Log
             </button>

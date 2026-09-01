@@ -52,30 +52,30 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         {toasts.map(t => (
           <div 
             key={t.id}
-            className={`flex items-start gap-3 p-4 rounded-xl shadow-lg border animate-in slide-in-from-bottom duration-200 backdrop-blur-md bg-white/95 dark:bg-slate-900/95 ${
+            className={`flex items-start gap-3 p-3.5 rounded-xl shadow-subtle border animate-in slide-in-from-bottom duration-200 bg-surface ${
               t.type === 'success' 
-                ? 'border-emerald-500/20 text-emerald-900 dark:text-emerald-300' 
+                ? 'border-success/30' 
                 : t.type === 'error'
-                  ? 'border-rose-500/20 text-rose-900 dark:text-rose-300'
-                  : 'border-blue-500/20 text-blue-900 dark:text-blue-300'
+                  ? 'border-danger/30'
+                  : 'border-primary/30'
             }`}
           >
             {/* Icon */}
             <div className="flex-shrink-0 mt-0.5">
-              {t.type === 'success' && <CheckCircle className="w-5 h-5 text-emerald-500" />}
-              {t.type === 'error' && <AlertCircle className="w-5 h-5 text-rose-500" />}
-              {t.type === 'info' && <Info className="w-5 h-5 text-blue-500" />}
+              {t.type === 'success' && <CheckCircle className="w-4.5 h-4.5 text-success" />}
+              {t.type === 'error' && <AlertCircle className="w-4.5 h-4.5 text-danger" />}
+              {t.type === 'info' && <Info className="w-4.5 h-4.5 text-primary" />}
             </div>
 
             {/* Message */}
-            <p className="text-sm font-medium pr-6 flex-1 text-slate-800 dark:text-slate-100">
+            <p className="text-[13px] font-normal leading-[1.4] pr-4 flex-1 text-text-primary">
               {t.message}
             </p>
 
             {/* Close Button */}
             <button 
               onClick={() => removeToast(t.id)}
-              className="flex-shrink-0 p-0.5 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 transition-colors"
+              className="flex-shrink-0 p-1 rounded-full hover:bg-background text-text-secondary hover:text-text-primary transition-colors"
             >
               <X className="w-4 h-4" />
             </button>

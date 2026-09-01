@@ -33,28 +33,28 @@ export function Modal({ isOpen, onClose, title, children }: ModalProps) {
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
       {/* Backdrop */}
       <div 
-        className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity duration-300"
+        className="fixed inset-0 bg-text-primary/40 backdrop-blur-xs transition-opacity duration-300"
         onClick={onClose}
       />
 
       {/* Modal Container */}
-      <div className="relative w-full sm:max-w-lg bg-white dark:bg-slate-900 rounded-t-2xl sm:rounded-2xl shadow-xl z-10 border border-slate-200 dark:border-slate-800 flex flex-col max-h-[90vh] sm:max-h-[85vh] transition-all transform duration-300">
+      <div className="relative w-full sm:max-w-lg bg-surface rounded-t-xl sm:rounded-xl shadow-subtle z-10 border border-border flex flex-col max-h-[90vh] sm:max-h-[85vh] transition-all transform duration-200">
         
         {/* Header */}
-        <div className="flex items-center justify-between p-5 border-b border-slate-100 dark:border-slate-800">
-          <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
+        <div className="flex items-center justify-between p-4 border-b border-border-subtle">
+          <h3 className="text-[17px] font-semibold text-text-primary leading-[1.2]">
             {title}
           </h3>
           <button 
             onClick={onClose}
-            className="p-1.5 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
+            className="p-1.5 rounded-full hover:bg-background text-text-secondary hover:text-text-primary transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Content */}
-        <div className="p-6 overflow-y-auto flex-1">
+        <div className="p-4 sm:p-6 overflow-y-auto flex-1 text-text-primary">
           {children}
         </div>
       </div>

@@ -7,7 +7,8 @@ import Image from 'next/image';
 import { 
   Plus, Upload, FileText, ArrowLeft, Trash2, Download, 
   Settings, HeartHandshake, UserPlus, Info, CheckSquare, 
-  Square, Calendar, CreditCard, ChevronRight, Eye, MoreVertical, Copy, Check 
+  Square, Calendar, CreditCard, ChevronRight, Eye, MoreVertical, Copy, Check,
+  ArrowUpRight, ArrowDownRight 
 } from 'lucide-react';
 import { isGuestMode, getGuestUser, supabase } from '@/lib/supabase/client';
 import { getGroup, getGroupMembers, addMemberToGroup, updateGroupStatus, createPlaceholderMember } from '@/lib/supabase/groups';
@@ -458,23 +459,23 @@ export default function GroupDetail({ params }: PageProps) {
   const isGroupSettled = group.status === 'settled';
 
   return (
-    <div className="space-y-6 pb-6 text-slate-900 dark:text-slate-100">
+    <div className="space-y-6 pb-6 text-text-primary">
       {/* Group Detail Header */}
       <div className="flex items-center justify-between text-left">
         <div className="flex items-center gap-3">
           <button 
             onClick={() => router.push('/dashboard')}
-            className="p-2 border border-slate-200 dark:border-slate-800 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-500 transition-colors"
+            className="p-2 bg-surface border border-border rounded-lg hover:bg-background text-text-secondary transition-colors shadow-subtle"
           >
             <ArrowLeft className="w-4 h-4" />
           </button>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-xl sm:text-2xl font-black tracking-tight text-slate-900 dark:text-white">
+              <h1 className="text-[22px] font-semibold text-text-primary leading-[1.2]">
                 {group.name}
               </h1>
               {isGroupSettled && (
-                <span className="text-[8px] bg-emerald-50 text-emerald-600 dark:bg-emerald-950/20 dark:text-emerald-400 px-1.5 py-0.5 rounded font-black tracking-wider uppercase">
+                <span className="text-[12px] bg-success-light text-success px-2 py-0.5 rounded-full font-medium uppercase tracking-wider">
                   Settled Up
                 </span>
               )}
@@ -482,12 +483,12 @@ export default function GroupDetail({ params }: PageProps) {
             <div className="flex items-center gap-2 mt-0.5">
               <button 
                 onClick={handleCopyInviteLink}
-                className="inline-flex items-center gap-1 text-[10px] bg-blue-50 dark:bg-blue-950/30 text-primary hover:bg-blue-100 dark:hover:bg-blue-900/40 px-2 py-0.5 rounded-lg font-bold transition-colors cursor-pointer"
+                className="inline-flex items-center gap-1 text-[13px] bg-primary-light text-primary hover:opacity-80 px-2.5 py-0.5 rounded-full font-medium transition-colors cursor-pointer"
                 title="Click to copy invite link"
               >
                 Code: {group.invite_code} <Copy className="w-3 h-3" />
               </button>
-              <span className="text-[10px] text-slate-400 font-semibold">• {members.length} members</span>
+              <span className="text-[13px] text-text-secondary">• {members.length} members</span>
             </div>
           </div>
         </div>
@@ -496,14 +497,14 @@ export default function GroupDetail({ params }: PageProps) {
           {isGroupSettled ? (
             <button 
               onClick={handleCloseGroupToggle}
-              className="px-3 py-2 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-350 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl text-xs font-bold transition-all"
+              className="px-3.5 py-2 bg-surface border border-border text-text-primary hover:bg-background rounded-lg text-[15px] font-medium transition-colors shadow-subtle"
             >
               Reopen Group
             </button>
           ) : (
             <button 
               onClick={openAddExpenseModal}
-              className="bg-primary hover:bg-primary-light text-white px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1 shadow-sm active:scale-95 transition-all"
+              className="bg-primary hover:bg-primary-hover text-white px-3.5 py-2 rounded-lg text-[15px] font-medium flex items-center gap-1 shadow-subtle active:scale-95 transition-colors"
             >
               <Plus className="w-4 h-4" /> Add Expense
             </button>
@@ -512,15 +513,15 @@ export default function GroupDetail({ params }: PageProps) {
       </div>
 
       {/* Tab Selector Headers */}
-      <div className="flex border-b border-slate-200 dark:border-slate-800 py-1 text-left">
+      <div className="flex border-b border-border-subtle text-left">
         {(['expenses', 'settle', 'members'] as const).map(tab => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`px-4 py-2 text-xs font-bold transition-all border-b-2 capitalize flex-shrink-0 ${
+            className={`px-4 py-2.5 text-[15px] transition-colors border-b-2 capitalize flex-shrink-0 ${
               activeTab === tab 
-                ? 'border-primary text-primary font-black scale-105' 
-                : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200'
+                ? 'border-primary text-primary font-medium' 
+                : 'border-transparent text-text-secondary hover:text-text-primary font-normal'
             }`}
           >
             {tab === 'settle' 
@@ -536,15 +537,15 @@ export default function GroupDetail({ params }: PageProps) {
 
       {/* 1. Expenses feed tab */}
       {activeTab === 'expenses' && (
-        <div className="space-y-3.5">
+        <div className="space-y-3">
           {/* Collapsible Date Filter widget */}
-          <div className="flex flex-col gap-1.5 p-3 bg-white dark:bg-slate-900 border border-border-custom rounded-2xl text-left shadow-sm">
+          <div className="flex flex-col gap-2 p-3.5 bg-surface border border-border rounded-xl text-left shadow-subtle">
             <div className="flex items-center justify-between gap-2 flex-wrap">
-              <span className="text-[10px] font-black uppercase text-slate-400">Filter by Date</span>
+              <span className="text-[13px] font-normal text-text-secondary">Filter by Date</span>
               <select
                 value={dateFilter}
                 onChange={(e: any) => setDateFilter(e.target.value)}
-                className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-2 py-1 text-xs text-slate-800 dark:text-slate-100 focus:outline-none"
+                className="bg-surface border border-border rounded-lg px-2.5 py-1 text-[13px] text-text-primary focus:outline-none focus:border-primary"
               >
                 <option value="all">All Dates</option>
                 <option value="7days">Last 7 Days</option>
@@ -559,34 +560,34 @@ export default function GroupDetail({ params }: PageProps) {
                 type="date"
                 value={specificDate}
                 onChange={(e) => setSpecificDate(e.target.value)}
-                className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-2.5 py-1 text-xs text-slate-800 dark:text-slate-100 focus:outline-none mt-1"
+                className="w-full bg-surface border border-border rounded-lg px-2.5 py-1 text-[13px] text-text-primary focus:outline-none focus:border-primary mt-1"
               />
             )}
 
             {dateFilter === 'custom' && (
-              <div className="flex items-center gap-1.5 mt-1">
+              <div className="flex items-center gap-2 mt-1">
                 <input
                   type="date"
                   value={customStart}
                   onChange={(e) => setCustomStart(e.target.value)}
-                  className="flex-1 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-2 py-1 text-xs text-slate-800 dark:text-slate-100 focus:outline-none"
+                  className="flex-1 bg-surface border border-border rounded-lg px-2 py-1 text-[13px] text-text-primary focus:outline-none focus:border-primary"
                 />
-                <span className="text-xs text-slate-400">to</span>
+                <span className="text-[13px] text-text-secondary">to</span>
                 <input
                   type="date"
                   value={customEnd}
                   onChange={(e) => setCustomEnd(e.target.value)}
-                  className="flex-1 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-2 py-1 text-xs text-slate-800 dark:text-slate-100 focus:outline-none"
+                  className="flex-1 bg-surface border border-border rounded-lg px-2 py-1 text-[13px] text-text-primary focus:outline-none focus:border-primary"
                 />
               </div>
             )}
           </div>
 
           {expenses.length === 0 && settlements.length === 0 ? (
-            <div className="bg-white dark:bg-slate-900 border border-border-custom rounded-3xl p-8 text-center flex flex-col items-center justify-center shadow-sm">
-              <span className="text-3xl mb-3">💸</span>
-              <h4 className="font-bold text-slate-850 dark:text-white mb-1">No activity logged</h4>
-              <p className="text-xs text-slate-500 dark:text-slate-400 max-w-xs mb-4">
+            <div className="bg-surface border border-border rounded-xl p-8 text-center flex flex-col items-center justify-center shadow-subtle">
+              <FileText className="w-8 h-8 text-text-secondary mb-3" />
+              <h4 className="font-semibold text-text-primary text-[17px] mb-1 leading-[1.2]">No activity logged</h4>
+              <p className="text-[13px] font-normal text-text-secondary max-w-xs mb-4 leading-[1.4]">
                 Record your first bill or trip receipt using the "+ Add Expense" button.
               </p>
             </div>
@@ -601,7 +602,7 @@ export default function GroupDetail({ params }: PageProps) {
 
               if (filteredTimeline.length === 0) {
                 return (
-                  <div className="bg-white dark:bg-slate-900 border border-border-custom rounded-3xl p-6 text-center text-slate-400 text-xs shadow-sm">
+                  <div className="bg-surface border border-border rounded-xl p-6 text-center text-text-secondary text-[13px] shadow-subtle">
                     No activity matches the selected filters.
                   </div>
                 );
@@ -611,7 +612,7 @@ export default function GroupDetail({ params }: PageProps) {
                 <div className="space-y-4">
                   {Object.entries(groupedTimeline).map(([dateHeader, list]) => (
                     <div key={dateHeader} className="space-y-2">
-                      <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest text-left mt-3">
+                      <h4 className="text-[13px] font-normal text-text-secondary text-left mt-3">
                         {dateHeader}
                       </h4>
                       <div className="space-y-2">
@@ -621,36 +622,42 @@ export default function GroupDetail({ params }: PageProps) {
                             return (
                               <div 
                                 key={item.key}
-                                className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-3 flex items-center justify-between hover:border-blue-500 hover:shadow-md transition-all shadow-xs relative group"
+                                className="bg-surface border border-border rounded-xl p-3.5 flex items-center justify-between hover:border-primary transition-all shadow-subtle relative group"
                               >
                                 <div className="flex items-center gap-3">
-                                  <div className="w-9 h-9 bg-slate-50 dark:bg-slate-800 rounded-xl flex items-center justify-center text-lg">
+                                  <div className="w-9 h-9 bg-background rounded-full flex items-center justify-center text-lg flex-shrink-0">
                                     {getCategoryEmoji(item.category)}
                                   </div>
                                   <div className="text-left">
-                                    <h4 className="font-bold text-slate-800 dark:text-slate-100 text-xs sm:text-sm">
+                                    <h4 className="font-medium text-text-primary text-[15px] leading-[1.4]">
                                       {item.description}
                                     </h4>
-                                    <p className="text-[10px] text-slate-400 mt-0.5">
-                                      Paid by <span className="font-semibold">{isPayer ? 'You' : item.added_by_profile?.name || 'someone'}</span>
+                                    <p className="text-[13px] text-text-secondary mt-0.5 leading-[1.4]">
+                                      Paid by <span className="font-medium text-text-primary">{isPayer ? 'You' : item.added_by_profile?.name || 'someone'}</span>
                                     </p>
                                   </div>
                                 </div>
 
                                 <div className="flex items-center gap-2">
                                   <div className="text-right mr-1">
-                                    <span className="font-extrabold text-slate-900 dark:text-white text-xs sm:text-sm block">
+                                    <span className="font-semibold text-text-primary text-[15px] block leading-[1.4]">
                                       {formatCurrency(item.amount)}
                                     </span>
                                     {isPayer ? (
-                                      <span className="text-[9px] text-emerald-600 dark:text-emerald-400 font-bold block">
-                                        You lent {formatCurrency(Number(item.amount) - (item.splits?.find((s: any) => s.user_id === currentUser?.id)?.share_amount || 0))}
-                                      </span>
+                                      <div className="flex items-center justify-end gap-0.5">
+                                        <ArrowUpRight className="w-3 h-3 text-success stroke-[2.5px]" />
+                                        <span className="text-[13px] text-success font-medium block leading-[1.4]">
+                                          You lent {formatCurrency(Number(item.amount) - (item.splits?.find((s: any) => s.user_id === currentUser?.id)?.share_amount || 0))}
+                                        </span>
+                                      </div>
                                     ) : (
                                       item.splits?.some((s: any) => s.user_id === currentUser?.id) && (
-                                        <span className="text-[9px] text-rose-600 dark:text-rose-400 font-bold block">
-                                          You owe {formatCurrency(item.splits.find((s: any) => s.user_id === currentUser?.id)?.share_amount || 0)}
-                                        </span>
+                                        <div className="flex items-center justify-end gap-0.5">
+                                          <ArrowDownRight className="w-3 h-3 text-warning stroke-[2.5px]" />
+                                          <span className="text-[13px] text-warning font-medium block leading-[1.4]">
+                                            You owe {formatCurrency(item.splits.find((s: any) => s.user_id === currentUser?.id)?.share_amount || 0)}
+                                          </span>
+                                        </div>
                                       )
                                     )}
                                   </div>
@@ -659,21 +666,21 @@ export default function GroupDetail({ params }: PageProps) {
                                     {item.receipt_url && (
                                       <button 
                                         onClick={() => setViewReceiptUrl(item.receipt_url)}
-                                        className="p-1.5 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-400 hover:text-slate-600 transition-colors"
+                                        className="p-1.5 border border-border hover:bg-background rounded-lg text-text-secondary hover:text-text-primary transition-colors"
                                         title="View Receipt"
                                       >
                                         <Eye className="w-4 h-4" />
                                       </button>
                                     )}
 
-                                    {/* Three-dot menu popover - all group members can update or delete */}
+                                    {/* Three-dot menu popover */}
                                     <div className="relative">
                                       <button
                                         onClick={(e) => {
                                           e.stopPropagation();
                                           setActiveMenuId(activeMenuId === item.key ? null : item.key);
                                         }}
-                                        className="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+                                        className="p-1.5 text-text-secondary hover:text-text-primary rounded-lg hover:bg-background transition-colors"
                                         title="Actions"
                                       >
                                         <MoreVertical className="w-4 h-4" />
@@ -682,10 +689,10 @@ export default function GroupDetail({ params }: PageProps) {
                                       {activeMenuId === item.key && (
                                         <>
                                           <div className="fixed inset-0 z-30" onClick={() => setActiveMenuId(null)} />
-                                          <div className="absolute right-0 mt-1 w-24 bg-white dark:bg-slate-950 rounded-xl shadow-lg border border-slate-200/60 dark:border-slate-800/60 py-1.5 z-40 text-left">
+                                          <div className="absolute right-0 mt-1 w-28 bg-surface rounded-xl shadow-subtle border border-border py-1.5 z-40 text-left">
                                             <button
                                               onClick={() => handleStartEditExpense(item)}
-                                              className="w-full text-left px-3 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors"
+                                              className="w-full text-left px-3 py-1.5 text-[13px] font-medium text-text-primary hover:bg-background transition-colors"
                                             >
                                               Edit
                                             </button>
@@ -694,7 +701,7 @@ export default function GroupDetail({ params }: PageProps) {
                                                 setDeletingExpenseId(item.id);
                                                 setActiveMenuId(null);
                                               }}
-                                              className="w-full text-left px-3 py-1.5 text-xs font-semibold text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/20 transition-colors"
+                                              className="w-full text-left px-3 py-1.5 text-[13px] font-medium text-danger hover:bg-danger-light transition-colors"
                                             >
                                               Delete
                                             </button>
@@ -712,27 +719,27 @@ export default function GroupDetail({ params }: PageProps) {
                             return (
                               <div 
                                 key={item.key}
-                                className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-3 flex items-center justify-between opacity-90 shadow-xs"
+                                className="bg-surface border border-border rounded-xl p-3.5 flex items-center justify-between shadow-subtle"
                               >
                                 <div className="flex items-center gap-3">
-                                  <div className="w-9 h-9 bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400 rounded-xl flex items-center justify-center text-lg font-black">
+                                  <div className="w-9 h-9 bg-success-light text-success rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">
                                     ✓
                                   </div>
                                   <div className="text-left">
-                                    <h4 className="font-bold text-slate-700 dark:text-slate-200 text-xs sm:text-sm">
+                                    <h4 className="font-medium text-text-primary text-[15px] leading-[1.4]">
                                       {item.from_profile?.name || 'Someone'} paid {item.to_profile?.name || 'Someone'}
                                     </h4>
-                                    <p className="text-[10px] text-slate-400 mt-0.5">
+                                    <p className="text-[13px] text-text-secondary mt-0.5 leading-[1.4]">
                                       {item.note || 'Settled balance'}
                                     </p>
                                   </div>
                                 </div>
 
                                 <div className="text-right">
-                                  <span className="font-extrabold text-emerald-600 dark:text-emerald-400 text-xs sm:text-sm block">
+                                  <span className="font-semibold text-success text-[15px] block leading-[1.4]">
                                     {formatCurrency(item.amount)}
                                   </span>
-                                  <span className="text-[9px] text-slate-400 block font-bold">
+                                  <span className="text-[13px] text-text-secondary block font-normal">
                                     {isPayer ? 'You paid' : isRecipient ? 'You received' : 'Settlement'}
                                   </span>
                                 </div>
@@ -753,8 +760,6 @@ export default function GroupDetail({ params }: PageProps) {
       {/* 2. Settle Up (Debts) tab */}
       {activeTab === 'settle' && (
         <div className="space-y-4">
-
-
           <SettleUpVisualizer 
             payments={simplifiedTransactions}
             onSettle={handleMarkAsPaid}
@@ -765,17 +770,17 @@ export default function GroupDetail({ params }: PageProps) {
       {/* 3. Members tab */}
       {activeTab === 'members' && (
         <div className="space-y-4 animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-slate-900 border border-border-custom p-4 rounded-3xl text-left flex items-center justify-between shadow-sm">
+          <div className="bg-surface border border-border p-4 rounded-xl text-left flex items-center justify-between shadow-subtle">
             <div>
-              <span className="text-[10px] font-black text-slate-450 uppercase tracking-widest block">Invite Members</span>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                Share this group invite code or copy direct join links to onboard real profiles.
+              <span className="text-[15px] font-semibold text-text-primary block leading-[1.2]">Invite Members</span>
+              <p className="text-[13px] text-text-secondary mt-0.5 leading-[1.4]">
+                Share this group invite code or copy direct join links to onboard members.
               </p>
             </div>
             
             <button 
               onClick={copyInviteDetails}
-              className="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 p-2 rounded-xl text-xs font-bold transition-all"
+              className="bg-surface border border-border text-text-primary hover:bg-background p-2 rounded-lg text-[13px] font-medium transition-colors shadow-subtle flex-shrink-0"
               title="Copy group invite details"
             >
               Copy Info
@@ -785,14 +790,14 @@ export default function GroupDetail({ params }: PageProps) {
           {/* Group Members List */}
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <h3 className="font-bold text-xs uppercase tracking-widest text-slate-400 text-left">Active Members ({members.length})</h3>
+              <h2 className="text-[17px] font-semibold text-text-primary text-left leading-[1.2]">Active Members ({members.length})</h2>
               
               <button
                 onClick={() => {
                   setInviteName('');
                   setIsInviteModalOpen(true);
                 }}
-                className="text-xs font-bold text-primary hover:underline flex items-center gap-1"
+                className="text-[13px] font-medium text-primary hover:text-primary-hover flex items-center gap-1"
               >
                 <Plus className="w-3.5 h-3.5" /> Add Member
               </button>
@@ -804,26 +809,26 @@ export default function GroupDetail({ params }: PageProps) {
                 return (
                   <div 
                     key={member.id}
-                    className="bg-white dark:bg-slate-900 border border-border-custom rounded-2xl p-3 flex items-center justify-between hover:border-slate-300 dark:hover:border-slate-750 transition-colors shadow-sm"
+                    className="bg-surface border border-border rounded-xl p-3.5 flex items-center justify-between hover:border-border transition-colors shadow-subtle"
                   >
                     <div className="flex items-center gap-3">
                       <img 
                         src={member.avatar_url || `https://api.dicebear.com/7.x/bottts/svg?seed=${member.name}`}
                         alt={member.name}
-                        className="w-8.5 h-8.5 rounded-full"
+                        className="w-9 h-9 rounded-full bg-background object-cover"
                       />
                       <div className="text-left">
                         <div className="flex items-center gap-1.5">
-                          <h4 className="font-bold text-slate-800 dark:text-slate-100 text-xs sm:text-sm">
+                          <h4 className="font-medium text-text-primary text-[15px] leading-[1.4]">
                             {member.name}
                           </h4>
                           {member.is_placeholder && (
-                            <span className="text-[7.5px] font-black uppercase bg-slate-100 dark:bg-slate-800 text-slate-500 px-1 rounded tracking-wider">
-                              not on app yet
+                            <span className="text-[11px] font-medium bg-background text-text-secondary px-1.5 py-0.5 rounded-full">
+                              not on app
                             </span>
                           )}
                         </div>
-                        <p className="text-[10px] text-slate-400">
+                        <p className="text-[13px] text-text-secondary">
                           Joined {formatDate(member.created_at)}
                         </p>
                       </div>
@@ -831,15 +836,21 @@ export default function GroupDetail({ params }: PageProps) {
 
                     <div className="text-right">
                       {balance === 0 ? (
-                        <span className="text-xs text-slate-400">Balanced</span>
+                        <span className="text-[13px] text-text-secondary font-normal">Balanced</span>
                       ) : balance > 0 ? (
-                        <span className="font-extrabold text-emerald-600 dark:text-emerald-450 text-xs sm:text-sm">
-                          Owed ₹{balance.toFixed(2)}
-                        </span>
+                        <div className="flex items-center gap-0.5 justify-end">
+                          <ArrowUpRight className="w-3 h-3 text-success stroke-[2.5px]" />
+                          <span className="font-semibold text-success text-[15px] leading-[1.4]">
+                            Owed {formatCurrency(balance)}
+                          </span>
+                        </div>
                       ) : (
-                        <span className="font-extrabold text-rose-600 dark:text-rose-400 text-xs sm:text-sm">
-                          Owes ₹{Math.abs(balance).toFixed(2)}
-                        </span>
+                        <div className="flex items-center gap-0.5 justify-end">
+                          <ArrowDownRight className="w-3 h-3 text-warning stroke-[2.5px]" />
+                          <span className="font-semibold text-warning text-[15px] leading-[1.4]">
+                            Owes {formatCurrency(Math.abs(balance))}
+                          </span>
+                        </div>
                       )}
                     </div>
                   </div>
@@ -852,7 +863,7 @@ export default function GroupDetail({ params }: PageProps) {
 
       {/* MODALS */}
 
-      {/* 1. Redesigned Add/Edit Expense Modal */}
+      {/* 1. Add/Edit Expense Modal */}
       <Modal 
         isOpen={isExpModalOpen} 
         onClose={() => {
@@ -865,7 +876,7 @@ export default function GroupDetail({ params }: PageProps) {
           <div className="space-y-4 overflow-y-auto flex-1 pr-1 pb-4">
           {/* Amount input */}
           <div className="text-left">
-            <label className="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5">
+            <label className="block text-[13px] font-normal text-text-secondary mb-1.5">
               Amount (₹)
             </label>
             <input 
@@ -876,13 +887,13 @@ export default function GroupDetail({ params }: PageProps) {
               value={expAmount}
               onChange={(e) => setExpAmount(e.target.value)}
               disabled={modalLoading}
-              className="block w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary text-slate-800 dark:text-slate-100"
+              className="block w-full bg-surface border border-border rounded-lg px-3 py-2.5 text-[15px] text-text-primary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
             />
           </div>
 
           {/* Description input */}
           <div className="text-left">
-            <label className="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5">
+            <label className="block text-[13px] font-normal text-text-secondary mb-1.5">
               Description / Note
             </label>
             <input 
@@ -892,32 +903,32 @@ export default function GroupDetail({ params }: PageProps) {
               value={expDesc}
               onChange={(e) => setExpDesc(e.target.value)}
               disabled={modalLoading}
-              className="block w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2.5 text-xs focus:outline-none text-slate-800 dark:text-slate-100"
+              className="block w-full bg-surface border border-border rounded-lg px-3 py-2.5 text-[15px] text-text-primary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
             />
           </div>
 
           {/* Category dropdown & Date */}
           <div className="grid grid-cols-2 gap-3 text-left">
             <div>
-              <label className="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5">
+              <label className="block text-[13px] font-normal text-text-secondary mb-1.5">
                 Category
               </label>
               <select 
                 value={expCategory}
                 onChange={(e) => setExpCategory(e.target.value)}
                 disabled={modalLoading}
-                className="block w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-xs focus:outline-none text-slate-800 dark:text-slate-100"
+                className="block w-full bg-surface border border-border rounded-lg px-3 py-2.5 text-[15px] text-text-primary focus:outline-none focus:border-primary"
               >
-                <option value="Food">Food 🍔</option>
-                <option value="Travel">Travel ✈️</option>
-                <option value="Stay">Stay 🏠</option>
-                <option value="Shopping">Shopping 🛒</option>
-                <option value="Other">Other 💸</option>
+                <option value="Food">Food</option>
+                <option value="Travel">Travel</option>
+                <option value="Stay">Stay</option>
+                <option value="Shopping">Shopping</option>
+                <option value="Other">Other</option>
               </select>
             </div>
 
             <div>
-              <label className="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5">
+              <label className="block text-[13px] font-normal text-text-secondary mb-1.5">
                 Date
               </label>
               <input 
@@ -926,21 +937,21 @@ export default function GroupDetail({ params }: PageProps) {
                 value={expDate}
                 onChange={(e) => setExpDate(e.target.value)}
                 disabled={modalLoading}
-                className="block w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-xs focus:outline-none text-slate-800 dark:text-slate-100"
+                className="block w-full bg-surface border border-border rounded-lg px-3 py-2.5 text-[15px] text-text-primary focus:outline-none focus:border-primary"
               />
             </div>
           </div>
 
           {/* Paid by dropdown */}
           <div className="text-left">
-            <label className="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5">
+            <label className="block text-[13px] font-normal text-text-secondary mb-1.5">
               Paid by
             </label>
             <select
               value={payerId}
               onChange={(e) => setPayerId(e.target.value)}
               disabled={modalLoading}
-              className="block w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-xs focus:outline-none text-slate-800 dark:text-slate-100"
+              className="block w-full bg-surface border border-border rounded-lg px-3 py-2.5 text-[15px] text-text-primary focus:outline-none focus:border-primary"
               required
             >
               <option value="">Choose Member...</option>
@@ -951,9 +962,9 @@ export default function GroupDetail({ params }: PageProps) {
           </div>
 
           {/* Split among list */}
-          <div className="border-t border-slate-100 dark:border-slate-800 pt-3 text-left">
+          <div className="border-t border-border-subtle pt-3 text-left">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-wider">Split Among</span>
+              <span className="text-[13px] font-normal text-text-secondary">Split Among</span>
               <button
                 type="button"
                 onClick={() => {
@@ -964,12 +975,12 @@ export default function GroupDetail({ params }: PageProps) {
                   });
                   setSelectedSplitUsers(nextSelections);
                 }}
-                className="flex items-center gap-1.5 text-xs text-slate-700 dark:text-slate-350 font-bold focus:outline-none"
+                className="flex items-center gap-1.5 text-[13px] text-text-primary font-medium focus:outline-none"
               >
                 {Object.values(selectedSplitUsers).every(v => v) && Object.keys(selectedSplitUsers).length === members.length ? (
                   <CheckSquare className="w-4 h-4 text-primary" />
                 ) : (
-                  <Square className="w-4 h-4 text-slate-400" />
+                  <Square className="w-4 h-4 text-text-secondary" />
                 )}
                 <span>All</span>
               </button>
@@ -979,23 +990,23 @@ export default function GroupDetail({ params }: PageProps) {
               {members.map(member => {
                 const isSelected = selectedSplitUsers[member.id] || false;
                 return (
-                  <div key={member.id} className="flex items-center justify-between text-xs py-0.5">
+                  <div key={member.id} className="flex items-center justify-between text-[15px] py-0.5">
                     <button
                       type="button"
                       onClick={() => setSelectedSplitUsers(prev => ({ ...prev, [member.id]: !prev[member.id] }))}
-                      className="flex items-center gap-2 hover:opacity-85 text-slate-700 dark:text-slate-350"
+                      className="flex items-center gap-2 text-text-primary hover:opacity-85"
                     >
                       {isSelected ? (
                         <CheckSquare className="w-4 h-4 text-primary" />
                       ) : (
-                        <Square className="w-4 h-4 text-slate-400" />
+                        <Square className="w-4 h-4 text-text-secondary" />
                       )}
                       <img 
                         src={member.avatar_url || `https://api.dicebear.com/7.x/bottts/svg?seed=${member.name}`}
                         alt={member.name}
-                        className="w-5.5 h-5.5 rounded-full"
+                        className="w-5.5 h-5.5 rounded-full object-cover"
                       />
-                      <span>{member.name}</span>
+                      <span className="text-[15px] text-text-primary">{member.name}</span>
                     </button>
                   </div>
                 );
@@ -1003,9 +1014,9 @@ export default function GroupDetail({ params }: PageProps) {
             </div>
 
             {/* Live math share calculation display */}
-            <div className="mt-3 p-3 bg-slate-50 dark:bg-slate-900/40 border border-slate-150 dark:border-slate-850 rounded-xl flex items-center justify-between text-[11px]">
-              <span className="font-semibold text-slate-500">Each:</span>
-              <span className="font-black text-primary">
+            <div className="mt-3 p-3 bg-primary-light rounded-lg flex items-center justify-between text-[13px]">
+              <span className="font-normal text-text-secondary">Each:</span>
+              <span className="font-semibold text-primary">
                 {(() => {
                   const checkedCount = Object.values(selectedSplitUsers).filter(v => v).length;
                   const amt = parseFloat(expAmount) || 0;
@@ -1018,10 +1029,10 @@ export default function GroupDetail({ params }: PageProps) {
 
           {/* Receipt attachment option */}
           <div className="text-left">
-            <label className="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1">
+            <label className="block text-[13px] font-normal text-text-secondary mb-1">
               Attach Bill Receipt (Optional)
             </label>
-            <label className="flex items-center gap-1.5 justify-center border border-dashed border-slate-350 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 px-3 py-2 rounded-xl text-xs text-slate-500 dark:text-slate-400 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors">
+            <label className="flex items-center gap-1.5 justify-center border border-dashed border-border bg-surface px-3 py-2.5 rounded-lg text-[13px] text-text-secondary cursor-pointer hover:bg-background transition-colors">
               <Upload className="w-3.5 h-3.5" />
               <span className="truncate max-w-[120px]">{receiptFile ? receiptFile.name : 'Upload File'}</span>
               <input 
@@ -1035,7 +1046,7 @@ export default function GroupDetail({ params }: PageProps) {
           </div>
 
           {/* Fixed bottom button panel */}
-          <div className="flex gap-2 pt-3 justify-end border-t border-slate-100 dark:border-slate-800">
+          <div className="flex gap-2 pt-3 justify-end border-t border-border-subtle">
             <button 
               type="button"
               onClick={() => {
@@ -1043,14 +1054,14 @@ export default function GroupDetail({ params }: PageProps) {
                 setIsExpModalOpen(false);
               }}
               disabled={modalLoading}
-              className="px-4 py-2 border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-850"
+              className="px-4 py-2 bg-surface border border-border rounded-lg text-[15px] font-medium text-text-secondary hover:bg-background transition-colors"
             >
               Cancel
             </button>
             <button 
               type="submit"
               disabled={modalLoading}
-              className="bg-primary hover:opacity-90 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-sm"
+              className="bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-lg text-[15px] font-medium transition-colors shadow-subtle"
             >
               {modalLoading ? 'Saving...' : editingExpenseId ? 'Save Changes' : 'Add Expense'}
             </button>
@@ -1066,7 +1077,7 @@ export default function GroupDetail({ params }: PageProps) {
       >
         <form onSubmit={handleAddMember} className="space-y-4">
           <div className="text-left">
-            <label className="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5">
+            <label className="block text-[13px] font-normal text-text-secondary mb-1.5">
               Member Display Name
             </label>
             <input 
@@ -1076,9 +1087,9 @@ export default function GroupDetail({ params }: PageProps) {
               onChange={(e) => setInviteName(e.target.value)}
               required
               disabled={inviteLoading}
-              className="block w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-xs focus:outline-none text-slate-800 dark:text-slate-100"
+              className="block w-full bg-surface border border-border rounded-lg px-3 py-2.5 text-[15px] text-text-primary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
             />
-            <p className="text-[10px] text-slate-450 mt-1.5">
+            <p className="text-[13px] text-text-secondary mt-1.5 leading-[1.4]">
               This creates a placeholder member. You can start splitting expenses with them immediately, and they can link a real account later via the invite link.
             </p>
           </div>
@@ -1088,14 +1099,14 @@ export default function GroupDetail({ params }: PageProps) {
               type="button"
               onClick={() => setIsInviteModalOpen(false)}
               disabled={inviteLoading}
-              className="px-4 py-2 border border-slate-250 dark:border-slate-800 rounded-xl text-xs font-bold text-slate-550"
+              className="px-4 py-2 bg-surface border border-border rounded-lg text-[15px] font-medium text-text-secondary hover:bg-background transition-colors"
             >
               Cancel
             </button>
             <button 
               type="submit"
               disabled={inviteLoading}
-              className="bg-primary hover:opacity-90 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-sm"
+              className="bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-lg text-[15px] font-medium transition-colors shadow-subtle"
             >
               {inviteLoading ? 'Adding...' : 'Add Member'}
             </button>
@@ -1111,12 +1122,12 @@ export default function GroupDetail({ params }: PageProps) {
               href={viewReceiptUrl} 
               target="_blank" 
               rel="noreferrer" 
-              className="bg-primary text-white px-4 py-2 rounded-xl text-xs font-bold hover:opacity-95 transition-colors"
+              className="bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-lg text-[15px] font-medium transition-colors shadow-subtle"
             >
               Open PDF Document in New Tab
             </a>
           ) : (
-            <div className="relative w-full h-[400px] rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800">
+            <div className="relative w-full h-[400px] rounded-xl overflow-hidden border border-border">
               <Image 
                 src={viewReceiptUrl || ''} 
                 alt="Receipt Attachment" 
@@ -1136,19 +1147,19 @@ export default function GroupDetail({ params }: PageProps) {
         title="Confirm Delete"
       >
         <div className="space-y-4">
-          <p className="text-xs text-slate-500 dark:text-slate-400 text-left">
+          <p className="text-[13px] text-text-secondary text-left leading-[1.4]">
             Are you sure you want to permanently delete this expense? This action will restore split balances and cannot be undone.
           </p>
           <div className="flex gap-2 justify-end">
             <button 
               onClick={() => setDeletingExpenseId(null)}
-              className="px-4 py-2 border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-850"
+              className="px-4 py-2 bg-surface border border-border rounded-lg text-[15px] font-medium text-text-secondary hover:bg-background transition-colors"
             >
               Cancel
             </button>
             <button 
               onClick={() => deletingExpenseId && handleExpenseDelete(deletingExpenseId)}
-              className="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all active:scale-95"
+              className="bg-danger hover:opacity-90 text-white px-4 py-2 rounded-lg text-[15px] font-medium transition-colors shadow-subtle active:scale-95"
             >
               Delete Expense
             </button>

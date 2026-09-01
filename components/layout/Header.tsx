@@ -200,13 +200,13 @@ export function Header() {
 
   return (
     <>
-      <header className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 h-16 sticky top-0 z-40 px-4 sm:px-6 flex items-center justify-between shadow-xs">
+      <header className="bg-surface border-b border-border h-16 sticky top-0 z-40 px-4 sm:px-6 flex items-center justify-between shadow-subtle">
         {/* Logo */}
-        <div className="flex items-center gap-2">
-          <div className="bg-primary text-white p-2 rounded-xl shadow-md">
+        <div className="flex items-center gap-2.5">
+          <div className="bg-primary text-white p-2 rounded-lg shadow-subtle flex items-center justify-center">
             <Wallet className="w-5 h-5 text-white" />
           </div>
-          <span className="font-black text-base sm:text-lg tracking-tight text-primary">
+          <span className="font-semibold text-[17px] tracking-tight text-text-primary">
             Expense Manager
           </span>
         </div>
@@ -220,11 +220,11 @@ export function Header() {
                 setShowNotifPopover(!showNotifPopover);
                 setShowProfileMenu(false);
               }}
-              className="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 transition-colors relative"
+              className="p-2 rounded-lg hover:bg-background text-text-secondary transition-colors relative"
             >
               <Bell className="w-5 h-5" />
               {unreadCount > 0 && (
-                <span className="absolute top-2 right-2 bg-rose-500 text-white font-bold text-[9px] w-4.5 h-4.5 rounded-full flex items-center justify-center border-2 border-white dark:border-slate-900">
+                <span className="absolute top-1.5 right-1.5 bg-danger text-white font-medium text-[10px] w-4 h-4 rounded-full flex items-center justify-center border-2 border-surface">
                   {unreadCount}
                 </span>
               )}
@@ -232,22 +232,22 @@ export function Header() {
 
             {/* Notification Popover */}
             {showNotifPopover && (
-              <div className="absolute right-0 mt-2.5 w-80 sm:w-96 bg-white dark:bg-slate-950 rounded-2xl shadow-xl border border-slate-200/60 dark:border-slate-800/60 z-50 flex flex-col max-h-[480px]">
-                <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                  <h4 className="font-bold text-slate-900 dark:text-white text-sm">Activity</h4>
+              <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-surface rounded-xl shadow-subtle border border-border z-50 flex flex-col max-h-[480px]">
+                <div className="p-4 border-b border-border-subtle flex items-center justify-between">
+                  <h4 className="font-semibold text-text-primary text-[15px]">Activity</h4>
                   {unreadCount > 0 && (
                     <button 
                       onClick={handleMarkAllRead}
-                      className="text-xs font-semibold text-indigo-600 hover:text-indigo-700 dark:text-indigo-400"
+                      className="text-[13px] font-medium text-primary hover:text-primary-hover"
                     >
                       Mark all read
                     </button>
                   )}
                 </div>
 
-                <div className="overflow-y-auto divide-y divide-slate-100 dark:divide-slate-900 flex-1">
+                <div className="overflow-y-auto divide-y divide-border-subtle flex-1">
                   {notifications.length === 0 ? (
-                    <div className="p-8 text-center text-slate-400 text-xs">
+                    <div className="p-8 text-center text-text-secondary text-[13px]">
                       No activity yet
                     </div>
                   ) : (
@@ -256,14 +256,14 @@ export function Header() {
                       return (
                         <div 
                           key={notif.id} 
-                          className={`p-3.5 text-xs flex gap-3 items-start transition-colors ${
-                            notif.read ? 'opacity-70' : 'bg-emerald-50/10 dark:bg-emerald-950/5'
+                          className={`p-3.5 text-[13px] flex gap-3 items-start transition-colors ${
+                            notif.read ? 'opacity-70' : 'bg-primary-light/30'
                           }`}
                           onClick={() => !isInvite && handleMarkSingleRead(notif.id)}
                         >
-                          <div className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${isInvite ? 'bg-primary' : 'bg-slate-400'} opacity-80`} />
+                          <div className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${isInvite ? 'bg-primary' : 'bg-text-disabled'}`} />
                           <div className="flex-1 text-left">
-                            <p className="text-slate-800 dark:text-slate-200 leading-relaxed font-semibold">
+                            <p className="text-text-primary leading-[1.4] font-normal">
                               {notif.message}
                             </p>
                             
@@ -271,20 +271,20 @@ export function Header() {
                               <div className="flex gap-2 mt-2">
                                 <button
                                   onClick={(e) => handleAcceptInvite(notif, e)}
-                                  className="bg-primary hover:bg-primary-light text-white px-3 py-1.5 rounded-xl font-bold text-[10px] active:scale-95 transition-all shadow-sm"
+                                  className="bg-primary hover:bg-primary-hover text-white px-3 py-1.5 rounded-lg font-medium text-[13px] active:scale-95 transition-colors shadow-subtle"
                                 >
                                   Accept
                                 </button>
                                 <button
                                   onClick={(e) => handleDeclineInvite(notif, e)}
-                                  className="bg-slate-100 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-800 text-slate-500 px-3 py-1.5 rounded-xl font-bold text-[10px] active:scale-95 transition-all"
+                                  className="bg-surface border border-border hover:bg-background text-text-secondary px-3 py-1.5 rounded-lg font-medium text-[13px] active:scale-95 transition-colors"
                                 >
                                   Decline
                                 </button>
                               </div>
                             )}
                             
-                            <span className="text-[10px] text-slate-400 mt-1.5 block">
+                            <span className="text-[13px] text-text-secondary mt-1.5 block">
                               {new Date(notif.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
                             </span>
                           </div>
@@ -304,31 +304,31 @@ export function Header() {
                 setShowProfileMenu(!showProfileMenu);
                 setShowNotifPopover(false);
               }}
-              className="w-10 h-10 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none transition-all hover:scale-105 flex items-center justify-center border border-slate-200 dark:border-slate-800"
+              className="w-9 h-9 rounded-full hover:opacity-90 focus:outline-none transition-all flex items-center justify-center border border-border overflow-hidden"
             >
               <Image 
                 src={userAvatar || 'https://api.dicebear.com/7.x/bottts/svg?seed=User'} 
                 alt={userName}
-                width={28}
-                height={28}
+                width={36}
+                height={36}
                 unoptimized={userAvatar?.startsWith('data:')}
-                className="w-7 h-7 rounded-full bg-slate-50 dark:bg-slate-800 object-cover"
+                className="w-full h-full rounded-full bg-background object-cover"
               />
             </button>
 
             {/* Profile Dropdown popover */}
             {showProfileMenu && (
-              <div className="absolute right-0 mt-2.5 w-56 bg-white dark:bg-slate-950 rounded-2xl shadow-xl border border-slate-200/60 dark:border-slate-800/60 z-50 py-2">
-                <div className="px-4 py-2 border-b border-slate-100 dark:border-slate-800 mb-1">
-                  <p className="text-xs text-slate-400">Signed in as</p>
-                  <p className="font-bold text-slate-800 dark:text-white text-sm truncate">{userName}</p>
+              <div className="absolute right-0 mt-2 w-56 bg-surface rounded-xl shadow-subtle border border-border z-50 py-2">
+                <div className="px-4 py-2 border-b border-border-subtle mb-1 text-left">
+                  <p className="text-[13px] text-text-secondary">Signed in as</p>
+                  <p className="font-semibold text-text-primary text-[15px] truncate">{userName}</p>
                 </div>
 
                 <button 
                   onClick={handleLogout}
-                  className="w-full text-left px-4 py-2 text-xs font-semibold text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/20 flex items-center gap-2 transition-colors"
+                  className="w-full text-left px-4 py-2 text-[13px] font-medium text-danger hover:bg-danger-light flex items-center gap-2 transition-colors"
                 >
-                  <LogOut className="w-4 h-4" />
+                  <LogOut className="w-4 h-4 text-danger" />
                   Sign Out
                 </button>
               </div>

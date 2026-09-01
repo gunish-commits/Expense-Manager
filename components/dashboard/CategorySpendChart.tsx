@@ -6,7 +6,7 @@ import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from 'recharts';
 import { TrendingUp } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils/format';
 
-const COLORS = ['#2563EB', '#3B82F6', '#10B981', '#6366F1', '#06B6D4', '#8B5CF6', '#F59E0B'];
+const COLORS = ['#4F46E5', '#16A34A', '#F97316', '#0EA5E9', '#D946EF', '#EAB308'];
 
 interface CategorySpendChartProps {
   chartData: Array<{ name: string; value: number }>;
@@ -15,15 +15,15 @@ interface CategorySpendChartProps {
 export default function CategorySpendChart({ chartData }: CategorySpendChartProps) {
   if (chartData.length === 0) {
     return (
-      <div className="h-48 flex flex-col items-center justify-center text-slate-400 text-xs">
+      <div className="h-48 flex flex-col items-center justify-center text-text-secondary text-[13px]">
         No expenses logged during this period.
       </div>
     );
   }
 
   return (
-    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl">
-      <h3 className="font-bold text-sm text-slate-800 dark:text-slate-200 mb-4 flex items-center gap-1.5">
+    <div className="bg-surface border border-border p-4 rounded-xl shadow-subtle text-left">
+      <h3 className="font-semibold text-[17px] text-text-primary mb-4 flex items-center gap-1.5 leading-[1.2]">
         <TrendingUp className="w-4 h-4 text-primary" />
         Spending Breakdown
       </h3>
@@ -49,17 +49,17 @@ export default function CategorySpendChart({ chartData }: CategorySpendChartProp
         </div>
 
         {/* Custom legend */}
-        <div className="w-full sm:w-1/2 space-y-1.5 flex flex-col justify-center">
+        <div className="w-full sm:w-1/2 space-y-2 flex flex-col justify-center">
           {chartData.slice(0, 4).map((entry, index) => (
-            <div key={entry.name} className="flex items-center justify-between text-xs text-slate-600 dark:text-slate-400">
-              <div className="flex items-center gap-1.5">
+            <div key={entry.name} className="flex items-center justify-between text-[13px] text-text-secondary">
+              <div className="flex items-center gap-2">
                 <span 
                   className="w-2.5 h-2.5 rounded-full inline-block" 
                   style={{ backgroundColor: COLORS[index % COLORS.length] }}
                 />
-                <span className="font-medium truncate max-w-[80px]">{entry.name}</span>
+                <span className="font-normal truncate max-w-[100px] text-text-primary">{entry.name}</span>
               </div>
-              <span className="font-bold text-slate-800 dark:text-slate-200">{formatCurrency(entry.value)}</span>
+              <span className="font-medium text-text-primary">{formatCurrency(entry.value)}</span>
             </div>
           ))}
         </div>

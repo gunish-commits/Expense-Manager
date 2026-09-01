@@ -89,28 +89,28 @@ export default function JoinGroupPage({ params }: { params: Promise<{ code: stri
   if (!group) return null;
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-center space-y-6 mt-12 text-slate-900 dark:text-slate-100 shadow-xs">
+    <div className="max-w-md mx-auto p-6 bg-surface border border-border rounded-xl text-center space-y-6 mt-12 text-text-primary shadow-subtle">
       <span className="text-4xl">✉️</span>
       <div className="space-y-1">
-        <h2 className="text-xl font-bold">Group Invitation</h2>
-        <p className="text-xs text-slate-400">You have been invited to join</p>
+        <h1 className="text-[22px] font-semibold text-text-primary leading-[1.2]">Group Invitation</h1>
+        <p className="text-[13px] text-text-secondary leading-[1.4]">You have been invited to join</p>
       </div>
 
-      <div className="p-4 bg-blue-50/50 dark:bg-blue-950/20 rounded-2xl border border-dashed border-blue-200 dark:border-blue-800">
-        <h3 className="text-lg font-black text-primary">{group.name}</h3>
-        <p className="text-[10px] text-slate-400 mt-1 font-semibold">Invite Code: {group.invite_code}</p>
+      <div className="p-4 bg-primary-light rounded-xl border border-primary/20">
+        <h2 className="text-[17px] font-semibold text-primary leading-[1.2]">{group.name}</h2>
+        <p className="text-[13px] text-text-secondary mt-1 font-normal">Invite Code: {group.invite_code}</p>
       </div>
 
       <div className="flex flex-col gap-2.5 pt-2">
         <button
           onClick={handleAccept}
-          className="w-full bg-primary hover:bg-primary-light text-white py-3 rounded-xl text-xs font-bold transition-all active:scale-95 shadow-sm"
+          className="w-full bg-primary hover:bg-primary-hover text-white py-2.5 rounded-lg text-[15px] font-medium transition-colors active:scale-95 shadow-subtle"
         >
           Accept & Join Group
         </button>
         <button
           onClick={handleDecline}
-          className="w-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-500 py-3 rounded-xl text-xs font-bold transition-all"
+          className="w-full bg-surface hover:bg-background border border-border text-text-secondary py-2.5 rounded-lg text-[15px] font-medium transition-colors shadow-subtle"
         >
           Decline
         </button>

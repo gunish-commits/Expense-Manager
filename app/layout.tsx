@@ -27,13 +27,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="h-full bg-white">
-      <body className={`${inter.className} bg-white min-h-full flex flex-col text-slate-900`}>
+    <html lang="en" className="h-full bg-background">
+      <body className={`${inter.className} bg-background min-h-full flex flex-col text-text-primary`}>
         <ToastProvider>
           {/* Main shell wrapper */}
-          <div className="flex-1 w-full max-w-5xl mx-auto bg-white min-h-screen flex flex-col relative pb-24 sm:border-x border-slate-200 shadow-xs">
+          <div className="flex-1 w-full max-w-5xl mx-auto bg-background min-h-screen flex flex-col relative pb-24 sm:border-x border-border shadow-subtle">
             <Header />
-            <main className="flex-1 overflow-y-auto px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6">
+            <main className="flex-1 overflow-y-auto px-4 sm:px-6 pt-4 sm:pt-6">
               {children}
             </main>
             <BottomNav />

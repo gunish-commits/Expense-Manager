@@ -31,12 +31,12 @@ export function SettleUpVisualizer({ payments, onSettle }: SettleUpVisualizerPro
 
   if (payments.length === 0) {
     return (
-      <div className="bg-emerald-50/50 dark:bg-emerald-950/10 border border-emerald-200 dark:border-emerald-900/30 rounded-2xl p-6 text-center shadow-xs">
-        <div className="mx-auto w-12 h-12 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center mb-3">
-          <Check className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
+      <div className="bg-success-light border border-success/30 rounded-xl p-6 text-center shadow-subtle">
+        <div className="mx-auto w-10 h-10 rounded-full flex items-center justify-center mb-2 text-success">
+          <Check className="w-6 h-6 text-success" />
         </div>
-        <h4 className="font-bold text-slate-900 dark:text-white mb-1">Group is Settled!</h4>
-        <p className="text-xs text-slate-500 dark:text-slate-400">All member accounts are perfectly balanced.</p>
+        <h4 className="font-semibold text-text-primary text-[17px] mb-1 leading-[1.2]">Group is Settled!</h4>
+        <p className="text-[13px] text-text-secondary leading-[1.4]">All member accounts are perfectly balanced.</p>
       </div>
     );
   }
@@ -50,10 +50,10 @@ export function SettleUpVisualizer({ payments, onSettle }: SettleUpVisualizerPro
         return (
           <div 
             key={paymentKey}
-            className={`border rounded-2xl p-4 transition-all duration-300 ${
+            className={`border rounded-xl p-4 transition-all duration-200 bg-surface shadow-subtle ${
               isSelected 
-                ? 'border-primary bg-slate-50 dark:bg-slate-950' 
-                : 'border-slate-200 dark:border-slate-800 hover:border-blue-500 hover:shadow-md bg-white dark:bg-slate-900 shadow-xs'
+                ? 'border-primary bg-primary-light/20' 
+                : 'border-border hover:border-primary'
             }`}
           >
             {/* visual transaction card */}
@@ -64,18 +64,18 @@ export function SettleUpVisualizer({ payments, onSettle }: SettleUpVisualizerPro
                   <img 
                     src={`https://api.dicebear.com/7.x/bottts/svg?seed=${payment.from_name}`} 
                     alt={payment.from_name}
-                    className="w-8 h-8 rounded-full bg-slate-100 object-cover"
+                    className="w-8 h-8 rounded-full bg-background object-cover"
                   />
                   <div>
-                    <p className="font-bold text-slate-800 dark:text-slate-100 text-xs sm:text-sm truncate max-w-[80px] sm:max-w-none">
+                    <p className="font-medium text-text-primary text-[15px] truncate max-w-[80px] sm:max-w-none leading-[1.4]">
                       {payment.from_name}
                     </p>
-                    <span className="text-[9px] text-rose-600 dark:text-rose-400 font-semibold uppercase tracking-wider">pays</span>
+                    <span className="text-[11px] text-warning font-medium uppercase tracking-wider">pays</span>
                   </div>
                 </div>
 
                 {/* Arrow */}
-                <div className="text-slate-400">
+                <div className="text-text-secondary">
                   <ArrowRight className="w-4 h-4" />
                 </div>
 
@@ -84,13 +84,13 @@ export function SettleUpVisualizer({ payments, onSettle }: SettleUpVisualizerPro
                   <img 
                     src={`https://api.dicebear.com/7.x/bottts/svg?seed=${payment.to_name}`} 
                     alt={payment.to_name}
-                    className="w-8 h-8 rounded-full bg-slate-100 object-cover"
+                    className="w-8 h-8 rounded-full bg-background object-cover"
                   />
                   <div>
-                    <p className="font-bold text-slate-800 dark:text-slate-100 text-xs sm:text-sm truncate max-w-[80px] sm:max-w-none">
+                    <p className="font-medium text-text-primary text-[15px] truncate max-w-[80px] sm:max-w-none leading-[1.4]">
                       {payment.to_name}
                     </p>
-                    <span className="text-[9px] text-emerald-600 dark:text-emerald-400 font-semibold uppercase tracking-wider">receives</span>
+                    <span className="text-[11px] text-success font-medium uppercase tracking-wider">receives</span>
                   </div>
                 </div>
               </div>
@@ -98,14 +98,14 @@ export function SettleUpVisualizer({ payments, onSettle }: SettleUpVisualizerPro
               {/* Amount & Settle trigger */}
               <div className="flex items-center gap-2">
                 <div className="text-right">
-                  <span className="font-extrabold text-slate-900 dark:text-white text-sm sm:text-base block">
+                  <span className="font-semibold text-text-primary text-[15px] block leading-[1.4]">
                     {formatCurrency(payment.amount)}
                   </span>
                 </div>
                 {!isSelected && (
                   <button 
                     onClick={() => setSettlingPaymentId(paymentKey)}
-                    className="bg-primary hover:bg-primary-light text-white px-3 py-1.5 rounded-xl text-[10px] font-bold transition-all active:scale-95 shadow-sm"
+                    className="bg-primary hover:bg-primary-hover text-white px-3 py-1.5 rounded-lg text-[13px] font-medium transition-colors shadow-subtle active:scale-95"
                   >
                     Mark as Paid
                   </button>
@@ -115,9 +115,9 @@ export function SettleUpVisualizer({ payments, onSettle }: SettleUpVisualizerPro
 
             {/* Expanded Confirmation Inputs */}
             {isSelected && (
-              <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800/80 animate-in fade-in duration-200 text-left">
-                <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">
-                  Are you sure you want to log a payment of <strong className="text-primary">{formatCurrency(payment.amount)}</strong> from <strong>{payment.from_name}</strong> to <strong>{payment.to_name}</strong>?
+              <div className="mt-4 pt-4 border-t border-border-subtle animate-in fade-in duration-200 text-left">
+                <p className="text-[13px] text-text-secondary mb-3 leading-[1.4]">
+                  Are you sure you want to log a payment of <strong className="text-primary font-medium">{formatCurrency(payment.amount)}</strong> from <strong>{payment.from_name}</strong> to <strong>{payment.to_name}</strong>?
                 </p>
                 <div className="flex flex-col sm:flex-row gap-2">
                   <input 
@@ -126,20 +126,20 @@ export function SettleUpVisualizer({ payments, onSettle }: SettleUpVisualizerPro
                     value={note}
                     onChange={(e) => setNote(e.target.value)}
                     disabled={loading}
-                    className="flex-1 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-primary text-slate-800 dark:text-slate-100"
+                    className="flex-1 bg-surface border border-border rounded-lg px-3 py-2 text-[13px] text-text-primary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
                   />
-                  <div className="flex gap-1.5 self-end sm:self-auto">
+                  <div className="flex gap-2 self-end sm:self-auto">
                     <button 
                       onClick={() => setSettlingPaymentId(null)}
                       disabled={loading}
-                      className="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+                      className="px-3 py-2 rounded-lg bg-surface border border-border text-[13px] font-medium text-text-secondary hover:bg-background transition-colors"
                     >
                       Cancel
                     </button>
                     <button 
                       onClick={() => handleRecordSettlement(payment)}
                       disabled={loading}
-                      className="bg-primary hover:bg-primary-light text-white px-3.5 py-2 rounded-xl text-xs font-bold transition-all active:scale-95 shadow-sm"
+                      className="bg-primary hover:bg-primary-hover text-white px-3.5 py-2 rounded-lg text-[13px] font-medium transition-colors shadow-subtle active:scale-95"
                     >
                       {loading ? 'Logging...' : 'Confirm Paid'}
                     </button>

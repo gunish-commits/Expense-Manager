@@ -342,16 +342,16 @@ export default function PersonalProfileMe() {
   }
 
   return (
-    <div className="space-y-6 pb-6 text-slate-900 dark:text-slate-100">
+    <div className="space-y-6 pb-6 text-text-primary">
       {/* 1. Header Profile Banner */}
       <div className="flex justify-between items-center text-left">
         <div>
-          <span className="text-[10px] uppercase font-black tracking-widest text-primary">
-            Personal Wallet
-          </span>
-          <h1 className="text-2xl font-black tracking-tight text-slate-900 dark:text-white">
+          <h1 className="text-[22px] font-semibold text-text-primary leading-[1.2]">
             My Expenses
           </h1>
+          <p className="text-[13px] font-normal text-text-secondary leading-[1.4] mt-0.5">
+            Personal budget & bill vault
+          </p>
         </div>
 
         {activeTab === 'expenses' ? (
@@ -359,7 +359,7 @@ export default function PersonalProfileMe() {
             {expenses.length > 0 && (
               <button 
                 onClick={() => setShowResetModal(true)}
-                className="px-3 py-2 border border-slate-200 dark:border-slate-800 text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/20 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-xs active:scale-95"
+                className="px-3 py-2 bg-surface border border-border text-danger hover:bg-danger-light rounded-lg text-[15px] font-medium transition-colors flex items-center gap-1.5 shadow-subtle active:scale-95"
                 title="Reset all personal expenses"
               >
                 <RotateCcw className="w-3.5 h-3.5" /> Reset
@@ -374,7 +374,7 @@ export default function PersonalProfileMe() {
                 setReceiptFile(null);
                 setIsExpModalOpen(true);
               }}
-              className="bg-primary hover:bg-primary-light text-white px-3.5 py-2 rounded-xl text-xs font-bold transition-all active:scale-95 flex items-center gap-1 shadow-sm"
+              className="bg-primary hover:bg-primary-hover text-white px-3.5 py-2 rounded-lg text-[15px] font-medium transition-colors active:scale-95 flex items-center gap-1 shadow-subtle"
             >
               <Plus className="w-4 h-4" /> Add Expense
             </button>
@@ -382,7 +382,7 @@ export default function PersonalProfileMe() {
         ) : (
           <button 
             onClick={() => setIsDocModalOpen(true)}
-            className="bg-primary hover:bg-primary-light text-white px-3.5 py-2 rounded-xl text-xs font-bold transition-all active:scale-95 shadow-sm flex items-center gap-1.5"
+            className="bg-primary hover:bg-primary-hover text-white px-3.5 py-2 rounded-lg text-[15px] font-medium transition-colors active:scale-95 shadow-subtle flex items-center gap-1.5"
           >
             <Upload className="w-4 h-4" /> Upload Standalone Bill
           </button>
@@ -390,46 +390,46 @@ export default function PersonalProfileMe() {
       </div>
 
       {/* 2. Monthly Spend Analytics Summary */}
-      <div className="grid grid-cols-2 gap-4 text-left">
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl shadow-xs">
-          <div className="w-9 h-9 bg-blue-50 dark:bg-blue-950/20 rounded-xl flex items-center justify-center mb-3">
-            <Wallet className="w-5.5 h-5.5 text-primary" />
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 text-left">
+        <div className="bg-surface border border-border p-4 rounded-xl shadow-subtle">
+          <div className="w-9 h-9 bg-primary-light text-primary rounded-full flex items-center justify-center mb-2">
+            <Wallet className="w-5 h-5 text-primary" />
           </div>
-          <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">Month Personal Spent</span>
-          <span className="text-base sm:text-lg font-black text-slate-900 dark:text-slate-100 mt-1 block">
+          <span className="text-[13px] font-normal text-text-secondary block">Month Personal Spent</span>
+          <span className="text-[22px] font-bold text-text-primary mt-1 block leading-[1.2]">
             {formatCurrency(totalSpent)}
           </span>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl shadow-xs">
-          <div className="w-9 h-9 bg-blue-50 dark:bg-blue-950/20 rounded-xl flex items-center justify-center mb-3">
-            <Tag className="w-5.5 h-5.5 text-primary" />
+        <div className="bg-surface border border-border p-4 rounded-xl shadow-subtle">
+          <div className="w-9 h-9 bg-primary-light text-primary rounded-full flex items-center justify-center mb-2">
+            <Tag className="w-5 h-5 text-primary" />
           </div>
-          <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">Total Records</span>
-          <span className="text-base sm:text-lg font-black text-slate-900 dark:text-slate-100 mt-1 block">
+          <span className="text-[13px] font-normal text-text-secondary block">Total Records</span>
+          <span className="text-[22px] font-bold text-text-primary mt-1 block leading-[1.2]">
             {expenses.length} logs
           </span>
         </div>
       </div>
 
       {/* 3. Section Navigation Tabs */}
-      <div className="flex border-b border-slate-200 dark:border-slate-800 py-1 text-left">
+      <div className="flex border-b border-border-subtle text-left">
         <button 
           onClick={() => setActiveTab('expenses')}
-          className={`px-4 py-2 text-xs font-bold transition-all border-b-2 flex items-center gap-1.5 ${
+          className={`px-4 py-2.5 text-[15px] transition-colors border-b-2 flex items-center gap-1.5 ${
             activeTab === 'expenses' 
-              ? 'border-primary text-primary font-black scale-105' 
-              : 'border-transparent text-slate-450 hover:text-slate-700'
+              ? 'border-primary text-primary font-medium' 
+              : 'border-transparent text-text-secondary hover:text-text-primary font-normal'
           }`}
         >
           My Expense Feed
         </button>
         <button 
           onClick={() => setActiveTab('bills')}
-          className={`px-4 py-2 text-xs font-bold transition-all border-b-2 flex items-center gap-1.5 ${
+          className={`px-4 py-2.5 text-[15px] transition-colors border-b-2 flex items-center gap-1.5 ${
             activeTab === 'bills' 
-              ? 'border-primary text-primary font-black scale-105' 
-              : 'border-transparent text-slate-450 hover:text-slate-700'
+              ? 'border-primary text-primary font-medium' 
+              : 'border-transparent text-text-secondary hover:text-text-primary font-normal'
           }`}
         >
           My Documents Vault
@@ -442,12 +442,12 @@ export default function PersonalProfileMe() {
           {/* Collapsible Date & Category filter widgets */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-left">
             {/* Category Filter */}
-            <div className="flex flex-col gap-1.5 p-3 bg-white dark:bg-slate-900 border border-border-custom rounded-2xl">
-              <span className="text-[10px] font-black uppercase text-slate-400">Category Filter</span>
+            <div className="flex flex-col gap-1.5 p-3.5 bg-surface border border-border rounded-xl shadow-subtle">
+              <span className="text-[13px] font-normal text-text-secondary">Category Filter</span>
               <select
                 value={categoryFilter}
                 onChange={(e) => setCategoryFilter(e.target.value)}
-                className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-2 py-1.5 text-xs text-slate-800 dark:text-slate-100 focus:outline-none"
+                className="bg-surface border border-border rounded-lg px-2.5 py-1.5 text-[13px] text-text-primary focus:outline-none focus:border-primary"
               >
                 <option value="All">All Categories</option>
                 <option value="Food">Food</option>
@@ -461,13 +461,13 @@ export default function PersonalProfileMe() {
             </div>
 
             {/* Date Filter */}
-            <div className="flex flex-col gap-1.5 p-3 bg-white dark:bg-slate-900 border border-border-custom rounded-2xl">
+            <div className="flex flex-col gap-1.5 p-3.5 bg-surface border border-border rounded-xl shadow-subtle">
               <div className="flex items-center justify-between gap-2 flex-wrap">
-                <span className="text-[10px] font-black uppercase text-slate-400">Filter by Date</span>
+                <span className="text-[13px] font-normal text-text-secondary">Filter by Date</span>
                 <select
                   value={dateFilter}
                   onChange={(e: any) => setDateFilter(e.target.value)}
-                  className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-2 py-1 text-xs text-slate-800 dark:text-slate-100 focus:outline-none"
+                  className="bg-surface border border-border rounded-lg px-2.5 py-1.5 text-[13px] text-text-primary focus:outline-none focus:border-primary"
                 >
                   <option value="all">All Dates</option>
                   <option value="7days">Last 7 Days</option>
@@ -482,24 +482,24 @@ export default function PersonalProfileMe() {
                   type="date"
                   value={specificDate}
                   onChange={(e) => setSpecificDate(e.target.value)}
-                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-2 py-1 text-xs text-slate-800 dark:text-slate-100 focus:outline-none mt-1"
+                  className="w-full bg-surface border border-border rounded-lg px-2.5 py-1 text-[13px] text-text-primary focus:outline-none focus:border-primary mt-1"
                 />
               )}
 
               {dateFilter === 'custom' && (
-                <div className="flex items-center gap-1.5 mt-1">
+                <div className="flex items-center gap-2 mt-1">
                   <input
                     type="date"
                     value={customStart}
                     onChange={(e) => setCustomStart(e.target.value)}
-                    className="flex-1 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-2 py-1 text-xs text-slate-800 dark:text-slate-100 focus:outline-none"
+                    className="flex-1 bg-surface border border-border rounded-lg px-2 py-1 text-[13px] text-text-primary focus:outline-none focus:border-primary"
                   />
-                  <span className="text-xs text-slate-400">to</span>
+                  <span className="text-[13px] text-text-secondary">to</span>
                   <input
                     type="date"
                     value={customEnd}
                     onChange={(e) => setCustomEnd(e.target.value)}
-                    className="flex-1 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-2 py-1 text-xs text-slate-800 dark:text-slate-100 focus:outline-none"
+                    className="flex-1 bg-surface border border-border rounded-lg px-2 py-1 text-[13px] text-text-primary focus:outline-none focus:border-primary"
                   />
                 </div>
               )}
@@ -508,10 +508,10 @@ export default function PersonalProfileMe() {
 
           <div className="space-y-3">
             {expenses.length === 0 ? (
-              <div className="bg-white dark:bg-slate-900 border border-border-custom rounded-3xl p-8 text-center flex flex-col items-center justify-center">
-                <span className="text-3xl mb-3">💸</span>
-                <h4 className="font-bold text-slate-800 dark:text-white mb-1.5">No expenses logged</h4>
-                <p className="text-xs text-slate-500 dark:text-slate-400 max-w-xs mb-4">
+              <div className="bg-surface border border-border rounded-xl p-8 text-center flex flex-col items-center justify-center shadow-subtle">
+                <FileText className="w-8 h-8 text-text-secondary mb-3" />
+                <h4 className="font-semibold text-text-primary text-[17px] mb-1.5 leading-[1.2]">No expenses logged</h4>
+                <p className="text-[13px] font-normal text-text-secondary max-w-xs mb-4 leading-[1.4]">
                   Log your personal, group-independent expenses here to track your overall monthly budget.
                 </p>
                 <button 
@@ -523,54 +523,54 @@ export default function PersonalProfileMe() {
                     setReceiptFile(null);
                     setIsExpModalOpen(true);
                   }}
-                  className="bg-slate-900 hover:bg-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition-colors"
+                  className="bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-lg text-[15px] font-medium transition-colors shadow-subtle"
                 >
                   Add Expense
                 </button>
               </div>
             ) : Object.keys(groupedExpenses).length === 0 ? (
-              <div className="bg-white dark:bg-slate-900 border border-border-custom rounded-3xl p-8 text-center text-slate-400 text-xs">
+              <div className="bg-surface border border-border rounded-xl p-8 text-center text-text-secondary text-[13px] shadow-subtle">
                 No expenses match the selected filters.
               </div>
             ) : (
               <div className="space-y-4">
                 {Object.entries(groupedExpenses).map(([dateHeader, list]) => (
                   <div key={dateHeader} className="space-y-2">
-                    <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest text-left mt-3">
+                    <h4 className="text-[13px] font-normal text-text-secondary text-left mt-3">
                       {dateHeader}
                     </h4>
                     <div className="space-y-2">
                       {list.map(exp => (
                         <div 
                           key={exp.id}
-                          className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-3 flex items-center justify-between hover:border-blue-500 hover:shadow-md transition-all shadow-xs"
+                          className="bg-surface border border-border rounded-xl p-3.5 flex items-center justify-between hover:border-primary transition-all shadow-subtle"
                         >
                           <div className="flex items-center gap-3">
-                            <div className="w-9 h-9 bg-slate-50 dark:bg-slate-800 rounded-xl flex items-center justify-center text-lg">
+                            <div className="w-9 h-9 bg-background rounded-full flex items-center justify-center text-lg flex-shrink-0">
                               {getCategoryEmoji(exp.category)}
                             </div>
                             <div className="text-left">
-                              <h4 className="font-bold text-slate-800 dark:text-slate-100 text-xs sm:text-sm">
+                              <h4 className="font-medium text-text-primary text-[15px] leading-[1.4]">
                                 {exp.note || exp.category}
                               </h4>
-                              <p className="text-[10px] text-slate-400 mt-0.5">
+                              <p className="text-[13px] text-text-secondary mt-0.5 leading-[1.4]">
                                 {exp.category}
                               </p>
                             </div>
                           </div>
 
                           <div className="flex items-center gap-2">
-                            <span className="font-extrabold text-sm text-slate-900 dark:text-slate-100 mr-1">
+                            <span className="font-semibold text-[15px] text-text-primary mr-1 leading-[1.4]">
                               {formatCurrency(exp.amount)}
                             </span>
-                            <div className="flex items-center gap-1.5">
+                            <div className="flex items-center gap-1">
                               {exp.receipt_url && (
                                 <button 
                                   onClick={() => setViewReceiptUrl(exp.receipt_url)}
-                                  className="p-1 text-slate-400 hover:text-blue-600 transition-colors"
+                                  className="p-1.5 border border-border hover:bg-background rounded-lg text-text-secondary hover:text-text-primary transition-colors"
                                   title="View receipt attachment"
                                 >
-                                  <Eye className="w-4.5 h-4.5" />
+                                  <Eye className="w-4 h-4" />
                                 </button>
                               )}
                               
@@ -581,7 +581,7 @@ export default function PersonalProfileMe() {
                                     e.stopPropagation();
                                     setActiveMenuId(activeMenuId === exp.id ? null : exp.id);
                                   }}
-                                  className="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+                                  className="p-1.5 text-text-secondary hover:text-text-primary rounded-lg hover:bg-background transition-colors"
                                   title="Actions"
                                 >
                                   <MoreVertical className="w-4 h-4" />
@@ -590,10 +590,10 @@ export default function PersonalProfileMe() {
                                 {activeMenuId === exp.id && (
                                   <>
                                     <div className="fixed inset-0 z-30" onClick={() => setActiveMenuId(null)} />
-                                    <div className="absolute right-0 mt-1 w-24 bg-white dark:bg-slate-950 rounded-xl shadow-lg border border-slate-200/60 dark:border-slate-800/60 py-1.5 z-40 text-left">
+                                    <div className="absolute right-0 mt-1 w-28 bg-surface rounded-xl shadow-subtle border border-border py-1.5 z-40 text-left">
                                       <button
                                         onClick={() => handleStartEdit(exp)}
-                                        className="w-full text-left px-3 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors"
+                                        className="w-full text-left px-3 py-1.5 text-[13px] font-medium text-text-primary hover:bg-background transition-colors"
                                       >
                                         Edit
                                       </button>
@@ -602,7 +602,7 @@ export default function PersonalProfileMe() {
                                           setDeletingExpId(exp.id);
                                           setActiveMenuId(null);
                                         }}
-                                        className="w-full text-left px-3 py-1.5 text-xs font-semibold text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/20 transition-colors"
+                                        className="w-full text-left px-3 py-1.5 text-[13px] font-medium text-danger hover:bg-danger-light transition-colors"
                                       >
                                         Delete
                                       </button>
@@ -625,15 +625,15 @@ export default function PersonalProfileMe() {
 
       {/* TAB 2: SAVED BILLS */}
       {activeTab === 'bills' && (
-        <div className="space-y-5 animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl text-left flex items-center justify-between shadow-xs">
+        <div className="space-y-4 animate-in fade-in duration-200">
+          <div className="bg-surface border border-border p-4 rounded-xl text-left flex items-center justify-between shadow-subtle">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 bg-blue-50 dark:bg-blue-950/20 rounded-xl flex items-center justify-center">
+              <div className="w-9 h-9 bg-primary-light rounded-full flex items-center justify-center text-primary flex-shrink-0">
                 <HardDrive className="w-5 h-5 text-primary" />
               </div>
               <div>
-                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">Stored Bills Vault</span>
-                <span className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 block truncate max-w-[180px]">
+                <span className="text-[15px] font-semibold text-text-primary block leading-[1.2]">Stored Bills Vault</span>
+                <span className="text-[13px] text-text-secondary mt-0.5 block truncate max-w-[180px] leading-[1.4]">
                   {documents.length} documents archived
                 </span>
               </div>
@@ -641,7 +641,7 @@ export default function PersonalProfileMe() {
             
             <button 
               onClick={() => setIsDocModalOpen(true)}
-              className="bg-primary hover:bg-primary-light text-white px-3.5 py-2 rounded-xl text-xs font-bold transition-all active:scale-95 shadow-sm flex items-center gap-1.5"
+              className="bg-primary hover:bg-primary-hover text-white px-3.5 py-2 rounded-lg text-[15px] font-medium transition-colors active:scale-95 shadow-subtle flex items-center gap-1.5"
             >
               <Upload className="w-4 h-4" /> Upload Receipt
             </button>
@@ -649,38 +649,40 @@ export default function PersonalProfileMe() {
 
           {/* Stored Documents list */}
           <div className="space-y-3">
-            <h3 className="font-bold text-xs uppercase tracking-widest text-slate-400 text-left">Saved Documents</h3>
+            <h2 className="text-[17px] font-semibold text-text-primary text-left leading-[1.2]">Saved Documents</h2>
 
             {documents.length === 0 ? (
-              <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 text-center flex flex-col items-center justify-center shadow-xs">
-                <span className="text-3xl mb-3">📁</span>
-                <h4 className="font-bold text-slate-800 dark:text-white mb-1.5">Your vault is empty</h4>
-                <p className="text-xs text-slate-500 dark:text-slate-400 max-w-xs mb-5">
+              <div className="bg-surface border border-border rounded-xl p-8 text-center flex flex-col items-center justify-center shadow-subtle">
+                <div className="w-12 h-12 rounded-full flex items-center justify-center text-text-secondary mb-3">
+                  <span className="text-3xl">📁</span>
+                </div>
+                <h4 className="font-semibold text-text-primary text-[17px] mb-1.5 leading-[1.2]">Your vault is empty</h4>
+                <p className="text-[13px] font-normal text-text-secondary max-w-xs mb-5 leading-[1.4]">
                   Upload standalone utility contracts, house deposits, or lease scans to keep them handy.
                 </p>
                 <button 
                   onClick={() => setIsDocModalOpen(true)}
-                  className="bg-primary hover:bg-primary-light text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-sm"
+                  className="bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-lg text-[15px] font-medium transition-colors shadow-subtle"
                 >
                   Upload first file
                 </button>
               </div>
             ) : (
-              <div className="grid grid-cols-1 gap-2.5">
+              <div className="grid grid-cols-1 gap-2">
                 {documents.map(doc => (
                   <div 
                     key={doc.name}
-                    className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-3 flex items-center justify-between hover:border-blue-500 hover:shadow-md transition-all shadow-xs"
+                    className="bg-surface border border-border rounded-xl p-3.5 flex items-center justify-between hover:border-primary transition-all shadow-subtle"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 bg-slate-50 dark:bg-slate-850 rounded-xl flex items-center justify-center text-slate-500 dark:text-slate-400">
-                        <FileText className="w-5.5 h-5.5" />
+                      <div className="w-9 h-9 bg-background rounded-full flex items-center justify-center text-text-secondary flex-shrink-0">
+                        <FileText className="w-5 h-5" />
                       </div>
                       <div className="text-left">
-                        <h4 className="font-bold text-slate-800 dark:text-slate-100 text-xs sm:text-sm truncate max-w-[150px] sm:max-w-[200px]" title={doc.name}>
+                        <h4 className="font-medium text-text-primary text-[15px] truncate max-w-[150px] sm:max-w-[200px] leading-[1.4]" title={doc.name}>
                           {doc.name}
                         </h4>
-                        <p className="text-[10px] text-slate-400 mt-0.5">
+                        <p className="text-[13px] text-text-secondary mt-0.5 leading-[1.4]">
                           {formatBytes(doc.size)} • {formatDate(doc.created_at)}
                         </p>
                       </div>
@@ -691,17 +693,17 @@ export default function PersonalProfileMe() {
                         href={doc.url}
                         target="_blank"
                         rel="noreferrer"
-                        className="p-1.5 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-400 hover:text-slate-600 transition-colors"
+                        className="p-1.5 border border-border hover:bg-background rounded-lg text-text-secondary hover:text-text-primary transition-colors"
                         title="Download Document"
                       >
-                        <Download className="w-4.5 h-4.5" />
+                        <Download className="w-4 h-4" />
                       </a>
                       <button 
                         onClick={() => setDeletingDocName(doc.name)}
-                        className="p-1.5 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-400 hover:text-rose-600 transition-colors"
+                        className="p-1.5 border border-border hover:bg-danger-light rounded-lg text-text-secondary hover:text-danger transition-colors"
                         title="Delete Document"
                       >
-                        <Trash2 className="w-4.5 h-4.5" />
+                        <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
                   </div>
@@ -721,10 +723,10 @@ export default function PersonalProfileMe() {
         }} 
         title={editingExpenseId ? 'Edit Expense' : 'Add Expense'}
       >
-        <form onSubmit={handleCreateExpense} className="space-y-4 text-slate-800 dark:text-slate-200">
+        <form onSubmit={handleCreateExpense} className="space-y-4 text-text-primary">
           <div className="text-left">
-            <label className="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5">
-              Amount (INR)
+            <label className="block text-[13px] font-normal text-text-secondary mb-1.5">
+              Amount (₹)
             </label>
             <input 
               type="number" 
@@ -734,31 +736,31 @@ export default function PersonalProfileMe() {
               onChange={(e) => setAmount(e.target.value)}
               required
               disabled={expModalLoading}
-              className="block w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary text-slate-850 dark:text-slate-100"
+              className="block w-full bg-surface border border-border rounded-lg px-3 py-2.5 text-[15px] text-text-primary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-3 text-left">
             <div>
-              <label className="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5">
+              <label className="block text-[13px] font-normal text-text-secondary mb-1.5">
                 Category
               </label>
               <select 
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
                 disabled={expModalLoading}
-                className="block w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-xs focus:outline-none text-slate-800 dark:text-slate-100"
+                className="block w-full bg-surface border border-border rounded-lg px-3 py-2.5 text-[15px] text-text-primary focus:outline-none focus:border-primary"
               >
-                <option value="Food">Food 🍔</option>
-                <option value="Travel">Travel ✈️</option>
-                <option value="Stay">Stay 🏠</option>
-                <option value="Shopping">Shopping 🛒</option>
-                <option value="Other">Other 💸</option>
+                <option value="Food">Food</option>
+                <option value="Travel">Travel</option>
+                <option value="Stay">Stay</option>
+                <option value="Shopping">Shopping</option>
+                <option value="Other">Other</option>
               </select>
             </div>
 
             <div>
-              <label className="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5">
+              <label className="block text-[13px] font-normal text-text-secondary mb-1.5">
                 Date
               </label>
               <input 
@@ -767,13 +769,13 @@ export default function PersonalProfileMe() {
                 onChange={(e) => setDate(e.target.value)}
                 required
                 disabled={expModalLoading}
-                className="block w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-xs focus:outline-none text-slate-800 dark:text-slate-100"
+                className="block w-full bg-surface border border-border rounded-lg px-3 py-2.5 text-[15px] text-text-primary focus:outline-none focus:border-primary"
               />
             </div>
           </div>
 
           <div className="text-left">
-            <label className="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5">
+            <label className="block text-[13px] font-normal text-text-secondary mb-1.5">
               Description / Detail Note
             </label>
             <input 
@@ -782,15 +784,15 @@ export default function PersonalProfileMe() {
               value={note}
               onChange={(e) => setNote(e.target.value)}
               disabled={expModalLoading}
-              className="block w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-850 dark:text-slate-100 focus:outline-none"
+              className="block w-full bg-surface border border-border rounded-lg px-3 py-2.5 text-[15px] text-text-primary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
             />
           </div>
 
           <div className="text-left">
-            <label className="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5">
+            <label className="block text-[13px] font-normal text-text-secondary mb-1.5">
               Receipt Attachment (Optional)
             </label>
-            <label className="flex items-center gap-2 justify-center border-2 border-dashed border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 px-3 py-2 rounded-xl text-xs text-slate-500 dark:text-slate-400 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors">
+            <label className="flex items-center gap-2 justify-center border border-dashed border-border bg-surface px-3 py-2.5 rounded-lg text-[13px] text-text-secondary cursor-pointer hover:bg-background transition-colors">
               <Upload className="w-4 h-4" />
               <span className="truncate max-w-[120px]">{receiptFile ? receiptFile.name : 'Upload file'}</span>
               <input 
@@ -803,7 +805,7 @@ export default function PersonalProfileMe() {
             </label>
           </div>
 
-          <div className="flex gap-2 pt-2 justify-end border-t border-slate-100 dark:border-slate-800">
+          <div className="flex gap-2 pt-2 justify-end border-t border-border-subtle">
             <button 
               type="button"
               onClick={() => {
@@ -811,14 +813,14 @@ export default function PersonalProfileMe() {
                 setIsExpModalOpen(false);
               }}
               disabled={expModalLoading}
-              className="px-4 py-2 border border-slate-250 dark:border-slate-800 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-850"
+              className="px-4 py-2 bg-surface border border-border rounded-lg text-[15px] font-medium text-text-secondary hover:bg-background transition-colors"
             >
               Cancel
             </button>
             <button 
               type="submit"
               disabled={expModalLoading}
-              className="bg-primary hover:opacity-90 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all active:scale-95 shadow-sm"
+              className="bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-lg text-[15px] font-medium transition-colors shadow-subtle"
             >
               {expModalLoading ? 'Saving...' : editingExpenseId ? 'Save Changes' : 'Add Expense'}
             </button>
@@ -832,17 +834,17 @@ export default function PersonalProfileMe() {
         onClose={() => setIsDocModalOpen(false)} 
         title="Upload Stored Bill"
       >
-        <form onSubmit={handleDocUploadSubmit} className="space-y-4 text-slate-800 dark:text-slate-200">
+        <form onSubmit={handleDocUploadSubmit} className="space-y-4 text-text-primary">
           <div className="text-left">
-            <label className="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5">
+            <label className="block text-[13px] font-normal text-text-secondary mb-1.5">
               Select Receipt File
             </label>
-            <label className="flex flex-col items-center gap-2 justify-center border-2 border-dashed border-slate-350 dark:border-slate-800 hover:border-slate-400 bg-slate-50 dark:bg-slate-950 p-6 rounded-2xl cursor-pointer transition-colors text-slate-450 hover:text-slate-655">
-              <Upload className="w-8 h-8" />
-              <span className="text-xs font-bold truncate max-w-[200px]">
+            <label className="flex flex-col items-center gap-2 justify-center border border-dashed border-border bg-surface hover:bg-background p-6 rounded-xl cursor-pointer transition-colors text-text-secondary hover:text-text-primary">
+              <Upload className="w-8 h-8 text-text-secondary" />
+              <span className="text-[13px] font-medium truncate max-w-[200px]">
                 {selectedFile ? selectedFile.name : 'Choose PDF, Image or Doc'}
               </span>
-              <span className="text-[9px] text-slate-400">Max size limit: 5MB</span>
+              <span className="text-[11px] text-text-disabled">Max size limit: 5MB</span>
               <input 
                 type="file" 
                 accept="image/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
@@ -861,7 +863,7 @@ export default function PersonalProfileMe() {
 
           {selectedFile && (
             <div className="animate-in fade-in duration-200 text-left">
-              <label className="block text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1">
+              <label className="block text-[13px] font-normal text-text-secondary mb-1">
                 Custom Name (Optional)
               </label>
               <input 
@@ -870,24 +872,24 @@ export default function PersonalProfileMe() {
                 value={customFileName}
                 onChange={(e) => setCustomFileName(e.target.value)}
                 disabled={docUploading}
-                className="block w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-800 dark:text-slate-100 focus:outline-none"
+                className="block w-full bg-surface border border-border rounded-lg px-3 py-2.5 text-[15px] text-text-primary focus:outline-none focus:border-primary"
               />
             </div>
           )}
 
-          <div className="flex gap-2 pt-2 justify-end border-t border-slate-100 dark:border-slate-800">
+          <div className="flex gap-2 pt-2 justify-end border-t border-border-subtle">
             <button 
               type="button"
               onClick={() => setIsDocModalOpen(false)}
               disabled={docUploading}
-              className="px-4 py-2 border border-slate-250 dark:border-slate-800 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-850"
+              className="px-4 py-2 bg-surface border border-border rounded-lg text-[15px] font-medium text-text-secondary hover:bg-background transition-colors"
             >
               Cancel
             </button>
             <button 
               type="submit"
               disabled={docUploading || !selectedFile}
-              className="bg-primary hover:opacity-90 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all active:scale-95 shadow-sm disabled:opacity-40"
+              className="bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-lg text-[15px] font-medium transition-colors shadow-subtle disabled:opacity-40"
             >
               {docUploading ? 'Uploading...' : 'Upload Receipt'}
             </button>
@@ -903,12 +905,12 @@ export default function PersonalProfileMe() {
               href={viewReceiptUrl} 
               target="_blank" 
               rel="noreferrer" 
-              className="bg-primary text-white px-4 py-2 rounded-xl text-xs font-bold hover:opacity-95 transition-colors"
+              className="bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-lg text-[15px] font-medium transition-colors shadow-subtle"
             >
               Open PDF Document in New Tab
             </a>
           ) : (
-            <div className="relative w-full h-[400px] rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800">
+            <div className="relative w-full h-[400px] rounded-xl overflow-hidden border border-border">
               <Image 
                 src={viewReceiptUrl || ''} 
                 alt="Receipt Attachment" 
@@ -928,19 +930,19 @@ export default function PersonalProfileMe() {
         title="Confirm Delete"
       >
         <div className="space-y-4">
-          <p className="text-xs text-slate-550 dark:text-slate-400 text-left">
+          <p className="text-[13px] text-text-secondary text-left leading-[1.4]">
             Are you sure you want to permanently delete this personal expense record?
           </p>
           <div className="flex gap-2 justify-end">
             <button 
               onClick={() => setDeletingExpId(null)}
-              className="px-4 py-2 border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-50"
+              className="px-4 py-2 bg-surface border border-border rounded-lg text-[15px] font-medium text-text-secondary hover:bg-background transition-colors"
             >
               Cancel
             </button>
             <button 
               onClick={() => deletingExpId && handleDeleteExpense(deletingExpId)}
-              className="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all active:scale-95"
+              className="bg-danger hover:opacity-90 text-white px-4 py-2 rounded-lg text-[15px] font-medium transition-colors shadow-subtle active:scale-95"
             >
               Delete
             </button>
@@ -955,19 +957,19 @@ export default function PersonalProfileMe() {
         title="Confirm Delete Stored Bill"
       >
         <div className="space-y-4">
-          <p className="text-xs text-slate-555 dark:text-slate-400 text-left">
+          <p className="text-[13px] text-text-secondary text-left leading-[1.4]">
             Are you sure you want to delete the file "{deletingDocName}" from your vault?
           </p>
           <div className="flex gap-2 justify-end">
             <button 
               onClick={() => setDeletingDocName(null)}
-              className="px-4 py-2 border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-50"
+              className="px-4 py-2 bg-surface border border-border rounded-lg text-[15px] font-medium text-text-secondary hover:bg-background transition-colors"
             >
               Cancel
             </button>
             <button 
               onClick={handleDocDelete}
-              className="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all active:scale-95"
+              className="bg-danger hover:opacity-90 text-white px-4 py-2 rounded-lg text-[15px] font-medium transition-colors shadow-subtle active:scale-95"
             >
               Delete
             </button>
@@ -982,15 +984,15 @@ export default function PersonalProfileMe() {
         title="Reset Personal Expenses"
       >
         <div className="space-y-4 text-left">
-          <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-            Are you sure you want to clear all your personal expenses? This will delete all logged personal records and reset your spending total to <strong className="text-slate-900 dark:text-white">₹0</strong>.
+          <p className="text-[13px] text-text-secondary leading-[1.4]">
+            Are you sure you want to clear all your personal expenses? This will delete all logged personal records and reset your spending total to <strong className="text-text-primary">₹0</strong>.
           </p>
           <div className="flex gap-2 justify-end pt-2">
             <button 
               type="button"
               onClick={() => setShowResetModal(false)}
               disabled={resetting}
-              className="px-4 py-2 border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+              className="px-4 py-2 bg-surface border border-border rounded-lg text-[15px] font-medium text-text-secondary hover:bg-background transition-colors"
             >
               Cancel
             </button>
@@ -998,7 +1000,7 @@ export default function PersonalProfileMe() {
               type="button"
               onClick={handleResetAll}
               disabled={resetting}
-              className="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all active:scale-95 shadow-sm flex items-center gap-1.5"
+              className="bg-danger hover:opacity-90 text-white px-4 py-2 rounded-lg text-[15px] font-medium transition-colors shadow-subtle flex items-center gap-1.5 active:scale-95"
             >
               {resetting ? 'Resetting...' : 'Yes, Reset to ₹0'}
             </button>

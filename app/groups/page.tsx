@@ -129,24 +129,24 @@ export default function Groups() {
       {/* Page Header */}
       <div className="flex items-center justify-between">
         <div className="text-left">
-          <span className="text-[10px] uppercase font-black tracking-widest text-primary">
-            Shared Expenses
-          </span>
-          <h1 className="text-2xl font-black tracking-tight text-slate-900 dark:text-white">
+          <h1 className="text-[22px] font-semibold text-text-primary leading-[1.2]">
             My Groups
           </h1>
+          <p className="text-[13px] font-normal text-text-secondary leading-[1.4] mt-0.5">
+            Shared expense splitting
+          </p>
         </div>
 
         <div className="flex items-center gap-2">
           <button 
             onClick={() => setIsJoinModalOpen(true)}
-            className="px-3.5 py-2 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-xs active:scale-95"
+            className="px-3.5 py-2 bg-surface border border-border text-text-primary hover:bg-background rounded-lg text-[15px] font-medium transition-colors flex items-center gap-1.5 shadow-subtle active:scale-95"
           >
             <UserPlus className="w-4 h-4 text-primary" /> Join with Code
           </button>
           <button 
             onClick={() => setIsModalOpen(true)}
-            className="bg-primary hover:bg-primary-light text-white px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm active:scale-95"
+            className="bg-primary hover:bg-primary-hover text-white px-3.5 py-2 rounded-lg text-[15px] font-medium transition-colors flex items-center gap-1.5 shadow-subtle active:scale-95"
           >
             <Plus className="w-4 h-4" /> New Group
           </button>
@@ -154,23 +154,23 @@ export default function Groups() {
       </div>
 
       {/* Active vs History Tab header */}
-      <div className="flex border-b border-slate-200 dark:border-slate-800 py-1 text-left">
+      <div className="flex border-b border-border-subtle text-left">
         <button
           onClick={() => setActiveTab('active')}
-          className={`px-4 py-2 text-xs font-bold transition-all border-b-2 ${
+          className={`px-4 py-2.5 text-[15px] transition-colors border-b-2 ${
             activeTab === 'active' 
-              ? 'border-primary text-primary font-black' 
-              : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400'
+              ? 'border-primary text-primary font-medium' 
+              : 'border-transparent text-text-secondary hover:text-text-primary font-normal'
           }`}
         >
           Active
         </button>
         <button
           onClick={() => setActiveTab('settled')}
-          className={`px-4 py-2 text-xs font-bold transition-all border-b-2 ${
+          className={`px-4 py-2.5 text-[15px] transition-colors border-b-2 ${
             activeTab === 'settled' 
-              ? 'border-primary text-primary font-black' 
-              : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400'
+              ? 'border-primary text-primary font-medium' 
+              : 'border-transparent text-text-secondary hover:text-text-primary font-normal'
           }`}
         >
           History (Settled)
@@ -179,14 +179,14 @@ export default function Groups() {
 
       {/* Groups List */}
       {filteredGroups.length === 0 ? (
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 text-center flex flex-col items-center justify-center shadow-xs">
-          <div className="w-12 h-12 bg-blue-50 dark:bg-blue-950/20 rounded-2xl flex items-center justify-center text-primary mb-4 shadow-xs">
-            <Users className="w-6 h-6" />
+        <div className="bg-surface border border-border rounded-xl p-8 text-center flex flex-col items-center justify-center shadow-subtle">
+          <div className="w-12 h-12 rounded-full flex items-center justify-center text-text-secondary mb-3">
+            <Users className="w-8 h-8 text-text-secondary" />
           </div>
-          <h3 className="font-bold text-slate-800 dark:text-white mb-1.5">
+          <h3 className="font-semibold text-text-primary text-[17px] mb-1.5 leading-[1.2]">
             {activeTab === 'active' ? 'No active groups yet' : 'No settled groups in history'}
           </h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400 max-w-xs mb-5">
+          <p className="text-[13px] font-normal text-text-secondary max-w-xs mb-5 leading-[1.4]">
             {activeTab === 'active' 
               ? 'Groups allow you to split trips, rent, bills, or dinners easily with roommates and friends.'
               : 'When a group’s net balances all reach zero, they will appear here in your archive history.'}
@@ -194,34 +194,34 @@ export default function Groups() {
           {activeTab === 'active' && (
             <button 
               onClick={() => setIsModalOpen(true)}
-              className="bg-primary hover:bg-primary-light text-white px-4 py-2 rounded-xl text-xs font-bold transition-all active:scale-95 shadow-sm"
+              className="bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-lg text-[15px] font-medium transition-colors active:scale-95 shadow-subtle"
             >
               Start your first group
             </button>
           )}
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
           {filteredGroups.map(grp => (
             <Link 
               key={grp.id}
               href={`/groups/${grp.id}`}
-              className="group flex items-center justify-between p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl transition-all hover:border-blue-500 hover:shadow-md shadow-xs"
+              className="group flex items-center justify-between p-4 bg-surface border border-border rounded-xl transition-all hover:border-primary shadow-subtle"
             >
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-blue-50 dark:bg-blue-950/20 rounded-2xl flex items-center justify-center text-primary transition-colors group-hover:bg-primary group-hover:text-white">
+                <div className="w-10 h-10 bg-primary-light rounded-full flex items-center justify-center text-primary transition-colors group-hover:bg-primary group-hover:text-white flex-shrink-0">
                   <Users className="w-5 h-5" />
                 </div>
                 <div className="text-left">
-                  <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm group-hover:text-primary transition-colors">
+                  <h3 className="font-medium text-text-primary text-[15px] group-hover:text-primary transition-colors leading-[1.4]">
                     {grp.name}
                   </h3>
-                  <span className="text-[10px] text-slate-400 flex items-center gap-1 mt-0.5">
+                  <span className="text-[13px] font-normal text-text-secondary flex items-center gap-1 mt-0.5 leading-[1.4]">
                     <Calendar className="w-3.5 h-3.5" /> Established {new Date(grp.created_at).toLocaleDateString(undefined, { month: 'short', year: 'numeric' })}
                   </span>
                 </div>
               </div>
-              <ArrowRight className="w-4 h-4 text-slate-400 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="w-4 h-4 text-text-secondary group-hover:translate-x-1 transition-transform" />
             </Link>
           ))}
         </div>
@@ -235,7 +235,7 @@ export default function Groups() {
       >
         <form onSubmit={handleCreateGroup} className="space-y-4">
           <div>
-            <label className="block text-[10px] font-black text-slate-500 dark:text-slate-450 uppercase tracking-widest mb-1.5">
+            <label className="block text-[13px] font-normal text-text-secondary mb-1.5">
               Group Name
             </label>
             <input 
@@ -245,15 +245,15 @@ export default function Groups() {
               onChange={(e) => setNewGroupName(e.target.value)}
               required
               disabled={modalLoading}
-              className="block w-full bg-slate-50 dark:bg-slate-900 border border-slate-250 dark:border-slate-800 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary text-slate-800 dark:text-slate-100"
+              className="block w-full bg-surface border border-border rounded-lg px-3 py-2.5 text-[15px] text-text-primary placeholder:text-text-disabled focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
             />
           </div>
 
           <div>
-            <label className="block text-[10px] font-black text-slate-500 dark:text-slate-450 uppercase tracking-widest mb-1 mt-1">
+            <label className="block text-[13px] font-normal text-text-secondary mb-1 mt-1">
               Invite Members
             </label>
-            <span className="text-[10px] text-slate-400 block mb-2 leading-relaxed">
+            <span className="text-[13px] text-text-secondary block mb-2 leading-[1.4]">
               Enter names or emails of group members, separated by commas or newlines.
             </span>
             <textarea 
@@ -262,7 +262,7 @@ export default function Groups() {
               value={membersInput}
               onChange={(e) => setMembersInput(e.target.value)}
               disabled={modalLoading}
-              className="block w-full bg-slate-50 dark:bg-slate-900 border border-slate-250 dark:border-slate-800 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary text-slate-800 dark:text-slate-100 resize-none"
+              className="block w-full bg-surface border border-border rounded-lg px-3 py-2 text-[15px] text-text-primary placeholder:text-text-disabled focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary resize-none"
             />
           </div>
 
@@ -271,14 +271,14 @@ export default function Groups() {
               type="button"
               onClick={() => setIsModalOpen(false)}
               disabled={modalLoading}
-              className="px-4 py-2 border border-slate-250 dark:border-slate-800 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+              className="px-4 py-2 bg-surface border border-border rounded-lg text-[15px] font-medium text-text-secondary hover:bg-background transition-colors"
             >
               Cancel
             </button>
             <button 
               type="submit"
               disabled={modalLoading}
-              className="bg-primary hover:bg-primary-light text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-sm flex items-center gap-1 active:scale-95"
+              className="bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-lg text-[15px] font-medium transition-colors shadow-subtle flex items-center gap-1 active:scale-95"
             >
               {modalLoading ? 'Creating...' : 'Create Group'}
             </button>
@@ -294,7 +294,7 @@ export default function Groups() {
       >
         <form onSubmit={handleJoinByCode} className="space-y-4 text-left">
           <div>
-            <label className="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1.5">
+            <label className="block text-[13px] font-normal text-text-secondary mb-1.5">
               Group Invite Code
             </label>
             <input 
@@ -304,9 +304,9 @@ export default function Groups() {
               onChange={(e) => setJoinCodeInput(e.target.value.toUpperCase())}
               required
               disabled={joinModalLoading}
-              className="block w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2.5 text-sm uppercase tracking-widest font-black focus:outline-none focus:ring-1 focus:ring-primary text-slate-800 dark:text-slate-100"
+              className="block w-full bg-surface border border-border rounded-lg px-3 py-2.5 text-[15px] uppercase tracking-widest font-semibold text-text-primary placeholder:text-text-disabled focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
             />
-            <span className="text-[10px] text-slate-400 block mt-1.5 leading-relaxed">
+            <span className="text-[13px] text-text-secondary block mt-1.5 leading-[1.4]">
               Ask your friend or group creator for their 6-character group invite code.
             </span>
           </div>
@@ -316,14 +316,14 @@ export default function Groups() {
               type="button"
               onClick={() => setIsJoinModalOpen(false)}
               disabled={joinModalLoading}
-              className="px-4 py-2 border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+              className="px-4 py-2 bg-surface border border-border rounded-lg text-[15px] font-medium text-text-secondary hover:bg-background transition-colors"
             >
               Cancel
             </button>
             <button 
               type="submit"
               disabled={joinModalLoading}
-              className="bg-primary hover:bg-primary-light text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-sm flex items-center gap-1 active:scale-95"
+              className="bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-lg text-[15px] font-medium transition-colors shadow-subtle flex items-center gap-1 active:scale-95"
             >
               {joinModalLoading ? 'Joining...' : 'Join Group'}
             </button>

@@ -28,7 +28,7 @@ export function BottomNav() {
   };
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-slate-955/95 backdrop-blur-lg border-t border-border-custom px-2 py-1 max-w-5xl mx-auto">
+    <nav className="fixed bottom-0 left-0 right-0 z-40 bg-surface/95 backdrop-blur-md border-t border-border px-2 py-1 max-w-5xl mx-auto">
       <div className="flex items-center justify-around w-full relative">
         {navItems.map(item => {
           const Icon = item.icon;
@@ -39,10 +39,10 @@ export function BottomNav() {
               <button 
                 key={item.href}
                 onClick={handleAddClick}
-                className="relative -top-3.5 bg-primary hover:bg-primary-light text-white w-11 h-11 rounded-full flex items-center justify-center shadow-md transition-all active:scale-90 hover:scale-105 border-4 border-background"
+                className="relative -top-3.5 bg-primary hover:bg-primary-hover text-white w-11 h-11 rounded-full flex items-center justify-center shadow-subtle transition-all active:scale-95 border-4 border-background"
                 title="Add Expense"
               >
-                <Plus className="w-5.5 h-5.5 stroke-[3px]" />
+                <Plus className="w-5 h-5 stroke-[2.5px]" />
               </button>
             );
           }
@@ -51,14 +51,14 @@ export function BottomNav() {
             <Link 
               key={item.href}
               href={item.href}
-              className={`flex flex-col items-center justify-center py-0.5 px-3 rounded-xl transition-all duration-200 gap-0.5 ${
+              className={`flex flex-col items-center justify-center py-1 px-3 transition-colors duration-150 gap-0.5 ${
                 isActive 
-                  ? 'text-primary font-extrabold scale-105' 
-                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'
+                  ? 'text-primary font-medium' 
+                  : 'text-text-secondary hover:text-text-primary'
               }`}
             >
-              <Icon className={`w-4.5 h-4.5 transition-transform duration-200 ${isActive ? 'stroke-[2.5px]' : 'stroke-[2px]'}`} />
-              <span className="text-[9px] tracking-wide">
+              <Icon className={`w-5 h-5 ${isActive ? 'stroke-[2.2px]' : 'stroke-[1.8px]'}`} />
+              <span className="text-[11px] tracking-tight">
                 {item.label}
               </span>
             </Link>
