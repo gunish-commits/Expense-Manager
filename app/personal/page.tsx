@@ -325,7 +325,7 @@ export default function PersonalProfileMe() {
   }
 
   return (
-    <div className="space-y-6 pb-6 text-[#262421] dark:text-slate-100">
+    <div className="space-y-6 pb-6 text-slate-900 dark:text-slate-100">
       {/* 1. Header Profile Banner */}
       <div className="flex justify-between items-center text-left">
         <div>
@@ -347,14 +347,14 @@ export default function PersonalProfileMe() {
               setReceiptFile(null);
               setIsExpModalOpen(true);
             }}
-            className="bg-primary hover:opacity-90 text-white px-3.5 py-2 rounded-xl text-xs font-bold transition-all active:scale-95 flex items-center gap-1 shadow-sm"
+            className="bg-primary hover:bg-primary-light text-white px-3.5 py-2 rounded-xl text-xs font-bold transition-all active:scale-95 flex items-center gap-1 shadow-sm"
           >
             <Plus className="w-4 h-4" /> Add Expense
           </button>
         ) : (
           <button 
             onClick={() => setIsDocModalOpen(true)}
-            className="bg-primary hover:opacity-90 text-white px-3.5 py-2 rounded-xl text-xs font-bold transition-all active:scale-95 shadow-sm flex items-center gap-1.5"
+            className="bg-primary hover:bg-primary-light text-white px-3.5 py-2 rounded-xl text-xs font-bold transition-all active:scale-95 shadow-sm flex items-center gap-1.5"
           >
             <Upload className="w-4 h-4" /> Upload Standalone Bill
           </button>
@@ -363,29 +363,29 @@ export default function PersonalProfileMe() {
 
       {/* 2. Monthly Spend Analytics Summary */}
       <div className="grid grid-cols-2 gap-4 text-left">
-        <div className="bg-white dark:bg-slate-900 border border-[#E6E2DA] dark:border-[#2F2C29] p-4 rounded-3xl">
-          <div className="w-9 h-9 bg-teal-50 dark:bg-teal-950/20 rounded-xl flex items-center justify-center mb-3">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl shadow-xs">
+          <div className="w-9 h-9 bg-blue-50 dark:bg-blue-950/20 rounded-xl flex items-center justify-center mb-3">
             <Wallet className="w-5.5 h-5.5 text-primary" />
           </div>
           <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">Month Personal Spent</span>
-          <span className="text-base sm:text-lg font-black text-slate-800 dark:text-slate-100 mt-1 block">
+          <span className="text-base sm:text-lg font-black text-slate-900 dark:text-slate-100 mt-1 block">
             {formatCurrency(totalSpent)}
           </span>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 border border-[#E6E2DA] dark:border-[#2F2C29] p-4 rounded-3xl">
-          <div className="w-9 h-9 bg-amber-50 dark:bg-amber-950/20 rounded-xl flex items-center justify-center mb-3">
-            <Tag className="w-5.5 h-5.5 text-[#D4A24C] dark:text-[#E6B560]" />
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl shadow-xs">
+          <div className="w-9 h-9 bg-blue-50 dark:bg-blue-950/20 rounded-xl flex items-center justify-center mb-3">
+            <Tag className="w-5.5 h-5.5 text-primary" />
           </div>
           <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">Total Records</span>
-          <span className="text-base sm:text-lg font-black text-slate-800 dark:text-slate-100 mt-1 block">
+          <span className="text-base sm:text-lg font-black text-slate-900 dark:text-slate-100 mt-1 block">
             {expenses.length} logs
           </span>
         </div>
       </div>
 
       {/* 3. Section Navigation Tabs */}
-      <div className="flex border-b border-border-custom py-1 text-left">
+      <div className="flex border-b border-slate-200 dark:border-slate-800 py-1 text-left">
         <button 
           onClick={() => setActiveTab('expenses')}
           className={`px-4 py-2 text-xs font-bold transition-all border-b-2 flex items-center gap-1.5 ${
@@ -515,14 +515,14 @@ export default function PersonalProfileMe() {
                       {list.map(exp => (
                         <div 
                           key={exp.id}
-                          className="bg-white dark:bg-slate-900 border border-[#E6E2DA] dark:border-[#2F2C29] rounded-2xl p-3 flex items-center justify-between hover:border-primary transition-colors shadow-sm"
+                          className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-3 flex items-center justify-between hover:border-blue-500 hover:shadow-md transition-all shadow-xs"
                         >
                           <div className="flex items-center gap-3">
                             <div className="w-9 h-9 bg-slate-50 dark:bg-slate-800 rounded-xl flex items-center justify-center text-lg">
                               {getCategoryEmoji(exp.category)}
                             </div>
                             <div className="text-left">
-                              <h4 className="font-bold text-slate-850 dark:text-slate-100 text-xs sm:text-sm">
+                              <h4 className="font-bold text-slate-800 dark:text-slate-100 text-xs sm:text-sm">
                                 {exp.note || exp.category}
                               </h4>
                               <p className="text-[10px] text-slate-400 mt-0.5">
@@ -532,14 +532,14 @@ export default function PersonalProfileMe() {
                           </div>
 
                           <div className="flex items-center gap-2">
-                            <span className="font-extrabold text-sm text-slate-800 dark:text-slate-200 mr-1">
+                            <span className="font-extrabold text-sm text-slate-900 dark:text-slate-100 mr-1">
                               {formatCurrency(exp.amount)}
                             </span>
                             <div className="flex items-center gap-1.5">
                               {exp.receipt_url && (
                                 <button 
                                   onClick={() => setViewReceiptUrl(exp.receipt_url)}
-                                  className="p-1 text-slate-400 hover:text-indigo-650 transition-colors"
+                                  className="p-1 text-slate-400 hover:text-blue-600 transition-colors"
                                   title="View receipt attachment"
                                 >
                                   <Eye className="w-4.5 h-4.5" />
@@ -598,14 +598,14 @@ export default function PersonalProfileMe() {
       {/* TAB 2: SAVED BILLS */}
       {activeTab === 'bills' && (
         <div className="space-y-5 animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-slate-900 border border-[#E6E2DA] dark:border-[#2F2C29] p-4 rounded-3xl text-left flex items-center justify-between shadow-sm">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl text-left flex items-center justify-between shadow-xs">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 bg-emerald-50 dark:bg-emerald-950/20 rounded-xl flex items-center justify-center">
+              <div className="w-9 h-9 bg-blue-50 dark:bg-blue-950/20 rounded-xl flex items-center justify-center">
                 <HardDrive className="w-5 h-5 text-primary" />
               </div>
               <div>
                 <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">Stored Bills Vault</span>
-                <span className="text-xs text-slate-450 dark:text-slate-400 mt-0.5 block truncate max-w-[180px]">
+                <span className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 block truncate max-w-[180px]">
                   {documents.length} documents archived
                 </span>
               </div>
@@ -613,7 +613,7 @@ export default function PersonalProfileMe() {
             
             <button 
               onClick={() => setIsDocModalOpen(true)}
-              className="bg-primary hover:opacity-90 text-white px-3.5 py-2 rounded-xl text-xs font-bold transition-all active:scale-95 shadow-sm flex items-center gap-1.5"
+              className="bg-primary hover:bg-primary-light text-white px-3.5 py-2 rounded-xl text-xs font-bold transition-all active:scale-95 shadow-sm flex items-center gap-1.5"
             >
               <Upload className="w-4 h-4" /> Upload Receipt
             </button>
@@ -624,7 +624,7 @@ export default function PersonalProfileMe() {
             <h3 className="font-bold text-xs uppercase tracking-widest text-slate-400 text-left">Saved Documents</h3>
 
             {documents.length === 0 ? (
-              <div className="bg-white dark:bg-slate-900 border border-[#E6E2DA] dark:border-[#2F2C29] rounded-3xl p-8 text-center flex flex-col items-center justify-center shadow-sm">
+              <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 text-center flex flex-col items-center justify-center shadow-xs">
                 <span className="text-3xl mb-3">📁</span>
                 <h4 className="font-bold text-slate-800 dark:text-white mb-1.5">Your vault is empty</h4>
                 <p className="text-xs text-slate-500 dark:text-slate-400 max-w-xs mb-5">
@@ -632,7 +632,7 @@ export default function PersonalProfileMe() {
                 </p>
                 <button 
                   onClick={() => setIsDocModalOpen(true)}
-                  className="bg-slate-900 hover:bg-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition-colors"
+                  className="bg-primary hover:bg-primary-light text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-sm"
                 >
                   Upload first file
                 </button>
@@ -642,7 +642,7 @@ export default function PersonalProfileMe() {
                 {documents.map(doc => (
                   <div 
                     key={doc.name}
-                    className="bg-white dark:bg-slate-900 border border-[#E6E2DA] dark:border-[#2F2C29] rounded-2xl p-3 flex items-center justify-between hover:border-slate-300 dark:hover:border-slate-750 transition-colors shadow-sm"
+                    className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-3 flex items-center justify-between hover:border-blue-500 hover:shadow-md transition-all shadow-xs"
                   >
                     <div className="flex items-center gap-3">
                       <div className="w-9 h-9 bg-slate-50 dark:bg-slate-850 rounded-xl flex items-center justify-center text-slate-500 dark:text-slate-400">

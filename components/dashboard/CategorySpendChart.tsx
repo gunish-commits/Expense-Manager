@@ -6,7 +6,7 @@ import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from 'recharts';
 import { TrendingUp } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils/format';
 
-const COLORS = ['#2C3E66', '#D4A24C', '#E4572E', '#3E588F', '#8C867A', '#5A6B7C', '#E6C587'];
+const COLORS = ['#2563EB', '#3B82F6', '#10B981', '#6366F1', '#06B6D4', '#8B5CF6', '#F59E0B'];
 
 interface CategorySpendChartProps {
   chartData: Array<{ name: string; value: number }>;
@@ -22,7 +22,7 @@ export default function CategorySpendChart({ chartData }: CategorySpendChartProp
   }
 
   return (
-    <div className="bg-white dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800/50 p-4 rounded-3xl">
+    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl">
       <h3 className="font-bold text-sm text-slate-800 dark:text-slate-200 mb-4 flex items-center gap-1.5">
         <TrendingUp className="w-4 h-4 text-primary" />
         Spending Breakdown

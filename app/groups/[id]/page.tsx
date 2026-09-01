@@ -451,13 +451,13 @@ export default function GroupDetail({ params }: PageProps) {
   const isGroupSettled = group.status === 'settled';
 
   return (
-    <div className="space-y-6 pb-6 text-[#262421] dark:text-slate-100">
+    <div className="space-y-6 pb-6 text-slate-900 dark:text-slate-100">
       {/* Group Detail Header */}
       <div className="flex items-center justify-between text-left">
         <div className="flex items-center gap-3">
           <button 
             onClick={() => router.push('/dashboard')}
-            className="p-2 border border-slate-200 dark:border-slate-800 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-850 text-slate-500 transition-colors"
+            className="p-2 border border-slate-200 dark:border-slate-800 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-500 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
           </button>
@@ -482,14 +482,14 @@ export default function GroupDetail({ params }: PageProps) {
           {isGroupSettled ? (
             <button 
               onClick={handleCloseGroupToggle}
-              className="px-3 py-2 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-350 hover:bg-slate-55 dark:hover:bg-slate-850 rounded-xl text-xs font-bold transition-all"
+              className="px-3 py-2 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-350 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl text-xs font-bold transition-all"
             >
               Reopen Group
             </button>
           ) : (
             <button 
               onClick={openAddExpenseModal}
-              className="bg-primary hover:opacity-90 text-white px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1 shadow-sm active:scale-95"
+              className="bg-primary hover:bg-primary-light text-white px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1 shadow-sm active:scale-95 transition-all"
             >
               <Plus className="w-4 h-4" /> Add Expense
             </button>
@@ -498,14 +498,14 @@ export default function GroupDetail({ params }: PageProps) {
       </div>
 
       {/* Tab Selector Headers */}
-      <div className="flex border-b border-border-custom py-1 text-left">
+      <div className="flex border-b border-slate-200 dark:border-slate-800 py-1 text-left">
         {(['expenses', 'settle', 'members'] as const).map(tab => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
             className={`px-4 py-2 text-xs font-bold transition-all border-b-2 capitalize flex-shrink-0 ${
               activeTab === tab 
-                ? 'border-primary text-primary dark:text-[#E6B560] dark:border-[#E6B560] font-black scale-105' 
+                ? 'border-primary text-primary font-black scale-105' 
                 : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200'
             }`}
           >
@@ -607,14 +607,14 @@ export default function GroupDetail({ params }: PageProps) {
                             return (
                               <div 
                                 key={item.key}
-                                className="bg-white dark:bg-slate-900 border border-[#E6E2DA] dark:border-[#2F2C29] rounded-2xl p-3 flex items-center justify-between hover:border-primary transition-colors shadow-sm relative group"
+                                className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-3 flex items-center justify-between hover:border-blue-500 hover:shadow-md transition-all shadow-xs relative group"
                               >
                                 <div className="flex items-center gap-3">
-                                  <div className="w-9 h-9 bg-slate-50 dark:bg-slate-850 rounded-xl flex items-center justify-center text-lg">
+                                  <div className="w-9 h-9 bg-slate-50 dark:bg-slate-800 rounded-xl flex items-center justify-center text-lg">
                                     {getCategoryEmoji(item.category)}
                                   </div>
                                   <div className="text-left">
-                                    <h4 className="font-bold text-slate-850 dark:text-slate-100 text-xs sm:text-sm">
+                                    <h4 className="font-bold text-slate-800 dark:text-slate-100 text-xs sm:text-sm">
                                       {item.description}
                                     </h4>
                                     <p className="text-[10px] text-slate-400 mt-0.5">
@@ -625,16 +625,16 @@ export default function GroupDetail({ params }: PageProps) {
 
                                 <div className="flex items-center gap-2">
                                   <div className="text-right mr-1">
-                                    <span className="font-extrabold text-slate-905 dark:text-white text-xs sm:text-sm block">
+                                    <span className="font-extrabold text-slate-900 dark:text-white text-xs sm:text-sm block">
                                       {formatCurrency(item.amount)}
                                     </span>
                                     {isPayer ? (
-                                      <span className="text-[9px] text-[#D4A24C] dark:text-[#E6B560] font-bold block">
+                                      <span className="text-[9px] text-emerald-600 dark:text-emerald-400 font-bold block">
                                         You lent {formatCurrency(Number(item.amount) - (item.splits?.find((s: any) => s.user_id === currentUser?.id)?.share_amount || 0))}
                                       </span>
                                     ) : (
                                       item.splits?.some((s: any) => s.user_id === currentUser?.id) && (
-                                        <span className="text-[9px] text-[#E68A2E] dark:text-[#FF9F40] font-bold block">
+                                        <span className="text-[9px] text-rose-600 dark:text-rose-400 font-bold block">
                                           You owe {formatCurrency(item.splits.find((s: any) => s.user_id === currentUser?.id)?.share_amount || 0)}
                                         </span>
                                       )
@@ -645,7 +645,7 @@ export default function GroupDetail({ params }: PageProps) {
                                     {item.receipt_url && (
                                       <button 
                                         onClick={() => setViewReceiptUrl(item.receipt_url)}
-                                        className="p-1.5 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-400 hover:text-slate-650 transition-colors"
+                                        className="p-1.5 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-400 hover:text-slate-600 transition-colors"
                                         title="View Receipt"
                                       >
                                         <Eye className="w-4 h-4" />
@@ -698,10 +698,10 @@ export default function GroupDetail({ params }: PageProps) {
                             return (
                               <div 
                                 key={item.key}
-                                className="bg-white dark:bg-slate-900 border border-[#E6E2DA] dark:border-[#2F2C29] rounded-2xl p-3 flex items-center justify-between opacity-80 shadow-sm"
+                                className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-3 flex items-center justify-between opacity-90 shadow-xs"
                               >
                                 <div className="flex items-center gap-3">
-                                  <div className="w-9 h-9 bg-emerald-50 dark:bg-emerald-950/20 text-[#D4A24C] dark:text-[#E6B560] rounded-xl flex items-center justify-center text-lg font-black">
+                                  <div className="w-9 h-9 bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400 rounded-xl flex items-center justify-center text-lg font-black">
                                     ✓
                                   </div>
                                   <div className="text-left">
@@ -715,7 +715,7 @@ export default function GroupDetail({ params }: PageProps) {
                                 </div>
 
                                 <div className="text-right">
-                                  <span className="font-extrabold text-[#D4A24C] dark:text-[#E6B560] text-xs sm:text-sm block">
+                                  <span className="font-extrabold text-emerald-600 dark:text-emerald-400 text-xs sm:text-sm block">
                                     {formatCurrency(item.amount)}
                                   </span>
                                   <span className="text-[9px] text-slate-400 block font-bold">
@@ -823,7 +823,7 @@ export default function GroupDetail({ params }: PageProps) {
                           Owed ₹{balance.toFixed(2)}
                         </span>
                       ) : (
-                        <span className="font-extrabold text-[#E68A2E] dark:text-[#FF9F40] text-xs sm:text-sm">
+                        <span className="font-extrabold text-rose-600 dark:text-rose-400 text-xs sm:text-sm">
                           Owes ₹{Math.abs(balance).toFixed(2)}
                         </span>
                       )}

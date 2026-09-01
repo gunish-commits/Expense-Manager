@@ -20,7 +20,7 @@ const CategorySpendChart = dynamic(
   { 
     ssr: false, 
     loading: () => (
-      <div className="bg-white dark:bg-slate-900 border border-[#E6E2DA] dark:border-[#2F2C29] p-6 rounded-3xl h-48 flex items-center justify-center text-xs text-slate-400 animate-pulse">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl h-48 flex items-center justify-center text-xs text-slate-400 animate-pulse">
         Loading spend charts...
       </div>
     )
@@ -282,23 +282,23 @@ export default function DashboardSummary() {
   }
 
   return (
-    <div className="space-y-6 pb-6 text-[#262421] dark:text-slate-100">
+    <div className="space-y-6 pb-6 text-slate-900 dark:text-slate-100">
       {/* 1. Welcome Greeting & Net Balance */}
-      <div className="text-left py-2">
-        <h1 className="text-sm font-bold text-slate-500 mt-0.5 dark:text-slate-400">
+      <div className="text-left py-1">
+        <h1 className="text-sm font-bold text-slate-500 dark:text-slate-400">
           Hi {userName.split(' ')[0]}
         </h1>
-        <div className="mt-2.5">
+        <div className="mt-2">
           {netBalance > 0.01 ? (
-            <span className="text-3xl font-black text-primary-light dark:text-[#E6B560] tracking-tight block">
+            <span className="text-3xl sm:text-4xl font-black text-emerald-600 dark:text-emerald-400 tracking-tight block">
               You're owed {formatCurrency(netBalance)}
             </span>
           ) : netBalance < -0.01 ? (
-            <span className="text-3xl font-black text-[#E4572E] dark:text-[#FF754F] tracking-tight block">
+            <span className="text-3xl sm:text-4xl font-black text-rose-600 dark:text-rose-400 tracking-tight block">
               You owe {formatCurrency(Math.abs(netBalance))}
             </span>
           ) : (
-            <span className="text-3xl font-black text-slate-800 dark:text-slate-200 tracking-tight block">
+            <span className="text-3xl sm:text-4xl font-black text-slate-800 dark:text-slate-200 tracking-tight block">
               All settled up
             </span>
           )}
@@ -306,19 +306,19 @@ export default function DashboardSummary() {
       </div>
 
       {/* 2. 3-Card Summary Row */}
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-3 gap-3 sm:gap-4">
         {/* Groups Card */}
         <Link 
           href="/groups"
-          className="bg-white dark:bg-slate-900 border border-[#E6E2DA] dark:border-[#2F2C29] p-3 rounded-2xl text-left hover:border-primary transition-all duration-200 shadow-sm"
+          className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-3.5 sm:p-4 rounded-2xl text-left hover:border-blue-500 hover:shadow-md transition-all shadow-xs"
         >
-          <span className="text-[10px] font-black text-slate-450 uppercase tracking-wider block">Groups</span>
-          <span className={`text-xs sm:text-sm font-extrabold mt-1 block truncate ${
+          <span className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider block">Groups</span>
+          <span className={`text-xs sm:text-base font-extrabold mt-1 block truncate ${
             netGroupBalance > 0.01 
-              ? 'text-primary-light dark:text-[#E6B560]' 
+              ? 'text-emerald-600 dark:text-emerald-400' 
               : netGroupBalance < -0.01 
-                ? 'text-[#E4572E] dark:text-[#FF754F]' 
-                : 'text-slate-550 dark:text-slate-400'
+                ? 'text-rose-600 dark:text-rose-400' 
+                : 'text-slate-500 dark:text-slate-400'
           }`}>
             {netGroupBalance > 0.01 ? '+' : ''}{formatCurrency(netGroupBalance)}
           </span>
@@ -327,15 +327,15 @@ export default function DashboardSummary() {
         {/* Dues Card */}
         <Link 
           href="/dues"
-          className="bg-white dark:bg-slate-900 border border-[#E6E2DA] dark:border-[#2F2C29] p-3 rounded-2xl text-left hover:border-primary transition-all duration-200 shadow-sm"
+          className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-3.5 sm:p-4 rounded-2xl text-left hover:border-blue-500 hover:shadow-md transition-all shadow-xs"
         >
-          <span className="text-[10px] font-black text-slate-450 uppercase tracking-wider block">Dues</span>
-          <span className={`text-xs sm:text-sm font-extrabold mt-1 block truncate ${
+          <span className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider block">Dues</span>
+          <span className={`text-xs sm:text-base font-extrabold mt-1 block truncate ${
             netDuesBalance > 0.01 
-              ? 'text-primary-light dark:text-[#E6B560]' 
+              ? 'text-emerald-600 dark:text-emerald-400' 
               : netDuesBalance < -0.01 
-                ? 'text-[#E4572E] dark:text-[#FF754F]' 
-                : 'text-slate-555 dark:text-slate-400'
+                ? 'text-rose-600 dark:text-rose-400' 
+                : 'text-slate-500 dark:text-slate-400'
           }`}>
             {netDuesBalance > 0.01 ? '+' : ''}{formatCurrency(netDuesBalance)}
           </span>
@@ -344,10 +344,10 @@ export default function DashboardSummary() {
         {/* This Month's Spending Card */}
         <Link 
           href="/personal"
-          className="bg-white dark:bg-slate-900 border border-[#E6E2DA] dark:border-[#2F2C29] p-3 rounded-2xl text-left hover:border-primary transition-all duration-200 shadow-sm"
+          className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-3.5 sm:p-4 rounded-2xl text-left hover:border-blue-500 hover:shadow-md transition-all shadow-xs"
         >
-          <span className="text-[10px] font-black text-slate-450 uppercase tracking-wider block truncate">Spending</span>
-          <span className="text-xs sm:text-sm font-extrabold text-slate-800 dark:text-slate-200 mt-1 block truncate">
+          <span className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider block truncate">Spending</span>
+          <span className="text-xs sm:text-base font-extrabold text-slate-800 dark:text-slate-200 mt-1 block truncate">
             {formatCurrency(totalSpent)}
           </span>
         </Link>
@@ -357,11 +357,11 @@ export default function DashboardSummary() {
       <div className="space-y-3">
         <h3 className="font-bold text-xs uppercase tracking-widest text-slate-400 text-left">Active Groups</h3>
         {activeGroups.length === 0 ? (
-          <div className="bg-white dark:bg-slate-900 border border-[#E6E2DA] dark:border-[#2F2C29] rounded-3xl p-6 text-center shadow-sm">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 text-center shadow-xs">
             <p className="text-xs text-slate-400">No active groups. Tap '+' to create one!</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
             {activeGroups.map(g => {
               const bal = groupBalances[g.id] || 0;
               const groupMembers = groupMembersMap[g.id] || [];
@@ -370,7 +370,7 @@ export default function DashboardSummary() {
                 <Link
                   key={g.id}
                   href={`/groups/${g.id}`}
-                  className="bg-white dark:bg-slate-900 border border-[#E6E2DA] dark:border-[#2F2C29] p-4 rounded-3xl flex items-center justify-between hover:border-primary transition-all duration-200 shadow-sm"
+                  className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl flex items-center justify-between hover:border-blue-500 hover:shadow-md transition-all shadow-xs"
                 >
                   <div className="flex flex-col gap-1.5 text-left">
                     <span className="font-bold text-slate-800 dark:text-slate-100 text-sm sm:text-base">
@@ -398,15 +398,15 @@ export default function DashboardSummary() {
                   <div className="text-right">
                     {bal > 0.01 ? (
                       <div>
-                        <span className="text-[10px] font-black text-slate-450 uppercase tracking-wider block">Owed to you</span>
-                        <span className="text-xs sm:text-sm font-extrabold text-[#D4A24C] dark:text-[#E6B560]">
+                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider block">Owed to you</span>
+                        <span className="text-xs sm:text-sm font-extrabold text-emerald-600 dark:text-emerald-400">
                           {formatCurrency(bal)}
                         </span>
                       </div>
                     ) : bal < -0.01 ? (
                       <div>
-                        <span className="text-[10px] font-black text-slate-450 uppercase tracking-wider block">You owe</span>
-                        <span className="text-xs sm:text-sm font-extrabold text-[#E4572E] dark:text-[#FF754F]">
+                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider block">You owe</span>
+                        <span className="text-xs sm:text-sm font-extrabold text-rose-600 dark:text-rose-400">
                           {formatCurrency(Math.abs(bal))}
                         </span>
                       </div>
@@ -424,13 +424,13 @@ export default function DashboardSummary() {
       </div>
 
       {/* 4. Collapsible Category Spend Chart */}
-      <div className="bg-white dark:bg-slate-900 border border-[#E6E2DA] dark:border-[#2F2C29] rounded-3xl p-4 text-left shadow-sm">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 text-left shadow-xs">
         <button 
           onClick={() => setShowChart(!showChart)}
           className="w-full flex items-center justify-between font-bold text-xs uppercase tracking-widest text-slate-500 focus:outline-none"
         >
           <span>Spending Breakdown</span>
-          <span className="text-slate-455">{showChart ? 'Hide ▲' : 'Show ▼'}</span>
+          <span className="text-slate-400">{showChart ? 'Hide ▲' : 'Show ▼'}</span>
         </button>
 
         {showChart && (

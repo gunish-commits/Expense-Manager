@@ -132,7 +132,7 @@ export default function Groups() {
       </div>
 
       {/* Active vs History Tab header */}
-      <div className="flex border-b border-[#E6E4DF] dark:border-[#2D2A26] py-1 text-left">
+      <div className="flex border-b border-slate-200 dark:border-slate-800 py-1 text-left">
         <button
           onClick={() => setActiveTab('active')}
           className={`px-4 py-2 text-xs font-bold transition-all border-b-2 ${
@@ -157,8 +157,8 @@ export default function Groups() {
 
       {/* Groups List */}
       {filteredGroups.length === 0 ? (
-        <div className="bg-white dark:bg-slate-900 border border-[#E6E4DF] dark:border-[#2D2A26] rounded-3xl p-8 text-center flex flex-col items-center justify-center">
-          <div className="w-12 h-12 bg-blue-50 dark:bg-blue-950/20 rounded-2xl flex items-center justify-center text-primary mb-4 shadow-sm">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 text-center flex flex-col items-center justify-center shadow-xs">
+          <div className="w-12 h-12 bg-blue-50 dark:bg-blue-950/20 rounded-2xl flex items-center justify-center text-primary mb-4 shadow-xs">
             <Users className="w-6 h-6" />
           </div>
           <h3 className="font-bold text-slate-800 dark:text-white mb-1.5">
@@ -172,19 +172,19 @@ export default function Groups() {
           {activeTab === 'active' && (
             <button 
               onClick={() => setIsModalOpen(true)}
-              className="bg-slate-900 hover:bg-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all active:scale-95"
+              className="bg-primary hover:bg-primary-light text-white px-4 py-2 rounded-xl text-xs font-bold transition-all active:scale-95 shadow-sm"
             >
               Start your first group
             </button>
           )}
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-3.5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
           {filteredGroups.map(grp => (
             <Link 
               key={grp.id}
               href={`/groups/${grp.id}`}
-              className="group flex items-center justify-between p-4 bg-white dark:bg-slate-900 border border-[#E6E4DF] dark:border-[#2D2A26] rounded-3xl transition-all hover:border-primary"
+              className="group flex items-center justify-between p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl transition-all hover:border-blue-500 hover:shadow-md shadow-xs"
             >
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-blue-50 dark:bg-blue-950/20 rounded-2xl flex items-center justify-center text-primary transition-colors group-hover:bg-primary group-hover:text-white">

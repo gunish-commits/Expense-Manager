@@ -173,9 +173,9 @@ export function GlobalAddExpenseModal() {
                 router.push('/personal?action=add-expense');
                 setView('closed');
               }}
-              className="flex items-center gap-4 p-4 border border-[#E6E4DF] dark:border-[#2D2A26] rounded-2xl hover:border-primary transition-all bg-white dark:bg-slate-900 text-left"
+              className="flex items-center gap-4 p-4 border border-slate-200 dark:border-slate-800 rounded-2xl hover:border-blue-500 hover:shadow-md transition-all bg-white dark:bg-slate-900 text-left shadow-xs"
             >
-              <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-955/20 flex items-center justify-center text-primary">
+              <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/20 flex items-center justify-center text-primary">
                 <User className="w-5 h-5" />
               </div>
               <div>
@@ -187,9 +187,9 @@ export function GlobalAddExpenseModal() {
             {/* Option B: Group */}
             <button
               onClick={() => setView('group-form')}
-              className="flex items-center gap-4 p-4 border border-[#E6E4DF] dark:border-[#2D2A26] rounded-2xl hover:border-primary transition-all bg-white dark:bg-slate-900 text-left"
+              className="flex items-center gap-4 p-4 border border-slate-200 dark:border-slate-800 rounded-2xl hover:border-blue-500 hover:shadow-md transition-all bg-white dark:bg-slate-900 text-left shadow-xs"
             >
-              <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-955/20 flex items-center justify-center text-primary">
+              <div className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/20 flex items-center justify-center text-primary">
                 <Users className="w-5 h-5" />
               </div>
               <div>

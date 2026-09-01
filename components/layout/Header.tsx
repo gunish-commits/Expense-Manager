@@ -200,15 +200,7 @@ export function Header() {
 
   return (
     <>
-      {/* Banner for Guest Mode / Offline */}
-      {isGuest && (
-        <div className="bg-indigo-600 text-white text-center py-1.5 px-4 text-xs font-semibold flex items-center justify-center gap-1.5 shadow-inner sticky top-0 z-50">
-          <Sparkles className="w-3.5 h-3.5 animate-pulse" />
-          <span>Running in Guest Sandbox Mode (Offline). All data is saved on this device.</span>
-        </div>
-      )}
-
-      <header className="bg-white dark:bg-slate-900 border-b border-slate-200/50 dark:border-slate-800/50 h-16 sticky top-0 z-40 px-4 sm:px-6 flex items-center justify-between">
+      <header className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 h-16 sticky top-0 z-40 px-4 sm:px-6 flex items-center justify-between shadow-xs">
         {/* Logo */}
         <div className="flex items-center gap-2">
           <div className="bg-primary text-white p-2 rounded-xl shadow-md">

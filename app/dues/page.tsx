@@ -219,19 +219,19 @@ export default function DuesPage() {
     return (
       <div 
         key={rec.id}
-        className={`border rounded-3xl p-4 bg-white dark:bg-slate-900 transition-all ${
+        className={`border rounded-2xl p-4 bg-white dark:bg-slate-900 transition-all ${
           rec.settled 
-            ? 'border-[#E6E2DA] dark:border-[#2F2C29] opacity-70 shadow-none' 
-            : 'border-[#E6E2DA] dark:border-[#2F2C29] hover:border-primary transition-colors shadow-sm'
+            ? 'border-slate-200 dark:border-slate-800 opacity-70 shadow-none' 
+            : 'border-slate-200 dark:border-slate-800 hover:border-blue-500 hover:shadow-md transition-all shadow-xs'
         }`}
       >
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-slate-50 dark:bg-slate-850 rounded-2xl flex items-center justify-center text-lg">
+            <div className="w-10 h-10 bg-slate-50 dark:bg-slate-800 rounded-xl flex items-center justify-center text-lg">
               {isLender ? '📈' : '📉'}
             </div>
             <div className="text-left">
-              <h4 className="font-bold text-slate-805 dark:text-slate-100 text-xs sm:text-sm">
+              <h4 className="font-bold text-slate-800 dark:text-slate-100 text-xs sm:text-sm">
                 {isLender ? `Lent to ${counterPartyName}` : `Borrowed from ${counterPartyName}`}
               </h4>
               <p className="text-[10px] text-slate-400 mt-0.5">
@@ -244,10 +244,10 @@ export default function DuesPage() {
             <div className="text-right mr-1">
               <span className={`font-black text-sm sm:text-base block ${
                 rec.settled 
-                  ? 'text-slate-500' 
+                  ? 'text-slate-400' 
                   : isLender 
-                    ? 'text-emerald-600 dark:text-emerald-450' 
-                    : 'text-[#E68A2E] dark:text-[#FF9F40]'
+                    ? 'text-emerald-600 dark:text-emerald-400' 
+                    : 'text-rose-600 dark:text-rose-400'
               }`}>
                 {formatCurrency(rec.amount)}
               </span>
@@ -326,7 +326,7 @@ export default function DuesPage() {
   }
 
   return (
-    <div className="space-y-6 pb-6 text-[#262421] dark:text-slate-100">
+    <div className="space-y-6 pb-6 text-slate-900 dark:text-slate-100">
       {/* Top Header */}
       <div className="flex items-center justify-between text-left">
         <div>
@@ -346,7 +346,7 @@ export default function DuesPage() {
             setCustomContactName('');
             setIsModalOpen(true);
           }}
-          className="bg-primary hover:opacity-90 text-white px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm active:scale-95"
+          className="bg-primary hover:bg-primary-light text-white px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm active:scale-95"
         >
           <Plus className="w-4 h-4" /> Add Payment
         </button>
@@ -355,23 +355,23 @@ export default function DuesPage() {
       {/* Stats summaries */}
       <div className="grid grid-cols-2 gap-4">
         {/* Someone owes me (Lent) */}
-        <div className="bg-white dark:bg-slate-900 border border-[#E6E2DA] dark:border-[#2F2C29] p-4 rounded-3xl text-left">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl text-left shadow-xs">
           <div className="w-9 h-9 bg-emerald-50 dark:bg-emerald-950/20 rounded-xl flex items-center justify-center mb-3">
-            <ArrowUpRight className="w-5 h-5 text-emerald-600 dark:text-emerald-450" />
+            <ArrowUpRight className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
           </div>
           <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">Owed to You</span>
-          <span className="text-base sm:text-lg font-black text-emerald-600 dark:text-emerald-450 mt-1 block">
+          <span className="text-base sm:text-lg font-black text-emerald-600 dark:text-emerald-400 mt-1 block">
             {formatCurrency(owedToMe)}
           </span>
         </div>
 
         {/* I owe someone (Borrowed) */}
-        <div className="bg-white dark:bg-slate-900 border border-[#E6E2DA] dark:border-[#2F2C29] p-4 rounded-3xl text-left">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl text-left shadow-xs">
           <div className="w-9 h-9 bg-rose-50 dark:bg-rose-950/20 rounded-xl flex items-center justify-center mb-3">
-            <ArrowDownLeft className="w-5 h-5 text-[#E68A2E] dark:text-[#FF9F40]" />
+            <ArrowDownLeft className="w-5 h-5 text-rose-600 dark:text-rose-400" />
           </div>
           <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">You Owe</span>
-          <span className="text-base sm:text-lg font-black text-[#E68A2E] dark:text-[#FF9F40] mt-1 block">
+          <span className="text-base sm:text-lg font-black text-rose-600 dark:text-rose-400 mt-1 block">
             {formatCurrency(iOwe)}
           </span>
         </div>
@@ -382,10 +382,10 @@ export default function DuesPage() {
         <h3 className="font-bold text-xs uppercase tracking-widest text-slate-400 text-left">Active Dues</h3>
         
         {unsettledRecords.length === 0 ? (
-          <div className="bg-white dark:bg-slate-900 border border-[#E6E2DA] dark:border-[#2F2C29] rounded-3xl p-8 text-center flex flex-col items-center justify-center shadow-sm">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 text-center flex flex-col items-center justify-center shadow-xs">
             <span className="text-3xl mb-3">🤝</span>
             <h4 className="font-bold text-slate-800 dark:text-white mb-1">No active dues</h4>
-            <p className="text-xs text-slate-500 dark:text-slate-455 max-w-xs">
+            <p className="text-xs text-slate-500 dark:text-slate-400 max-w-xs">
               Quickly record any simple cash loans you made to a friend without setting up a group workspace.
             </p>
           </div>
@@ -400,7 +400,7 @@ export default function DuesPage() {
           <div className="space-y-2 mt-4 text-left">
             <button
               onClick={() => setShowSettled(!showSettled)}
-              className="w-full flex items-center justify-between font-bold text-xs uppercase tracking-widest text-slate-500 bg-white dark:bg-slate-900 border border-[#E6E2DA] dark:border-[#2F2C29] p-3 rounded-2xl focus:outline-none"
+              className="w-full flex items-center justify-between font-bold text-xs uppercase tracking-widest text-slate-500 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-3 rounded-2xl focus:outline-none"
             >
               <span>Settled Dues ({settledRecords.length})</span>
               <span>{showSettled ? 'Hide ▲' : 'Show ▼'}</span>
@@ -444,8 +444,8 @@ export default function DuesPage() {
                 onClick={() => setDirection('pay')}
                 className={`py-2 text-xs font-bold rounded-lg transition-all ${
                   direction === 'pay' 
-                    ? 'bg-white dark:bg-slate-900 text-[#E68A2E] dark:text-[#FF9F40] shadow-sm' 
-                    : 'text-slate-455 hover:text-slate-650'
+                    ? 'bg-white dark:bg-slate-900 text-rose-600 dark:text-rose-400 shadow-sm' 
+                    : 'text-slate-450 hover:text-slate-650'
                 }`}
               >
                 I Borrowed

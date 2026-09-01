@@ -31,9 +31,9 @@ export function SettleUpVisualizer({ payments, onSettle }: SettleUpVisualizerPro
 
   if (payments.length === 0) {
     return (
-      <div className="bg-emerald-50/50 dark:bg-emerald-950/10 border border-[#E6E2DA] dark:border-[#2F2C29] rounded-2xl p-6 text-center shadow-sm">
+      <div className="bg-emerald-50/50 dark:bg-emerald-950/10 border border-emerald-200 dark:border-emerald-900/30 rounded-2xl p-6 text-center shadow-xs">
         <div className="mx-auto w-12 h-12 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center mb-3">
-          <Check className="w-6 h-6 text-[#D4A24C] dark:text-[#E6B560]" />
+          <Check className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
         </div>
         <h4 className="font-bold text-slate-900 dark:text-white mb-1">Group is Settled!</h4>
         <p className="text-xs text-slate-500 dark:text-slate-400">All member accounts are perfectly balanced.</p>
@@ -53,7 +53,7 @@ export function SettleUpVisualizer({ payments, onSettle }: SettleUpVisualizerPro
             className={`border rounded-2xl p-4 transition-all duration-300 ${
               isSelected 
                 ? 'border-primary bg-slate-50 dark:bg-slate-950' 
-                : 'border-[#E6E2DA] dark:border-[#2F2C29] hover:border-primary bg-white dark:bg-slate-900'
+                : 'border-slate-200 dark:border-slate-800 hover:border-blue-500 hover:shadow-md bg-white dark:bg-slate-900 shadow-xs'
             }`}
           >
             {/* visual transaction card */}
@@ -70,7 +70,7 @@ export function SettleUpVisualizer({ payments, onSettle }: SettleUpVisualizerPro
                     <p className="font-bold text-slate-800 dark:text-slate-100 text-xs sm:text-sm truncate max-w-[80px] sm:max-w-none">
                       {payment.from_name}
                     </p>
-                    <span className="text-[9px] text-[#E4572E] dark:text-[#FF754F] font-semibold uppercase tracking-wider">pays</span>
+                    <span className="text-[9px] text-rose-600 dark:text-rose-400 font-semibold uppercase tracking-wider">pays</span>
                   </div>
                 </div>
 
@@ -90,7 +90,7 @@ export function SettleUpVisualizer({ payments, onSettle }: SettleUpVisualizerPro
                     <p className="font-bold text-slate-800 dark:text-slate-100 text-xs sm:text-sm truncate max-w-[80px] sm:max-w-none">
                       {payment.to_name}
                     </p>
-                    <span className="text-[9px] text-[#D4A24C] dark:text-[#E6B560] font-semibold uppercase tracking-wider">receives</span>
+                    <span className="text-[9px] text-emerald-600 dark:text-emerald-400 font-semibold uppercase tracking-wider">receives</span>
                   </div>
                 </div>
               </div>
@@ -105,7 +105,7 @@ export function SettleUpVisualizer({ payments, onSettle }: SettleUpVisualizerPro
                 {!isSelected && (
                   <button 
                     onClick={() => setSettlingPaymentId(paymentKey)}
-                    className="bg-[#2C3E66] hover:bg-[#3E588F] text-white px-3 py-1.5 rounded-xl text-[10px] font-bold transition-all active:scale-95 shadow-sm"
+                    className="bg-primary hover:bg-primary-light text-white px-3 py-1.5 rounded-xl text-[10px] font-bold transition-all active:scale-95 shadow-sm"
                   >
                     Mark as Paid
                   </button>
@@ -139,7 +139,7 @@ export function SettleUpVisualizer({ payments, onSettle }: SettleUpVisualizerPro
                     <button 
                       onClick={() => handleRecordSettlement(payment)}
                       disabled={loading}
-                      className="bg-[#2C3E66] hover:bg-[#3E588F] text-white px-3.5 py-2 rounded-xl text-xs font-bold transition-all active:scale-95 shadow-sm"
+                      className="bg-primary hover:bg-primary-light text-white px-3.5 py-2 rounded-xl text-xs font-bold transition-all active:scale-95 shadow-sm"
                     >
                       {loading ? 'Logging...' : 'Confirm Paid'}
                     </button>
