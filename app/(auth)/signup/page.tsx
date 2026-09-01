@@ -46,12 +46,23 @@ export default function Signup() {
       if (error) {
         showToast(error.message, 'error');
       } else if (data.session) {
-        showToast('Registration successful! You have been logged in automatically.', 'success');
+        showToast('Registration successful! You are logged in.', 'success');
         localStorage.removeItem('guest_mode');
         router.push('/dashboard');
-      } else {
-        showToast('Registration successful! Please check your email inbox to confirm your account.', 'info');
-        router.push('/login');
+      } else if (data.user) {
+        // When email confirmation is disabled in Supabase, auto-sign in
+        const { data: signInData, error: signInErr } = await supabase.auth.signInWithPassword({
+          email,
+          password
+        });
+        if (!signInErr && signInData.session) {
+          showToast('Registration successful! You are logged in.', 'success');
+          localStorage.removeItem('guest_mode');
+          router.push('/dashboard');
+        } else {
+          showToast('Registration successful! Please sign in.', 'success');
+          router.push('/login');
+        }
       }
     } catch (e: any) {
       showToast(e.message || 'An unexpected error occurred', 'error');
