@@ -362,7 +362,9 @@ export async function addMemberToGroup(groupId: string, memberId: string): Promi
 }
 
 export async function getGroupByInviteCode(code: string): Promise<Group | null> {
-  const cleanCode = code.trim().toUpperCase();
+  if (!code) return null;
+  const cleanCode = decodeURIComponent(code).trim().toUpperCase();
+  
   if (isGuestMode()) {
     const groups = getLocalList<Group>('local_groups');
     return groups.find(g => g.invite_code?.toUpperCase() === cleanCode) || null;
@@ -371,16 +373,19 @@ export async function getGroupByInviteCode(code: string): Promise<Group | null> 
   const { data, error } = await supabase
     .from('groups')
     .select('*')
-    .eq('invite_code', cleanCode)
-    .single();
+    .ilike('invite_code', cleanCode)
+    .maybeSingle();
 
-  if (error) return null;
+  if (error) {
+    console.error('Error fetching group by invite code:', error);
+    return null;
+  }
   return data;
 }
 
 export async function joinGroupByCode(code: string, userId: string): Promise<void> {
   const grp = await getGroupByInviteCode(code);
-  if (!grp) throw new Error('Group not found');
+  if (!grp) throw new Error('Group not found or invalid invite code');
 
   // 1. Fetch real user's profile name to match against placeholders
   let realName = '';
@@ -393,7 +398,7 @@ export async function joinGroupByCode(code: string, userId: string): Promise<voi
       .from('profiles')
       .select('name')
       .eq('id', userId)
-      .single();
+      .maybeSingle();
     realName = p?.name || '';
   }
 
@@ -419,11 +424,19 @@ export async function joinGroupByCode(code: string, userId: string): Promise<voi
     return;
   }
 
+  // Check if already a member in Cloud Supabase
+  const alreadyMember = members.some(m => m.id === userId);
+  if (alreadyMember) {
+    return; // Already joined, proceed to view group
+  }
+
   const { error } = await supabase
     .from('group_members')
     .insert({ group_id: grp.id, user_id: userId });
 
-  if (error) throw error;
+  if (error && !error.message?.includes('duplicate key')) {
+    throw error;
+  }
 }
 
 export async function updateGroupStatus(groupId: string, status: 'active' | 'settled'): Promise<void> {

@@ -42,7 +42,9 @@ export default function Login() {
       } else {
         showToast('Logged in successfully!', 'success');
         localStorage.removeItem('guest_mode'); // Disable guest mode
-        router.push('/dashboard');
+        const params = new URLSearchParams(window.location.search);
+        const destination = params.get('redirectTo') || '/dashboard';
+        router.push(destination);
       }
     } catch (e: any) {
       showToast(e.message || 'An unexpected error occurred', 'error');
@@ -89,8 +91,12 @@ export default function Login() {
     };
     localStorage.setItem('guest_user', JSON.stringify(guestUser));
     showToast('Entered Guest Sandbox Mode (Offline)', 'info');
-    router.push('/dashboard');
+    const params = new URLSearchParams(window.location.search);
+    const destination = params.get('redirectTo') || '/dashboard';
+    router.push(destination);
   };
+
+  const currentRedirect = typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('redirectTo') : null;
 
   return (
     <div className="min-h-screen flex flex-col justify-center px-6 py-12 bg-background">
@@ -195,7 +201,7 @@ export default function Login() {
           <div className="text-center text-[13px]">
             <span className="text-text-secondary">Don't have an account? </span>
             <Link 
-              href="/signup" 
+              href={currentRedirect ? `/signup?redirectTo=${encodeURIComponent(currentRedirect)}` : '/signup'} 
               className="font-medium text-primary hover:text-primary-hover transition-colors"
             >
               Create one now

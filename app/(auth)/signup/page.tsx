@@ -43,12 +43,15 @@ export default function Signup() {
         }
       });
 
+      const params = new URLSearchParams(window.location.search);
+      const destination = params.get('redirectTo') || '/dashboard';
+
       if (error) {
         showToast(error.message, 'error');
       } else if (data.session) {
         showToast('Registration successful! You are logged in.', 'success');
         localStorage.removeItem('guest_mode');
-        router.push('/dashboard');
+        router.push(destination);
       } else if (data.user) {
         // When email confirmation is disabled in Supabase, auto-sign in
         const { data: signInData, error: signInErr } = await supabase.auth.signInWithPassword({
@@ -58,10 +61,10 @@ export default function Signup() {
         if (!signInErr && signInData.session) {
           showToast('Registration successful! You are logged in.', 'success');
           localStorage.removeItem('guest_mode');
-          router.push('/dashboard');
+          router.push(destination);
         } else {
           showToast('Registration successful! Please sign in.', 'success');
-          router.push('/login');
+          router.push(`/login${params.get('redirectTo') ? `?redirectTo=${params.get('redirectTo')}` : ''}`);
         }
       }
     } catch (e: any) {
@@ -160,7 +163,7 @@ export default function Signup() {
           <div className="text-center text-[13px]">
             <span className="text-text-secondary">Already have an account? </span>
             <Link 
-              href="/login" 
+              href={typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('redirectTo') ? `/login?redirectTo=${encodeURIComponent(new URLSearchParams(window.location.search).get('redirectTo')!)}` : '/login'} 
               className="font-medium text-primary hover:text-primary-hover transition-colors"
             >
               Sign in instead
