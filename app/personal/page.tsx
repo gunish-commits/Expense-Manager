@@ -4,9 +4,9 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { Plus, Upload, Trash2, Calendar, Wallet, Tag, Eye, HardDrive, FileText, Download, MoreVertical } from 'lucide-react';
+import { Plus, Upload, Trash2, Calendar, Wallet, Tag, Eye, HardDrive, FileText, Download, MoreVertical, RotateCcw } from 'lucide-react';
 import { isGuestMode, getGuestUser, supabase } from '@/lib/supabase/client';
-import { getPersonalExpenses, createPersonalExpense, deletePersonalExpense, updatePersonalExpense } from '@/lib/supabase/personalExpenses';
+import { getPersonalExpenses, createPersonalExpense, deletePersonalExpense, updatePersonalExpense, clearAllPersonalExpenses } from '@/lib/supabase/personalExpenses';
 import { listDocuments, uploadFile, deleteDocument, StorageFile } from '@/lib/supabase/storage';
 import { PersonalExpense } from '@/types';
 import { Modal } from '@/components/ui/Modal';
@@ -54,6 +54,9 @@ export default function PersonalProfileMe() {
   const [customFileName, setCustomFileName] = useState('');
   const [docUploading, setDocUploading] = useState(false);
   const [deletingDocName, setDeletingDocName] = useState<string | null>(null);
+  // Reset modal state
+  const [showResetModal, setShowResetModal] = useState(false);
+  const [resetting, setResetting] = useState(false);
 
   const fetchExpenses = async () => {
     try {
@@ -63,6 +66,20 @@ export default function PersonalProfileMe() {
       setTotalSpent(total);
     } catch (e: any) {
       showToast(e.message || 'Error fetching personal expenses', 'error');
+    }
+  };
+
+  const handleResetAll = async () => {
+    setResetting(true);
+    try {
+      await clearAllPersonalExpenses();
+      await fetchExpenses();
+      setShowResetModal(false);
+      showToast('Personal expenses have been reset to ₹0', 'success');
+    } catch (e: any) {
+      showToast(e.message || 'Error resetting personal expenses', 'error');
+    } finally {
+      setResetting(false);
     }
   };
 
@@ -338,19 +355,30 @@ export default function PersonalProfileMe() {
         </div>
 
         {activeTab === 'expenses' ? (
-          <button 
-            onClick={() => {
-              setEditingExpenseId(null);
-              setAmount('');
-              setCategory('Food');
-              setNote('');
-              setReceiptFile(null);
-              setIsExpModalOpen(true);
-            }}
-            className="bg-primary hover:bg-primary-light text-white px-3.5 py-2 rounded-xl text-xs font-bold transition-all active:scale-95 flex items-center gap-1 shadow-sm"
-          >
-            <Plus className="w-4 h-4" /> Add Expense
-          </button>
+          <div className="flex items-center gap-2">
+            {expenses.length > 0 && (
+              <button 
+                onClick={() => setShowResetModal(true)}
+                className="px-3 py-2 border border-slate-200 dark:border-slate-800 text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/20 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-xs active:scale-95"
+                title="Reset all personal expenses"
+              >
+                <RotateCcw className="w-3.5 h-3.5" /> Reset
+              </button>
+            )}
+            <button 
+              onClick={() => {
+                setEditingExpenseId(null);
+                setAmount('');
+                setCategory('Food');
+                setNote('');
+                setReceiptFile(null);
+                setIsExpModalOpen(true);
+              }}
+              className="bg-primary hover:bg-primary-light text-white px-3.5 py-2 rounded-xl text-xs font-bold transition-all active:scale-95 flex items-center gap-1 shadow-sm"
+            >
+              <Plus className="w-4 h-4" /> Add Expense
+            </button>
+          </div>
         ) : (
           <button 
             onClick={() => setIsDocModalOpen(true)}
@@ -942,6 +970,37 @@ export default function PersonalProfileMe() {
               className="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all active:scale-95"
             >
               Delete
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Modal 6: Confirm Reset All Personal Expenses */}
+      <Modal 
+        isOpen={showResetModal} 
+        onClose={() => setShowResetModal(false)} 
+        title="Reset Personal Expenses"
+      >
+        <div className="space-y-4 text-left">
+          <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+            Are you sure you want to clear all your personal expenses? This will delete all logged personal records and reset your spending total to <strong className="text-slate-900 dark:text-white">₹0</strong>.
+          </p>
+          <div className="flex gap-2 justify-end pt-2">
+            <button 
+              type="button"
+              onClick={() => setShowResetModal(false)}
+              disabled={resetting}
+              className="px-4 py-2 border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+            >
+              Cancel
+            </button>
+            <button 
+              type="button"
+              onClick={handleResetAll}
+              disabled={resetting}
+              className="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all active:scale-95 shadow-sm flex items-center gap-1.5"
+            >
+              {resetting ? 'Resetting...' : 'Yes, Reset to ₹0'}
             </button>
           </div>
         </div>

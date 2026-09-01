@@ -5,109 +5,41 @@ import { Group, Profile, GroupMember } from '@/types';
 // Seed local storage with initial data if running in Guest Mode
 export function seedLocalData() {
   if (typeof window === 'undefined') return;
-  if (localStorage.getItem('local_notifications_cleared_v2') !== 'true') {
-    localStorage.removeItem('local_data_seeded');
+
+  // Automatically purge legacy mock data (Goa trip, Alice, Bob, etc.)
+  if (localStorage.getItem('local_clean_v4') !== 'true') {
+    localStorage.removeItem('local_groups');
+    localStorage.removeItem('local_group_members');
+    localStorage.removeItem('local_expenses');
+    localStorage.removeItem('local_expense_splits');
+    localStorage.removeItem('local_settlements');
+    localStorage.removeItem('local_personal_expenses');
+    localStorage.removeItem('local_borrow_records');
+    localStorage.removeItem('local_recurring_expenses');
     localStorage.removeItem('local_notifications');
-    localStorage.setItem('local_notifications_cleared_v2', 'true');
+    localStorage.setItem('local_clean_v4', 'true');
   }
-  if (localStorage.getItem('local_data_seeded') === 'true') return;
 
   const guest = getGuestUser();
-  const aliceId = 'alice-uuid-1111-1111';
-  const bobId = 'bob-uuid-2222-2222';
-  const charlieId = 'charlie-uuid-3333-3333';
 
-  // Seed Profiles
-  const profiles: Profile[] = [
-    { id: guest.id, name: guest.name, avatar_url: guest.avatar_url, created_at: new Date().toISOString() },
-    { id: aliceId, name: 'Alice Smith', avatar_url: 'https://api.dicebear.com/7.x/bottts/svg?seed=Alice', created_at: new Date().toISOString() },
-    { id: bobId, name: 'Bob Vance', avatar_url: 'https://api.dicebear.com/7.x/bottts/svg?seed=Bob', created_at: new Date().toISOString() },
-    { id: charlieId, name: 'Charlie Green', avatar_url: 'https://api.dicebear.com/7.x/bottts/svg?seed=Charlie', created_at: new Date().toISOString() }
-  ];
-  localStorage.setItem('local_profiles', JSON.stringify(profiles));
+  // Initialize clean profiles list
+  if (!localStorage.getItem('local_profiles')) {
+    const profiles: Profile[] = [
+      { id: guest.id, name: guest.name, avatar_url: guest.avatar_url, created_at: new Date().toISOString() }
+    ];
+    localStorage.setItem('local_profiles', JSON.stringify(profiles));
+  }
 
-  // Seed Groups
-  const group1Id = 'group-uuid-goa-trip';
-  const group2Id = 'group-uuid-flatmates';
-  const groups: Group[] = [
-    { id: group1Id, name: 'Goa Trip', created_by: guest.id, created_at: new Date().toISOString(), status: 'active', invite_code: 'GOA123' },
-    { id: group2Id, name: 'Flat 204 Expenses', created_by: guest.id, created_at: new Date().toISOString(), status: 'active', invite_code: 'FLA456' }
-  ];
-  localStorage.setItem('local_groups', JSON.stringify(groups));
-
-  // Seed Group Members
-  const members: GroupMember[] = [
-    // Group 1 members
-    { group_id: group1Id, user_id: guest.id, joined_at: new Date().toISOString() },
-    { group_id: group1Id, user_id: aliceId, joined_at: new Date().toISOString() },
-    { group_id: group1Id, user_id: bobId, joined_at: new Date().toISOString() },
-    { group_id: group1Id, user_id: charlieId, joined_at: new Date().toISOString() },
-
-    // Group 2 members
-    { group_id: group2Id, user_id: guest.id, joined_at: new Date().toISOString() },
-    { group_id: group2Id, user_id: aliceId, joined_at: new Date().toISOString() }
-  ];
-  localStorage.setItem('local_group_members', JSON.stringify(members));
-
-  // Seed Expenses
-  const exp1Id = 'exp-uuid-1';
-  const exp2Id = 'exp-uuid-2';
-  const exp3Id = 'exp-uuid-3';
-  const expenses = [
-    { id: exp1Id, group_id: group1Id, added_by: guest.id, amount: 2400, description: 'Seafront Villa Booking', category: 'Lodging', date: '2026-08-25', receipt_url: null, created_at: new Date().toISOString() },
-    { id: exp2Id, group_id: group1Id, added_by: aliceId, amount: 1200, description: 'Dinner & Drinks at Curlies', category: 'Food', date: '2026-08-26', receipt_url: null, created_at: new Date().toISOString() },
-    { id: exp3Id, group_id: group2Id, added_by: guest.id, amount: 3000, description: 'Monthly WiFi Broadband', category: 'Utilities', date: '2026-08-01', receipt_url: null, created_at: new Date().toISOString() }
-  ];
-  localStorage.setItem('local_expenses', JSON.stringify(expenses));
-
-  // Seed Expense Splits
-  const splits = [
-    // seafront villa split (2400 / 4 members = 600 each)
-    { id: 'split-1-1', expense_id: exp1Id, user_id: guest.id, share_amount: 600, settled: false },
-    { id: 'split-1-2', expense_id: exp1Id, user_id: aliceId, share_amount: 600, settled: false },
-    { id: 'split-1-3', expense_id: exp1Id, user_id: bobId, share_amount: 600, settled: false },
-    { id: 'split-1-4', expense_id: exp1Id, user_id: charlieId, share_amount: 600, settled: false },
-
-    // dinner split (1200 / 3 members = 400 each, charlie opted out)
-    { id: 'split-2-1', expense_id: exp2Id, user_id: guest.id, share_amount: 400, settled: false },
-    { id: 'split-2-2', expense_id: exp2Id, user_id: aliceId, share_amount: 400, settled: false },
-    { id: 'split-2-3', expense_id: exp2Id, user_id: bobId, share_amount: 400, settled: false },
-
-    // wifi split (3000 / 2 members = 1500 each)
-    { id: 'split-3-1', expense_id: exp3Id, user_id: guest.id, share_amount: 1500, settled: false },
-    { id: 'split-3-2', expense_id: exp3Id, user_id: aliceId, share_amount: 1500, settled: false }
-  ];
-  localStorage.setItem('local_expense_splits', JSON.stringify(splits));
-
-  // Seed Settlements
-  const settlements = [
-    { id: 'settle-1', group_id: group1Id, from_user: bobId, to_user: guest.id, amount: 200, date: '2026-08-28', note: 'Partial payment for villa' }
-  ];
-  localStorage.setItem('local_settlements', JSON.stringify(settlements));
-
-  // Seed Personal Expenses
-  const personal = [
-    { id: 'pers-1', user_id: guest.id, amount: 150, category: 'Coffee', date: '2026-08-29', note: 'Starbucks latte', receipt_url: null },
-    { id: 'pers-2', user_id: guest.id, amount: 450, category: 'Transport', date: '2026-08-28', note: 'Uber ride to station', receipt_url: null }
-  ];
-  localStorage.setItem('local_personal_expenses', JSON.stringify(personal));
-
-  // Seed Borrow Records
-  const borrow = [
-    { id: 'borrow-1', lender_id: guest.id, borrower_id: aliceId, amount: 500, reason: 'Snacks at airport', date: '2026-08-25', settled: false, created_by: guest.id },
-    { id: 'borrow-2', lender_id: bobId, borrower_id: guest.id, amount: 300, reason: 'Cab share cash', date: '2026-08-26', settled: false, created_by: bobId }
-  ];
-  localStorage.setItem('local_borrow_records', JSON.stringify(borrow));
-
-  // Seed Recurring Expenses
-  const recurring = [
-    { id: 'recur-1', group_id: group2Id, description: 'Broadband Bill Renewal', amount: 3000, category: 'Utilities', split_between: [guest.id, aliceId], frequency: 'monthly', next_due_date: '2026-09-01', created_by: guest.id }
-  ];
-  localStorage.setItem('local_recurring_expenses', JSON.stringify(recurring));
-
-  // Seed Notifications
-  const notifications: any[] = [];
-  localStorage.setItem('local_notifications', JSON.stringify(notifications));
+  // Initialize empty collections
+  if (!localStorage.getItem('local_groups')) localStorage.setItem('local_groups', JSON.stringify([]));
+  if (!localStorage.getItem('local_group_members')) localStorage.setItem('local_group_members', JSON.stringify([]));
+  if (!localStorage.getItem('local_expenses')) localStorage.setItem('local_expenses', JSON.stringify([]));
+  if (!localStorage.getItem('local_expense_splits')) localStorage.setItem('local_expense_splits', JSON.stringify([]));
+  if (!localStorage.getItem('local_settlements')) localStorage.setItem('local_settlements', JSON.stringify([]));
+  if (!localStorage.getItem('local_personal_expenses')) localStorage.setItem('local_personal_expenses', JSON.stringify([]));
+  if (!localStorage.getItem('local_borrow_records')) localStorage.setItem('local_borrow_records', JSON.stringify([]));
+  if (!localStorage.getItem('local_recurring_expenses')) localStorage.setItem('local_recurring_expenses', JSON.stringify([]));
+  if (!localStorage.getItem('local_notifications')) localStorage.setItem('local_notifications', JSON.stringify([]));
 
   localStorage.setItem('local_data_seeded', 'true');
 }

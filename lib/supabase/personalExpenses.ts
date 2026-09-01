@@ -130,3 +130,24 @@ export async function updatePersonalExpense(
   if (error) throw error;
   return { ...data, amount: Number(data.amount) };
 }
+
+export async function clearAllPersonalExpenses(): Promise<void> {
+  if (isGuestMode()) {
+    const guest = getGuestUser();
+    const expenses = getLocalList<any>('local_personal_expenses');
+    // Remove all expenses belonging to the current guest user
+    saveLocalList('local_personal_expenses', expenses.filter(e => e.user_id !== guest.id));
+    return;
+  }
+
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('Not authenticated');
+
+  const { error } = await supabase
+    .from('personal_expenses')
+    .delete()
+    .eq('user_id', user.id);
+
+  if (error) throw error;
+}
+
