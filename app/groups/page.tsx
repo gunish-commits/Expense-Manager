@@ -36,10 +36,18 @@ export default function Groups() {
   const handleJoinByCode = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!joinCodeInput.trim()) {
-      showToast('Please enter an invite code', 'error');
+      showToast('Please enter an invite code or link', 'error');
       return;
     }
-    router.push(`/groups/join/${joinCodeInput.trim().toUpperCase()}`);
+    
+    let cleanCode = joinCodeInput.trim();
+    if (cleanCode.includes('/join/')) {
+      cleanCode = cleanCode.split('/join/').pop()?.split('?')[0]?.split('#')[0] || cleanCode;
+    } else if (cleanCode.includes('/groups/')) {
+      cleanCode = cleanCode.split('/groups/').pop()?.split('?')[0]?.split('#')[0] || cleanCode;
+    }
+    cleanCode = cleanCode.trim();
+    router.push(`/groups/join/${encodeURIComponent(cleanCode)}`);
   };
 
   useEffect(() => {

@@ -108,6 +108,14 @@ export async function getGroup(groupId: string): Promise<Group | null> {
     .single();
 
   if (error) return null;
+
+  // Self-heal: If invite_code is missing, generate and persist one
+  if (!data.invite_code) {
+    const newCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+    await supabase.from('groups').update({ invite_code: newCode }).eq('id', groupId);
+    data.invite_code = newCode;
+  }
+
   return data;
 }
 
@@ -275,10 +283,17 @@ export async function createGroup(name: string, invitedEmailsOrNames: string[] =
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error('Not authenticated');
 
+  const generatedCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+
   // Insert group
   const { data: newGroup, error: groupError } = await supabase
     .from('groups')
-    .insert({ name, created_by: user.id })
+    .insert({ 
+      name, 
+      created_by: user.id,
+      invite_code: generatedCode,
+      status: 'active'
+    })
     .select()
     .single();
 
@@ -291,19 +306,13 @@ export async function createGroup(name: string, invitedEmailsOrNames: string[] =
 
   if (memberError) throw memberError;
 
-  // Invite others - typically in Supabase, we either invite by email, which sends email or auto-joins
-  // Here, we'll try to find matching user profiles by name/email or generate invite codes.
-  // For simplicity, we search if user exists in profiles, otherwise we can create mock links.
   for (const contact of invitedEmailsOrNames) {
     if (!contact.trim()) continue;
     
-    // We attempt to find a profile with this name or email
-    // For production splitwise, we can lookup profiles or trigger a Resend email with invite link.
-    // If profiles exist:
     const { data: searchProfile } = await supabase
       .from('profiles')
       .select('id')
-      .eq('name', contact) // Simple lookup. In real system, we'd lookup auth.users by email.
+      .eq('name', contact)
       .limit(1);
 
     if (searchProfile && searchProfile.length > 0) {
@@ -361,23 +370,41 @@ export async function addMemberToGroup(groupId: string, memberId: string): Promi
   if (error) throw error;
 }
 
-export async function getGroupByInviteCode(code: string): Promise<Group | null> {
-  if (!code) return null;
-  const cleanCode = decodeURIComponent(code).trim().toUpperCase();
+export async function getGroupByInviteCode(codeOrId: string): Promise<Group | null> {
+  if (!codeOrId) return null;
+  let cleanCode = decodeURIComponent(codeOrId).trim();
+
+  // If a full link was passed, extract the code segment
+  if (cleanCode.includes('/join/')) {
+    cleanCode = cleanCode.split('/join/').pop()?.split('?')[0]?.split('#')[0] || cleanCode;
+  } else if (cleanCode.includes('/groups/')) {
+    cleanCode = cleanCode.split('/groups/').pop()?.split('?')[0]?.split('#')[0] || cleanCode;
+  }
+  cleanCode = cleanCode.trim();
   
   if (isGuestMode()) {
     const groups = getLocalList<Group>('local_groups');
-    return groups.find(g => g.invite_code?.toUpperCase() === cleanCode) || null;
+    return groups.find(g => 
+      g.invite_code?.toUpperCase() === cleanCode.toUpperCase() ||
+      g.id === cleanCode
+    ) || null;
   }
 
-  const { data, error } = await supabase
-    .from('groups')
-    .select('*')
-    .ilike('invite_code', cleanCode)
-    .maybeSingle();
+  // Check if cleanCode is a UUID
+  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(cleanCode);
+
+  let query = supabase.from('groups').select('*');
+  
+  if (isUuid) {
+    query = query.or(`id.eq.${cleanCode},invite_code.ilike.${cleanCode}`);
+  } else {
+    query = query.ilike('invite_code', cleanCode);
+  }
+
+  const { data, error } = await query.maybeSingle();
 
   if (error) {
-    console.error('Error fetching group by invite code:', error);
+    console.error('Error fetching group by invite code or ID:', error);
     return null;
   }
   return data;
