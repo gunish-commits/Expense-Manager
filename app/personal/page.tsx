@@ -244,7 +244,7 @@ export default function PersonalProfileMe() {
     try {
       const ext = selectedFile.name.substring(selectedFile.name.lastIndexOf('.'));
       const finalName = `${customFileName.trim() || 'Receipt'}_${Date.now()}${ext}`;
-      await uploadFile('receipts', selectedFile, finalName);
+      await uploadFile('documents', selectedFile, finalName);
       showToast('Document archived in vault!', 'success');
       setIsDocModalOpen(false);
       setSelectedFile(null);
