@@ -69,3 +69,14 @@ export function updateGuestUser(name: string, avatarUrl?: string): GuestProfile 
   
   return updated;
 }
+
+export function enableGuestMode(): void {
+  if (typeof window === 'undefined') return;
+  localStorage.setItem('guest_mode', 'true');
+}
+
+export function disableGuestMode(): void {
+  if (typeof window === 'undefined') return;
+  localStorage.removeItem('guest_mode');
+}
+

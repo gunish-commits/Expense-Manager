@@ -381,53 +381,86 @@ export async function getGroupByInviteCode(codeOrId: string): Promise<Group | nu
     cleanCode = cleanCode.split('/groups/').pop()?.split('?')[0]?.split('#')[0] || cleanCode;
   }
   cleanCode = cleanCode.trim();
-  
+
+  // 1. Check local groups first if in guest mode
   if (isGuestMode()) {
     const groups = getLocalList<Group>('local_groups');
-    return groups.find(g => 
+    const localFound = groups.find(g => 
       g.invite_code?.toUpperCase() === cleanCode.toUpperCase() ||
       g.id === cleanCode
-    ) || null;
+    );
+    if (localFound) return localFound;
   }
 
-  // Check if cleanCode is a UUID
+  // 2. Query Supabase (case-insensitive invite_code or UUID id)
   const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(cleanCode);
 
-  let query = supabase.from('groups').select('*');
-  
-  if (isUuid) {
-    query = query.or(`id.eq.${cleanCode},invite_code.ilike.${cleanCode}`);
-  } else {
-    query = query.ilike('invite_code', cleanCode);
-  }
+  try {
+    let query = supabase.from('groups').select('*');
+    if (isUuid) {
+      query = query.or(`id.eq.${cleanCode},invite_code.ilike.${cleanCode}`);
+    } else {
+      query = query.ilike('invite_code', cleanCode);
+    }
 
-  const { data, error } = await query.maybeSingle();
+    const { data, error } = await query.maybeSingle();
 
-  if (error) {
-    console.error('Error fetching group by invite code or ID:', error);
+    if (error) {
+      console.warn('Direct invite code query returned error, trying fallback search:', error.message);
+      // Fallback: Query all groups and find match
+      const { data: allGroups } = await supabase.from('groups').select('*').limit(50);
+      if (allGroups && allGroups.length > 0) {
+        const matched = allGroups.find(
+          g => g.invite_code?.toUpperCase() === cleanCode.toUpperCase() || g.id === cleanCode
+        );
+        if (matched) return matched;
+      }
+      return null;
+    }
+
+    if (data) return data;
+
+    // Additional fallback for case matching
+    const { data: allGroups } = await supabase.from('groups').select('*').limit(50);
+    if (allGroups && allGroups.length > 0) {
+      const matched = allGroups.find(
+        g => g.invite_code?.toUpperCase() === cleanCode.toUpperCase() || g.id === cleanCode
+      );
+      if (matched) return matched;
+    }
+
+    return null;
+  } catch (err) {
+    console.error('Error in getGroupByInviteCode:', err);
     return null;
   }
-  return data;
 }
 
-export async function joinGroupByCode(code: string, userId: string): Promise<void> {
-  const grp = await getGroupByInviteCode(code);
+export async function joinGroupByCode(codeOrId: string, userId: string): Promise<void> {
+  const grp = await getGroupByInviteCode(codeOrId);
   if (!grp) throw new Error('Group not found or invalid invite code');
 
-  // 1. Fetch real user's profile name to match against placeholders
-  let realName = '';
-  if (isGuestMode()) {
-    const profiles = getLocalList<Profile>('local_profiles');
-    const p = profiles.find(prof => prof.id === userId);
-    realName = p?.name || '';
-  } else {
-    const { data: p } = await supabase
-      .from('profiles')
-      .select('name')
-      .eq('id', userId)
-      .maybeSingle();
-    realName = p?.name || '';
+  // Check if group is a local guest group
+  const isLocalGroup = isGuestMode() && getLocalList<Group>('local_groups').some(g => g.id === grp.id);
+
+  if (isLocalGroup) {
+    const gm = getLocalList<GroupMember>('local_group_members');
+    const alreadyMember = gm.some(m => m.group_id === grp.id && m.user_id === userId);
+    if (!alreadyMember) {
+      gm.push({ group_id: grp.id, user_id: userId, joined_at: new Date().toISOString() });
+      saveLocalList('local_group_members', gm);
+    }
+    return;
   }
+
+  // Cloud Supabase Group Join
+  // 1. Fetch real user's profile name to match against placeholders
+  const { data: p } = await supabase
+    .from('profiles')
+    .select('name')
+    .eq('id', userId)
+    .maybeSingle();
+  const realName = p?.name || '';
 
   // 2. Check if a placeholder matches this name case-insensitively
   const members = await getGroupMembers(grp.id);
@@ -440,21 +473,10 @@ export async function joinGroupByCode(code: string, userId: string): Promise<voi
     return;
   }
 
-  // 3. Regular insert if no match
-  if (isGuestMode()) {
-    const gm = getLocalList<GroupMember>('local_group_members');
-    const alreadyMember = gm.some(m => m.group_id === grp.id && m.user_id === userId);
-    if (!alreadyMember) {
-      gm.push({ group_id: grp.id, user_id: userId, joined_at: new Date().toISOString() });
-      saveLocalList('local_group_members', gm);
-    }
-    return;
-  }
-
-  // Check if already a member in Cloud Supabase
+  // 3. Check if already a member in Cloud Supabase
   const alreadyMember = members.some(m => m.id === userId);
   if (alreadyMember) {
-    return; // Already joined, proceed to view group
+    return; // Already joined
   }
 
   const { error } = await supabase
