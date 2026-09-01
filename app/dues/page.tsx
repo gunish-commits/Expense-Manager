@@ -1,7 +1,7 @@
 // app/dues/page.tsx
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { Plus, ArrowUpRight, ArrowDownLeft, Trash2, Check, MoreVertical } from 'lucide-react';
 import { isGuestMode, getGuestUser, supabase } from '@/lib/supabase/client';
@@ -20,9 +20,35 @@ export default function DuesPage() {
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [records, setRecords] = useState<BorrowRecord[]>([]);
 
-  // Totals
-  const [owedToMe, setOwedToMe] = useState(0);
-  const [iOwe, setIOwe] = useState(0);
+  // Memoized totals from records
+  const { owedToMe, iOwe, unsettledRecords, settledRecords } = useMemo(() => {
+    let lentTotal = 0;
+    let borrowTotal = 0;
+    const unsettled: BorrowRecord[] = [];
+    const settled: BorrowRecord[] = [];
+
+    records.forEach(r => {
+      if (r.settled) {
+        settled.push(r);
+      } else {
+        unsettled.push(r);
+        if (currentUser) {
+          if (r.lender_id === currentUser.id) {
+            lentTotal += Number(r.amount);
+          } else {
+            borrowTotal += Number(r.amount);
+          }
+        }
+      }
+    });
+
+    return {
+      owedToMe: lentTotal,
+      iOwe: borrowTotal,
+      unsettledRecords: unsettled,
+      settledRecords: settled
+    };
+  }, [records, currentUser]);
 
   // Modal states
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -65,20 +91,6 @@ export default function DuesPage() {
     try {
       const data = await getBorrowRecords();
       setRecords(data);
-
-      let lentTotal = 0;
-      let borrowTotal = 0;
-      data.forEach(r => {
-        if (!r.settled) {
-          if (r.lender_id === userId) {
-            lentTotal += Number(r.amount);
-          } else {
-            borrowTotal += Number(r.amount);
-          }
-        }
-      });
-      setOwedToMe(lentTotal);
-      setIOwe(borrowTotal);
     } catch (e: any) {
       showToast(e.message || 'Error loading dues ledger', 'error');
     } finally {
@@ -115,7 +127,39 @@ export default function DuesPage() {
       return;
     }
 
-    setModalLoading(true);
+    const previousRecords = [...records];
+    const isEdit = !!editingId;
+    const targetId = editingId || `temp-due-${Date.now()}`;
+
+    // Optimistic record creation
+    const optimisticRecord: BorrowRecord = {
+      id: targetId,
+      lender_id: direction === 'collect' ? currentUser.id : 'contact-temp',
+      borrower_id: direction === 'collect' ? 'contact-temp' : currentUser.id,
+      amount: parsedAmt,
+      reason: reason.trim(),
+      date,
+      settled: false,
+      created_by: currentUser.id,
+      lender_profile: direction === 'collect' ? currentUser : { id: 'contact-temp', name: customContactName.trim(), avatar_url: `https://api.dicebear.com/7.x/bottts/svg?seed=${customContactName.trim()}`, created_at: '' },
+      borrower_profile: direction === 'collect' ? { id: 'contact-temp', name: customContactName.trim(), avatar_url: `https://api.dicebear.com/7.x/bottts/svg?seed=${customContactName.trim()}`, created_at: '' } : currentUser
+    };
+
+    // Instant UI update
+    if (isEdit) {
+      setRecords(prev => prev.map(r => r.id === targetId ? optimisticRecord : r));
+    } else {
+      setRecords(prev => [optimisticRecord, ...prev]);
+    }
+
+    // Close modal immediately
+    setIsModalOpen(false);
+    setAmount('');
+    setReason('');
+    setCustomContactName('');
+    setEditingId(null);
+    setModalLoading(false);
+
     try {
       let contactId = '';
       
@@ -132,7 +176,6 @@ export default function DuesPage() {
         localStorage.setItem('local_profiles', JSON.stringify(profiles));
         contactId = newProfId;
       } else {
-        // Cloud mode manually typed - create virtual profile under users list
         const { data: searchProfile } = await supabase
           .from('profiles')
           .select('id')
@@ -142,7 +185,6 @@ export default function DuesPage() {
         if (searchProfile && searchProfile.length > 0) {
           contactId = searchProfile[0].id;
         } else {
-          // Create a placeholder profile (profiles_id_fkey removed in migration!)
           const newProfId = crypto.randomUUID();
           const { error: profileErr } = await supabase
             .from('profiles')
@@ -157,58 +199,59 @@ export default function DuesPage() {
         }
       }
 
-      // Assign direction
       const lender_id = direction === 'collect' ? currentUser.id : contactId;
       const borrower_id = direction === 'collect' ? contactId : currentUser.id;
 
-      if (editingId) {
-        await updateBorrowRecord(editingId, lender_id, borrower_id, parsedAmt, reason.trim(), date);
+      let savedRecord: BorrowRecord;
+      if (isEdit) {
+        savedRecord = await updateBorrowRecord(targetId, lender_id, borrower_id, parsedAmt, reason.trim(), date);
         showToast('Due record updated successfully', 'success');
       } else {
-        await createBorrowRecord(lender_id, borrower_id, parsedAmt, reason.trim(), date);
+        savedRecord = await createBorrowRecord(lender_id, borrower_id, parsedAmt, reason.trim(), date);
         showToast('Due record recorded successfully', 'success');
       }
 
-      // Reset
-      setAmount('');
-      setReason('');
-      setCustomContactName('');
-      setEditingId(null);
-      setIsModalOpen(false);
-      fetchRecords(currentUser.id);
+      setRecords(prev => prev.map(r => r.id === targetId ? savedRecord : r));
       window.dispatchEvent(new Event('refresh-dashboard-data'));
     } catch (e: any) {
-      showToast(e.message || 'Failed to save due record', 'error');
-    } finally {
-      setModalLoading(false);
+      setRecords(previousRecords);
+      showToast(e.message || 'Failed to save due record — rolled back', 'error');
     }
   };
 
   const handleToggleSettle = async (rec: BorrowRecord) => {
+    const previousRecords = [...records];
+    const newSettledState = !rec.settled;
+
+    // Instant optimistic update
+    setRecords(prev => prev.map(r => r.id === rec.id ? { ...r, settled: newSettledState } : r));
+    showToast(newSettledState ? 'Record marked settled' : 'Record marked unsettled', 'success');
+
     try {
-      await settleBorrowRecord(rec.id, !rec.settled);
-      showToast(rec.settled ? 'Record marked unsettled' : 'Record marked settled', 'success');
-      fetchRecords(currentUser.id);
+      await settleBorrowRecord(rec.id, newSettledState);
       window.dispatchEvent(new Event('refresh-dashboard-data'));
     } catch (e: any) {
-      showToast(e.message || 'Error updating status', 'error');
+      setRecords(previousRecords);
+      showToast(e.message || 'Error updating status — rolled back', 'error');
     }
   };
 
   const handleDelete = async (id: string) => {
+    const previousRecords = [...records];
+
+    // Instant optimistic delete
+    setRecords(prev => prev.filter(r => r.id !== id));
+    setDeletingId(null);
+    showToast('Due record deleted', 'success');
+
     try {
       await deleteBorrowRecord(id);
-      showToast('Due record deleted', 'success');
-      setDeletingId(null);
-      fetchRecords(currentUser.id);
       window.dispatchEvent(new Event('refresh-dashboard-data'));
     } catch (e: any) {
-      showToast(e.message || 'Error deleting record', 'error');
+      setRecords(previousRecords);
+      showToast(e.message || 'Error deleting record — restored', 'error');
     }
   };
-
-  const unsettledRecords = records.filter(r => !r.settled);
-  const settledRecords = records.filter(r => r.settled);
 
   const renderDueCard = (rec: BorrowRecord) => {
     const isLender = rec.lender_id === currentUser.id;

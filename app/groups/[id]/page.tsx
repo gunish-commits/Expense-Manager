@@ -1,7 +1,7 @@
 // app/groups/[id]/page.tsx
 'use client';
 
-import React, { useState, useEffect, use } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, use } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { 
@@ -80,9 +80,49 @@ export default function GroupDetail({ params }: PageProps) {
   // Delete confirmations
   const [deletingExpenseId, setDeletingExpenseId] = useState<string | null>(null);
 
-  // Calculations
-  const [netBalances, setNetBalances] = useState<Record<string, number>>({});
-  const [simplifiedTransactions, setSimplifiedTransactions] = useState<SettleUpPayment[]>([]);
+  // Memoized Net Balances Calculation (Synchronous, 0 latency, no extra re-renders)
+  const netBalances = useMemo(() => {
+    if (members.length === 0) return {};
+
+    const balances: Record<string, number> = {};
+    members.forEach(m => { balances[m.id] = 0; });
+
+    // 1. Calculate paid vs owed from expenses
+    expenses.forEach(exp => {
+      const parsedAmt = Number(exp.amount);
+      const payerId = exp.added_by;
+
+      if (balances[payerId] !== undefined) {
+        balances[payerId] += parsedAmt;
+      }
+
+      // Debit Splits
+      exp.splits?.forEach(split => {
+        if (balances[split.user_id] !== undefined) {
+          balances[split.user_id] -= Number(split.share_amount);
+        }
+      });
+    });
+
+    // 2. Adjust balances based on payments (settlements)
+    settlements.forEach(s => {
+      const parsedAmt = Number(s.amount);
+      if (balances[s.from_user] !== undefined) {
+        balances[s.from_user] += parsedAmt;
+      }
+      if (balances[s.to_user] !== undefined) {
+        balances[s.to_user] -= parsedAmt;
+      }
+    });
+
+    return balances;
+  }, [expenses, settlements, members]);
+
+  // Memoized Debt Simplification Algorithm
+  const simplifiedTransactions = useMemo(() => {
+    if (members.length === 0 || Object.keys(netBalances).length === 0) return [];
+    return simplifyDebts(netBalances, members);
+  }, [netBalances, members]);
 
   // Fetch all group details
   const loadGroupDetails = async () => {
@@ -142,48 +182,6 @@ export default function GroupDetail({ params }: PageProps) {
       return () => clearInterval(interval);
     }
   }, [groupId]);
-
-  // Compute Balances whenever expenses or settlements change
-  useEffect(() => {
-    if (members.length === 0) return;
-
-    const balances: Record<string, number> = {};
-    members.forEach(m => { balances[m.id] = 0; });
-
-    // 1. Calculate paid vs owed from expenses
-    expenses.forEach(exp => {
-      const parsedAmt = Number(exp.amount);
-      const payerId = exp.added_by;
-
-      if (balances[payerId] !== undefined) {
-        balances[payerId] += parsedAmt;
-      }
-
-      // Debit Splits
-      exp.splits?.forEach(split => {
-        if (balances[split.user_id] !== undefined) {
-          balances[split.user_id] -= Number(split.share_amount);
-        }
-      });
-    });
-
-    // 2. Adjust balances based on payments (settlements)
-    settlements.forEach(s => {
-      const parsedAmt = Number(s.amount);
-      if (balances[s.from_user] !== undefined) {
-        balances[s.from_user] += parsedAmt;
-      }
-      if (balances[s.to_user] !== undefined) {
-        balances[s.to_user] -= parsedAmt;
-      }
-    });
-
-    setNetBalances(balances);
-
-    // 3. Run Debt Simplifier Algorithm
-    const transactions = simplifyDebts(balances, members);
-    setSimplifiedTransactions(transactions);
-  }, [expenses, settlements, members]);
 
   const openAddExpenseModal = () => {
     setEditingExpenseId(null);
@@ -245,29 +243,73 @@ export default function GroupDetail({ params }: PageProps) {
     }
 
     setModalLoading(true);
+    const previousExpenses = [...expenses];
+
+    // Prepare equal split amounts
+    const share = Math.round((parsedAmount / checkedUserIds.length) * 100) / 100;
+    let leftover = parsedAmount - (share * checkedUserIds.length);
+    
+    const splitsInput = checkedUserIds.map((uid, index) => {
+      let userShare = share;
+      if (index === 0) {
+        userShare = Math.round((share + leftover) * 100) / 100;
+      }
+      return { user_id: uid, share_amount: userShare };
+    });
+
+    const isEdit = !!editingExpenseId;
+    const targetExpId = editingExpenseId || `temp-${Date.now()}`;
+    const payerProfile = members.find(m => m.id === payerId);
+
+    // Optimistic UI item
+    const optimisticExp: Expense = {
+      id: targetExpId,
+      group_id: groupId,
+      added_by: payerId,
+      amount: parsedAmount,
+      description: expDesc.trim(),
+      category: expCategory,
+      date: expDate,
+      receipt_url: null,
+      created_at: new Date().toISOString(),
+      splits: splitsInput.map((s, idx) => ({
+        id: `opt-split-${idx}`,
+        expense_id: targetExpId,
+        user_id: s.user_id,
+        share_amount: s.share_amount,
+        settled: false,
+        profile: members.find(m => m.id === s.user_id)
+      })),
+      added_by_profile: payerProfile
+    };
+
+    // Instant UI update
+    if (isEdit) {
+      setExpenses(prev => prev.map(e => e.id === targetExpId ? optimisticExp : e));
+    } else {
+      setExpenses(prev => [optimisticExp, ...prev]);
+    }
+
+    // Close modal immediately for zero-lag feeling
+    setIsExpModalOpen(false);
+    setExpAmount('');
+    setExpDesc('');
+    setReceiptFile(null);
+    setEditingExpenseId(null);
+    setModalLoading(false);
+
     try {
       let receiptUrl: string | null = null;
       if (receiptFile) {
-        receiptUploading || setReceiptUploading(true);
+        setReceiptUploading(true);
         receiptUrl = await uploadFile('receipts', receiptFile);
         setReceiptUploading(false);
       }
 
-      // Prepare equal split amounts
-      const share = Math.round((parsedAmount / checkedUserIds.length) * 100) / 100;
-      let leftover = parsedAmount - (share * checkedUserIds.length);
-      
-      const splitsInput = checkedUserIds.map((uid, index) => {
-        let userShare = share;
-        if (index === 0) {
-          userShare = Math.round((share + leftover) * 100) / 100;
-        }
-        return { user_id: uid, share_amount: userShare };
-      });
-
-      if (editingExpenseId) {
-        await updateExpense(
-          editingExpenseId,
+      let savedExp: Expense;
+      if (isEdit) {
+        savedExp = await updateExpense(
+          targetExpId,
           parsedAmount,
           expDesc.trim(),
           expCategory,
@@ -278,7 +320,7 @@ export default function GroupDetail({ params }: PageProps) {
         );
         showToast('Expense updated successfully!', 'success');
       } else {
-        await createExpense(
+        savedExp = await createExpense(
           groupId,
           parsedAmount,
           expDesc.trim(),
@@ -291,18 +333,14 @@ export default function GroupDetail({ params }: PageProps) {
         showToast('Expense added successfully!', 'success');
       }
 
-      setIsExpModalOpen(false);
-      setExpAmount('');
-      setExpDesc('');
-      setReceiptFile(null);
-      setEditingExpenseId(null);
-      
-      loadGroupDetails();
+      // Replace optimistic placeholder with confirmed server object
+      setExpenses(prev => prev.map(e => e.id === targetExpId ? savedExp : e));
       window.dispatchEvent(new Event('refresh-dashboard-data'));
     } catch (err: any) {
-      showToast(err.message || 'Error saving expense', 'error');
+      // Rollback on failure
+      setExpenses(previousExpenses);
+      showToast(err.message || 'Error saving expense — rolled back', 'error');
     } finally {
-      setModalLoading(false);
       setReceiptUploading(false);
     }
   };
@@ -326,9 +364,29 @@ export default function GroupDetail({ params }: PageProps) {
   };
 
   const handleMarkAsPaid = async (payment: SettleUpPayment, note: string) => {
+    const previousSettlements = [...settlements];
+    const today = new Date().toISOString().split('T')[0];
+    const tempId = `temp-settle-${Date.now()}`;
+
+    // Optimistic Settlement
+    const optimisticSettlement: Settlement = {
+      id: tempId,
+      group_id: groupId,
+      from_user: payment.from,
+      to_user: payment.to,
+      amount: payment.amount,
+      date: today,
+      note: note || `Settled balance payment between members`,
+      from_profile: members.find(m => m.id === payment.from),
+      to_profile: members.find(m => m.id === payment.to)
+    };
+
+    // Instant UI update
+    setSettlements(prev => [optimisticSettlement, ...prev]);
+    showToast('Settlement payment recorded!', 'success');
+
     try {
-      const today = new Date().toISOString().split('T')[0];
-      await createSettlement(
+      const saved = await createSettlement(
         groupId,
         payment.from,
         payment.to,
@@ -336,23 +394,29 @@ export default function GroupDetail({ params }: PageProps) {
         today,
         note || `Settled balance payment between members`
       );
-      showToast('Settlement payment recorded!', 'success');
-      loadGroupDetails();
+      setSettlements(prev => prev.map(s => s.id === tempId ? saved : s));
       window.dispatchEvent(new Event('refresh-dashboard-data'));
     } catch (err: any) {
-      showToast(err.message || 'Error saving settlement', 'error');
+      // Rollback on failure
+      setSettlements(previousSettlements);
+      showToast(err.message || 'Error saving settlement — rolled back', 'error');
     }
   };
 
   const handleExpenseDelete = async (id: string) => {
+    const previousExpenses = [...expenses];
+    // Optimistic delete: remove immediately from timeline
+    setExpenses(prev => prev.filter(e => e.id !== id));
+    setDeletingExpenseId(null);
+    showToast('Expense deleted', 'success');
+
     try {
       await deleteExpense(id);
-      showToast('Expense deleted', 'success');
-      setDeletingExpenseId(null);
-      loadGroupDetails();
       window.dispatchEvent(new Event('refresh-dashboard-data'));
     } catch (err: any) {
-      showToast(err.message || 'Failed to delete expense', 'error');
+      // Rollback on failure
+      setExpenses(previousExpenses);
+      showToast(err.message || 'Failed to delete expense — restored', 'error');
     }
   };
 
@@ -812,9 +876,12 @@ export default function GroupDetail({ params }: PageProps) {
                     className="bg-surface border border-border rounded-xl p-3.5 flex items-center justify-between hover:border-border transition-colors shadow-subtle"
                   >
                     <div className="flex items-center gap-3">
-                      <img 
+                      <Image 
                         src={member.avatar_url || `https://api.dicebear.com/7.x/bottts/svg?seed=${member.name}`}
                         alt={member.name}
+                        width={36}
+                        height={36}
+                        unoptimized
                         className="w-9 h-9 rounded-full bg-background object-cover"
                       />
                       <div className="text-left">
@@ -1001,9 +1068,12 @@ export default function GroupDetail({ params }: PageProps) {
                       ) : (
                         <Square className="w-4 h-4 text-text-secondary" />
                       )}
-                      <img 
+                      <Image 
                         src={member.avatar_url || `https://api.dicebear.com/7.x/bottts/svg?seed=${member.name}`}
                         alt={member.name}
+                        width={22}
+                        height={22}
+                        unoptimized
                         className="w-5.5 h-5.5 rounded-full object-cover"
                       />
                       <span className="text-[15px] text-text-primary">{member.name}</span>

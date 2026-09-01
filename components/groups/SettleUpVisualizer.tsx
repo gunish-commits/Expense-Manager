@@ -2,6 +2,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { ArrowRight, Check } from 'lucide-react';
 import { SettleUpPayment } from '@/types';
 import { formatCurrency } from '@/lib/utils/format';
@@ -61,9 +62,12 @@ export function SettleUpVisualizer({ payments, onSettle }: SettleUpVisualizerPro
               <div className="flex items-center gap-2.5 sm:gap-4 flex-1">
                 {/* Debtor */}
                 <div className="flex items-center gap-2 text-left">
-                  <img 
+                  <Image 
                     src={`https://api.dicebear.com/7.x/bottts/svg?seed=${payment.from_name}`} 
                     alt={payment.from_name}
+                    width={32}
+                    height={32}
+                    unoptimized
                     className="w-8 h-8 rounded-full bg-background object-cover"
                   />
                   <div>
@@ -81,9 +85,12 @@ export function SettleUpVisualizer({ payments, onSettle }: SettleUpVisualizerPro
 
                 {/* Creditor */}
                 <div className="flex items-center gap-2 text-left">
-                  <img 
+                  <Image 
                     src={`https://api.dicebear.com/7.x/bottts/svg?seed=${payment.to_name}`} 
                     alt={payment.to_name}
+                    width={32}
+                    height={32}
+                    unoptimized
                     className="w-8 h-8 rounded-full bg-background object-cover"
                   />
                   <div>

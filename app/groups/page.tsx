@@ -6,7 +6,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Plus, Users, Calendar, ArrowRight, UserPlus, Sparkles } from 'lucide-react';
 import { isGuestMode, supabase } from '@/lib/supabase/client';
-import { getGroups, createGroup } from '@/lib/supabase/groups';
+import { createGroup } from '@/lib/supabase/groups';
+import { useGroups } from '@/lib/hooks/useData';
 import { Group } from '@/types';
 import { Modal } from '@/components/ui/Modal';
 import { useToast } from '@/components/ui/Toast';
@@ -16,10 +17,11 @@ export default function Groups() {
   const router = useRouter();
   const { showToast } = useToast();
 
-  const [loading, setLoading] = useState(true);
-  const [groups, setGroups] = useState<Group[]>([]);
+  const { data: cachedGroups, isLoading, mutate: mutateGroups } = useGroups();
   const [activeTab, setActiveTab] = useState<'active' | 'settled'>('active');
-  
+  const groups = cachedGroups || [];
+  const loading = isLoading && !cachedGroups;
+
   // Modal states
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newGroupName, setNewGroupName] = useState('');
@@ -39,34 +41,6 @@ export default function Groups() {
     }
     router.push(`/groups/join/${joinCodeInput.trim().toUpperCase()}`);
   };
-
-  const fetchGroups = async () => {
-    setLoading(true);
-    try {
-      const data = await getGroups();
-      setGroups(data);
-    } catch (e: any) {
-      showToast(e.message || 'Error fetching groups', 'error');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (isGuestMode()) {
-      fetchGroups();
-    } else {
-      const checkAuth = async () => {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session) {
-          router.push('/login');
-        } else {
-          fetchGroups();
-        }
-      };
-      checkAuth();
-    }
-  }, [router]);
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);

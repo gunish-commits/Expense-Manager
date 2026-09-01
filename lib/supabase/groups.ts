@@ -152,6 +152,60 @@ export async function getGroupMembers(groupId: string): Promise<Profile[]> {
   }));
 }
 
+export async function getBatchGroupMembers(groupIds: string[]): Promise<Record<string, Profile[]>> {
+  const result: Record<string, Profile[]> = {};
+  groupIds.forEach(gid => { result[gid] = []; });
+  if (groupIds.length === 0) return result;
+
+  if (isGuestMode()) {
+    seedLocalData();
+    const gm = getLocalList<GroupMember>('local_group_members');
+    const profiles = getLocalList<Profile>('local_profiles');
+    
+    gm.filter(m => groupIds.includes(m.group_id)).forEach(m => {
+      const p = profiles.find(prof => prof.id === m.user_id);
+      if (result[m.group_id]) {
+        result[m.group_id].push({
+          id: m.user_id,
+          name: m.display_name || p?.name || 'Unknown',
+          avatar_url: p?.avatar_url || `https://api.dicebear.com/7.x/bottts/svg?seed=${m.user_id}`,
+          created_at: m.joined_at,
+          is_placeholder: m.is_placeholder || false
+        });
+      }
+    });
+    return result;
+  }
+
+  const { data, error } = await supabase
+    .from('group_members')
+    .select(`
+      group_id,
+      user_id,
+      joined_at,
+      is_placeholder,
+      display_name,
+      profile:profiles(*)
+    `)
+    .in('group_id', groupIds);
+
+  if (error) throw error;
+
+  (data || []).forEach((gm: any) => {
+    if (result[gm.group_id]) {
+      result[gm.group_id].push({
+        id: gm.user_id,
+        name: gm.display_name || gm.profile?.name || 'Unknown User',
+        avatar_url: gm.profile?.avatar_url || `https://api.dicebear.com/7.x/bottts/svg?seed=${gm.user_id}`,
+        created_at: gm.joined_at,
+        is_placeholder: gm.is_placeholder || false
+      });
+    }
+  });
+
+  return result;
+}
+
 export async function createGroup(name: string, invitedEmailsOrNames: string[] = []): Promise<Group> {
   if (isGuestMode()) {
     seedLocalData();

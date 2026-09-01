@@ -1,7 +1,7 @@
 // app/personal/page.tsx
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Plus, Upload, Trash2, Calendar, Wallet, Tag, Eye, HardDrive, FileText, Download, MoreVertical, RotateCcw } from 'lucide-react';
@@ -151,7 +151,36 @@ export default function PersonalProfileMe() {
       return;
     }
 
-    setExpModalLoading(true);
+    const previousExpenses = [...expenses];
+    const isEdit = !!editingExpenseId;
+    const targetId = editingExpenseId || `temp-pexp-${Date.now()}`;
+
+    // Optimistic item
+    const optimisticExp: PersonalExpense = {
+      id: targetId,
+      user_id: currentUser?.id || 'guest',
+      amount: parsedAmount,
+      category,
+      date,
+      note: note.trim() || null,
+      receipt_url: null
+    };
+
+    // Instant UI update
+    if (isEdit) {
+      setExpenses(prev => prev.map(exp => exp.id === targetId ? optimisticExp : exp));
+    } else {
+      setExpenses(prev => [optimisticExp, ...prev]);
+    }
+
+    // Close modal immediately
+    setIsExpModalOpen(false);
+    setAmount('');
+    setNote('');
+    setReceiptFile(null);
+    setEditingExpenseId(null);
+    setExpModalLoading(false);
+
     try {
       let receiptUrl: string | null = null;
       if (receiptFile) {
@@ -160,9 +189,10 @@ export default function PersonalProfileMe() {
         setUploadingReceipt(false);
       }
 
-      if (editingExpenseId) {
-        await updatePersonalExpense(
-          editingExpenseId,
+      let savedExp: PersonalExpense;
+      if (isEdit) {
+        savedExp = await updatePersonalExpense(
+          targetId,
           parsedAmount,
           category,
           date,
@@ -171,7 +201,7 @@ export default function PersonalProfileMe() {
         );
         showToast('Expense updated successfully!', 'success');
       } else {
-        await createPersonalExpense(
+        savedExp = await createPersonalExpense(
           parsedAmount,
           category,
           date,
@@ -181,30 +211,28 @@ export default function PersonalProfileMe() {
         showToast('Personal expense logged!', 'success');
       }
 
-      setAmount('');
-      setNote('');
-      setReceiptFile(null);
-      setEditingExpenseId(null);
-      setIsExpModalOpen(false);
-      fetchExpenses();
+      setExpenses(prev => prev.map(exp => exp.id === targetId ? savedExp : exp));
       window.dispatchEvent(new Event('refresh-dashboard-data'));
     } catch (err: any) {
-      showToast(err.message || 'Error saving expense', 'error');
+      setExpenses(previousExpenses);
+      showToast(err.message || 'Error saving expense — rolled back', 'error');
     } finally {
-      setExpModalLoading(false);
       setUploadingReceipt(false);
     }
   };
 
   const handleDeleteExpense = async (id: string) => {
+    const previousExpenses = [...expenses];
+    setExpenses(prev => prev.filter(e => e.id !== id));
+    setDeletingExpId(null);
+    showToast('Expense deleted', 'success');
+
     try {
       await deletePersonalExpense(id);
-      showToast('Expense deleted', 'success');
-      setDeletingExpId(null);
-      fetchExpenses();
       window.dispatchEvent(new Event('refresh-dashboard-data'));
     } catch (e: any) {
-      showToast(e.message || 'Error deleting expense', 'error');
+      setExpenses(previousExpenses);
+      showToast(e.message || 'Error deleting expense — restored', 'error');
     }
   };
 
@@ -255,8 +283,8 @@ export default function PersonalProfileMe() {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
   };
 
-  // 1. Filter by category & Date
-  const getFilteredExpenses = () => {
+  // 1. Memoized filter by category & Date
+  const finalFilteredExpenses = useMemo(() => {
     let result = expenses;
     
     // Category filter
@@ -290,12 +318,12 @@ export default function PersonalProfileMe() {
     }
     
     return result;
-  };
+  }, [expenses, categoryFilter, dateFilter, specificDate, customStart, customEnd]);
 
-  // 2. Group by date headers
-  const getGroupedExpenses = (list: PersonalExpense[]) => {
+  // 2. Memoized Group by date headers
+  const groupedExpenses = useMemo(() => {
     const groups: Record<string, PersonalExpense[]> = {};
-    const sorted = [...list].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    const sorted = [...finalFilteredExpenses].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
     
     const now = new Date();
     const todayStr = now.toISOString().split('T')[0];
@@ -317,10 +345,7 @@ export default function PersonalProfileMe() {
     });
     
     return groups;
-  };
-
-  const finalFilteredExpenses = getFilteredExpenses();
-  const groupedExpenses = getGroupedExpenses(finalFilteredExpenses);
+  }, [finalFilteredExpenses]);
 
   if (loading || !currentUser) {
     return (

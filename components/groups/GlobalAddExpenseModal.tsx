@@ -3,6 +3,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { Modal } from '@/components/ui/Modal';
 import { useToast } from '@/components/ui/Toast';
 import { getGroups, getGroupMembers } from '@/lib/supabase/groups';
@@ -371,9 +372,12 @@ export function GlobalAddExpenseModal() {
                           ) : (
                             <Square className="w-4 h-4 text-text-secondary" />
                           )}
-                          <img 
+                          <Image 
                             src={member.avatar_url || `https://api.dicebear.com/7.x/bottts/svg?seed=${member.name}`}
                             alt={member.name}
+                            width={22}
+                            height={22}
+                            unoptimized
                             className="w-5.5 h-5.5 rounded-full object-cover"
                           />
                           <span>{member.name}</span>

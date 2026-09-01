@@ -4,10 +4,11 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import { ArrowUpRight, ArrowDownRight, Users } from 'lucide-react';
 import { isGuestMode, getGuestUser, supabase } from '@/lib/supabase/client';
-import { getGroups, getGroupMembers } from '@/lib/supabase/groups';
+import { getGroups, getBatchGroupMembers } from '@/lib/supabase/groups';
 import { getBatchExpenses, getBatchSettlements } from '@/lib/supabase/expenses';
 import { getPersonalExpenses } from '@/lib/supabase/personalExpenses';
 import { getBorrowRecords } from '@/lib/supabase/borrow';
@@ -104,20 +105,10 @@ export default function DashboardSummary() {
       
       const allGroupExpenses = await getBatchExpenses(groupIds);
       const allGroupSettlements = await getBatchSettlements(groupIds);
+      const membersMap = await getBatchGroupMembers(groupIds);
       
       setGroupExps(allGroupExpenses);
       setGroupSettlements(allGroupSettlements);
-
-      // Fetch group members map
-      const membersMap: Record<string, Profile[]> = {};
-      await Promise.all(groupsList.map(async (g) => {
-        try {
-          membersMap[g.id] = await getGroupMembers(g.id);
-        } catch (e) {
-          console.error(`Failed to fetch members for group ${g.id}`, e);
-          membersMap[g.id] = [];
-        }
-      }));
       setGroupMembersMap(membersMap);
 
       // 3. Fetch Borrow records (Dues)
@@ -401,10 +392,13 @@ export default function DashboardSummary() {
                     {/* Overlapping member avatars */}
                     <div className="flex items-center -space-x-1.5 overflow-hidden">
                       {groupMembers.slice(0, 4).map((member) => (
-                        <img
+                        <Image
                           key={member.id}
                           src={member.avatar_url || `https://api.dicebear.com/7.x/bottts/svg?seed=${member.name}`}
                           alt={member.name}
+                          width={22}
+                          height={22}
+                          unoptimized
                           className="w-5.5 h-5.5 rounded-full border border-surface bg-background object-cover"
                           title={member.name}
                         />
