@@ -7,7 +7,7 @@ import Image from 'next/image';
 import { 
   Plus, Upload, FileText, ArrowLeft, Trash2, Download, 
   Settings, HeartHandshake, UserPlus, Info, CheckSquare, 
-  Square, Calendar, CreditCard, ChevronRight, Eye, MoreVertical 
+  Square, Calendar, CreditCard, ChevronRight, Eye, MoreVertical, Copy, Check 
 } from 'lucide-react';
 import { isGuestMode, getGuestUser, supabase } from '@/lib/supabase/client';
 import { getGroup, getGroupMembers, addMemberToGroup, updateGroupStatus, createPlaceholderMember } from '@/lib/supabase/groups';
@@ -448,6 +448,13 @@ export default function GroupDetail({ params }: PageProps) {
     );
   }
 
+  const handleCopyInviteLink = () => {
+    if (!group) return;
+    const url = `${window.location.origin}/groups/join/${group.invite_code}`;
+    navigator.clipboard.writeText(url);
+    showToast(`Invite link copied to clipboard! (Code: ${group.invite_code})`, 'success');
+  };
+
   const isGroupSettled = group.status === 'settled';
 
   return (
@@ -472,9 +479,16 @@ export default function GroupDetail({ params }: PageProps) {
                 </span>
               )}
             </div>
-            <p className="text-[10px] text-slate-400 font-semibold mt-0.5">
-              Code: <span className="text-slate-500 font-bold">{group.invite_code}</span> • {members.length} members
-            </p>
+            <div className="flex items-center gap-2 mt-0.5">
+              <button 
+                onClick={handleCopyInviteLink}
+                className="inline-flex items-center gap-1 text-[10px] bg-blue-50 dark:bg-blue-950/30 text-primary hover:bg-blue-100 dark:hover:bg-blue-900/40 px-2 py-0.5 rounded-lg font-bold transition-colors cursor-pointer"
+                title="Click to copy invite link"
+              >
+                Code: {group.invite_code} <Copy className="w-3 h-3" />
+              </button>
+              <span className="text-[10px] text-slate-400 font-semibold">• {members.length} members</span>
+            </div>
           </div>
         </div>
 

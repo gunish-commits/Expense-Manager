@@ -26,6 +26,20 @@ export default function Groups() {
   const [membersInput, setMembersInput] = useState('');
   const [modalLoading, setModalLoading] = useState(false);
 
+  // Join group modal state
+  const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
+  const [joinCodeInput, setJoinCodeInput] = useState('');
+  const [joinModalLoading, setJoinModalLoading] = useState(false);
+
+  const handleJoinByCode = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!joinCodeInput.trim()) {
+      showToast('Please enter an invite code', 'error');
+      return;
+    }
+    router.push(`/groups/join/${joinCodeInput.trim().toUpperCase()}`);
+  };
+
   const fetchGroups = async () => {
     setLoading(true);
     try {
@@ -123,12 +137,20 @@ export default function Groups() {
           </h1>
         </div>
 
-        <button 
-          onClick={() => setIsModalOpen(true)}
-          className="bg-primary hover:bg-primary-light text-white px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm active:scale-95"
-        >
-          <Plus className="w-4 h-4" /> New Group
-        </button>
+        <div className="flex items-center gap-2">
+          <button 
+            onClick={() => setIsJoinModalOpen(true)}
+            className="px-3.5 py-2 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-xs active:scale-95"
+          >
+            <UserPlus className="w-4 h-4 text-primary" /> Join with Code
+          </button>
+          <button 
+            onClick={() => setIsModalOpen(true)}
+            className="bg-primary hover:bg-primary-light text-white px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm active:scale-95"
+          >
+            <Plus className="w-4 h-4" /> New Group
+          </button>
+        </div>
       </div>
 
       {/* Active vs History Tab header */}
@@ -259,6 +281,51 @@ export default function Groups() {
               className="bg-primary hover:bg-primary-light text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-sm flex items-center gap-1 active:scale-95"
             >
               {modalLoading ? 'Creating...' : 'Create Group'}
+            </button>
+          </div>
+        </form>
+      </Modal>
+
+      {/* Join Group with Code Modal */}
+      <Modal 
+        isOpen={isJoinModalOpen} 
+        onClose={() => setIsJoinModalOpen(false)} 
+        title="Join Group with Code"
+      >
+        <form onSubmit={handleJoinByCode} className="space-y-4 text-left">
+          <div>
+            <label className="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1.5">
+              Group Invite Code
+            </label>
+            <input 
+              type="text" 
+              placeholder="e.g. GOA123, FLA456"
+              value={joinCodeInput}
+              onChange={(e) => setJoinCodeInput(e.target.value.toUpperCase())}
+              required
+              disabled={joinModalLoading}
+              className="block w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2.5 text-sm uppercase tracking-widest font-black focus:outline-none focus:ring-1 focus:ring-primary text-slate-800 dark:text-slate-100"
+            />
+            <span className="text-[10px] text-slate-400 block mt-1.5 leading-relaxed">
+              Ask your friend or group creator for their 6-character group invite code.
+            </span>
+          </div>
+
+          <div className="flex gap-2 pt-2 justify-end">
+            <button 
+              type="button"
+              onClick={() => setIsJoinModalOpen(false)}
+              disabled={joinModalLoading}
+              className="px-4 py-2 border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+            >
+              Cancel
+            </button>
+            <button 
+              type="submit"
+              disabled={joinModalLoading}
+              className="bg-primary hover:bg-primary-light text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-sm flex items-center gap-1 active:scale-95"
+            >
+              {joinModalLoading ? 'Joining...' : 'Join Group'}
             </button>
           </div>
         </form>

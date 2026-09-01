@@ -89,23 +89,24 @@ export default function JoinGroupPage({ params }: { params: Promise<{ code: stri
   if (!group) return null;
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white dark:bg-slate-900 border border-[#E6E4DF] dark:border-[#2D2A26] rounded-3xl text-center space-y-6 mt-12 text-[#26241F] dark:text-slate-100 shadow-sm">
+    <div className="max-w-md mx-auto p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-center space-y-6 mt-12 text-slate-900 dark:text-slate-100 shadow-xs">
       <span className="text-4xl">✉️</span>
       <div className="space-y-1">
         <h2 className="text-xl font-bold">Group Invitation</h2>
         <p className="text-xs text-slate-400">You have been invited to join</p>
       </div>
 
-      <div className="p-4 bg-slate-50 dark:bg-slate-950 rounded-2xl border border-dashed border-[#E6E4DF] dark:border-[#2D2A26]">
-        <h3 className="text-lg font-black text-[#1F6E5C] dark:text-[#2B9B82]">{group.name}</h3>
+      <div className="p-4 bg-blue-50/50 dark:bg-blue-950/20 rounded-2xl border border-dashed border-blue-200 dark:border-blue-800">
+        <h3 className="text-lg font-black text-primary">{group.name}</h3>
+        <p className="text-[10px] text-slate-400 mt-1 font-semibold">Invite Code: {group.invite_code}</p>
       </div>
 
       <div className="flex flex-col gap-2.5 pt-2">
         <button
           onClick={handleAccept}
-          className="w-full bg-[#1F6E5C] hover:bg-[#2B9B82] text-white py-3 rounded-xl text-xs font-bold transition-all active:scale-95 shadow-sm"
+          className="w-full bg-primary hover:bg-primary-light text-white py-3 rounded-xl text-xs font-bold transition-all active:scale-95 shadow-sm"
         >
-          Accept Invitation
+          Accept & Join Group
         </button>
         <button
           onClick={handleDecline}
